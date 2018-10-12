@@ -1,14 +1,13 @@
-width = int(input("How wide?"))
-height = int(input("How high?"))
-bak = "."
-grid = []
-row = []
-for i in range(5):
-    grid.append(row)
-for li in grid:
-    print(id(li))
-# 92532104
-# 92532104
-# 92532104
-# 92532104
-# 92532104
+from tkinter import *
+import random
+import time
+
+WIDTH = 500
+HEIGHT = 400
+colors = ["red", "green", "blue", "purple", "orange", "yellow", "cyan",
+          "magenta","dodgerblue", "turquoise", "grey", "gold", "pink"]
+
+tk = Tk()
+canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
+tk.title("Drawing") # Title of window
+canvas.pack() # Done with the settings and show window on screen

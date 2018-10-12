@@ -13,3 +13,9 @@ y = 4
 while x < y:
     print(x)
     x = x + 1
+
+def hello_x_times(x):
+    for i in range(x):
+        print("hello")
+
+hello_x_times(10) # says hello x times

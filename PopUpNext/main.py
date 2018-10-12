@@ -2,20 +2,17 @@
 from tkinter import *
 import random
 import time
-from .grid import Square
-
 
 colors = ["red", "green", "blue", "purple", "orange", "yellow", "cyan",
           "magenta","dodgerblue", "turquoise", "grey", "gold", "pink"]
+
 WIDTH = 500 # canvas width
 HEIGHT = 400 # canvas height
 tk = Tk()
 canvas = Canvas(tk, width=WIDTH, height=HEIGHT)
 tk.title("Drawing") # Title of window
+
 canvas.pack() # Done with the settings and show window on screen
-
-
-# General rule, classes start with capital letter
 
 # Air module (quadrotor)
 class AirMod:

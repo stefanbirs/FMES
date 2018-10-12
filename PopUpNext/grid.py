@@ -14,8 +14,6 @@ class Square:
     def __init__(self,size):
         self.shape = canvas.create_square(0, 0, 100, 100 ,fill = 'blue', outline = 'blue')
 
-
-
 blocks = []
 for i in range(10):
     blocks.append(Square)

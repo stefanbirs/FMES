@@ -2,6 +2,8 @@
 from tkinter import *
 import random
 import time
+from .grid import Square
+
 
 colors = ["red", "green", "blue", "purple", "orange", "yellow", "cyan",
           "magenta","dodgerblue", "turquoise", "grey", "gold", "pink"]
@@ -46,7 +48,6 @@ class PodMod:
             self.yspeed = -self.yspeed
         if pos[2] >= WIDTH or pos[0] <= 0:
             self.xspeed = -self.xspeed
-
 
 # Ground module (wheel frame)
 class GroundMod:

@@ -1,2 +1,4 @@
 print("Hello world!");
-for X I
+for X in range(5):
+
+    print(X)

@@ -1,4 +1,6 @@
-print("Hello world!");
-for X in range(5):
+import random
 
-    print(X)
+print("Hello world!");
+for i in range(5):
+
+    print(random.randrange(1,20))

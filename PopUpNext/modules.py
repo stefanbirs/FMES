@@ -67,7 +67,7 @@ class PodMod:
             self.xspeed = -self.xspeed
 
 class GrdMod:
-    """Ground module (wheel base): for now it initiats as a big black circle
+    """Ground module (wheel base): for now it initiats as a big black circle (BBC)
     with a random speed. Has a Method called move that moves around the
     graphical window.
 
@@ -92,3 +92,6 @@ class GrdMod:
             self.yspeed = -self.yspeed
         if pos[2] >= WIDTH or pos[0] <= 0:
             self.xspeed = -self.xspeed
+
+class MapMod:
+    pass

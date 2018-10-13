@@ -8,7 +8,7 @@ Main branch should always be stable. To develop code create a branch and use tha
 
 - Variable names and function/method names - also be lowercase with underscores to separate words.
 
-- Class names - CamelCase (uppercase letter to start with, words run together, each starting with an uppercase letter, Example: MyClass, ).
+- Class names - CamelCase (uppercase letter to start with, words run together, each starting with an uppercase letter, Example: MyClass).
 
 - Module constants should be all uppercase.
 

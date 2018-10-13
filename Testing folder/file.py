@@ -1,3 +1,5 @@
 import subfile
 
-subfile.helloWorld()
+hi = subfile.Hi("Kamran")
+
+hi.helloWorld()

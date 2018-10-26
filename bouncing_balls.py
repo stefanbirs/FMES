@@ -27,6 +27,8 @@ class Ball: # General rule, classes start with capital letter
             self.yspeed = -self.yspeed
         if pos[2] >= WIDTH or pos[0] <= 0:
             self.xspeed = -self.xspeed
+            if self.xspeed > 10:
+                print(self.xspeed)
 
 # property of objects in python: objects can be treated like any other variable
 balls = []

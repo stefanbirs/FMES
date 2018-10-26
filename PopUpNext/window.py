@@ -42,8 +42,6 @@ for i in range(len(tmaze)+1):
 """Goal"""
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
 
-
-
 ################################################################################
 """ Wheels """
 class Wheels:

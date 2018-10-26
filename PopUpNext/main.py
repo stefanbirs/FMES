@@ -5,6 +5,7 @@ wheels = Wheels("green",20)
 
 while True:
     wheels.move()
+
     tk.update()
     time.sleep(0.01)
 

@@ -34,7 +34,7 @@ for i in range(len(tmaze)+1):
 """Goal"""
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
 
-class Car:
+class Wheels:
     def __init__(self,color, size):
         self.shape= canvas.create_rectangle(0,0,size,size, fill=color)
         self.xspeed = 0
@@ -103,10 +103,10 @@ class Car:
             self.b = self.b + 1
             self.i=3
 
-car=Car("green",20)
+wheels=Wheels("green",20)
 
 while True:
-    car.move()
+    wheels.move()
     tk.update()
     time.sleep(0.01)
 

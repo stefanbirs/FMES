@@ -1,15 +1,23 @@
+"""files"""
 from a_star import *
 from tkinter import *
+
+"""Libaries"""
 import random
 import time
 
+#########################################################################
+# constants
 WIDTH = 700
 HEIGHT = 700
 
+#########################################################################
+# canvas
 tk=Tk()
 canvas=Canvas(tk, width=WIDTH, height=HEIGHT)
-canvas.pack()
-canvas.create_rectangle(0,0,WIDTH,HEIGHT)
+canvas.pack() # create window
+canvas.create_rectangle(0,0,WIDTH,HEIGHT) # defining edges
+#########################################################################
 
 """ House """
 boxx=0
@@ -35,6 +43,8 @@ for i in range(len(tmaze)+1):
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
 
 
+
+################################################################################
 """ Wheels """
 class Wheels:
     def __init__(self,color, size):
@@ -104,14 +114,4 @@ class Wheels:
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
-
-
-
-wheels=Wheels("green",20)
-
-while True:
-    wheels.move()
-    tk.update()
-    time.sleep(0.01)
-
-tk.mainloop()
+################################################################################

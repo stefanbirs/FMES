@@ -1,12 +1,7 @@
-import a_star
+from a_star import *
 from tkinter import *
 import random
 import time
-
-tmaze = a_star.tmaze
-end = a_star.end
-start = a_star.start
-path = a_star.path
 
 WIDTH = 700
 HEIGHT = 700
@@ -16,10 +11,8 @@ canvas=Canvas(tk, width=WIDTH, height=HEIGHT)
 canvas.pack()
 canvas.create_rectangle(0,0,WIDTH,HEIGHT)
 
-""" Huse """
+"""Huse"""
 boxx=0
-
-
 for i in range(len(tmaze)-1):
     canvas.create_rectangle(20+boxx,20,20+93+boxx,20+93)
     boxy=0
@@ -27,7 +20,6 @@ for i in range(len(tmaze)-1):
         canvas.create_rectangle(20+boxx,20+boxy,20+93+boxx,20+93+boxy)
         boxy=boxy+93+20
     boxx=boxx+93+20
-
 
 """Trafik"""
 række=0
@@ -110,45 +102,6 @@ class Car:
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
-
-åben=[]
-
-for i in range(len(tmaze)):
-    for j in range(len(tmaze[0])):
-
-        if tmaze[i][j] == 1:
-            åben.append((i,j))
-
-print(åben)
-
-a = [None]*len(åben)
-
-for i in range(len(a)):
-    for j in range(len(a)):
-        print("i",i)
-        print("j",j)
-        if i==j:
-            continue
-        if åben[i][0]==åben[j][0]+1 and åben[i][1]==åben[j][1] or åben[i][0]==åben[j][0]-1 and åben[i][1]==åben[j][1] or åben[i][1]==åben[j][1]+1 and åben[i][0]==åben[j][0] or åben[i][1]==åben[j][1]-1 and åben[i][0]==åben[j][0]:
-            if a[i]== None:
-                a[i]=j
-                print("yes")
-            else:
-                a[i]=a[i],j
-                print("if",i)
-                print("if",j)
-
-# lal=[]
-#
-# for i in range(len(a)):
-#     for j in range(len(a)):
-#         if i in a[j]:
-#             lal.append(j)
-#             print("lal")
-#
-# print(åben)
-# print(a,"pik")
-# print(lal)
 
 car=Car("green",20)
 

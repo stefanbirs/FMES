@@ -18,7 +18,6 @@ canvas=Canvas(tk, width=WIDTH, height=HEIGHT)
 canvas.pack() # create window
 canvas.create_rectangle(0,0,WIDTH,HEIGHT) # defining edges
 #########################################################################
-
 """ House """
 boxx=0
 for i in range(len(tmaze)-1):
@@ -27,7 +26,6 @@ for i in range(len(tmaze)-1):
         canvas.create_rectangle(20+boxx,20+boxy,20+93+boxx,20+93+boxy)
         boxy=boxy+93+20
     boxx=boxx+93+20
-
 """Trafic"""
 række=0
 kollone=0
@@ -37,19 +35,14 @@ for i in range(len(tmaze)+1):
         if tmaze[i-1][j-1] == 1:
             kollone=(93+20)*(j-1)
             canvas.create_rectangle(række,kollone ,20+række,20+kollone, fill="red")
-
 """Goal"""
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
-
 #############################################################################
 # classes
 """ Wheels """
 class Wheels:
-
     def __init__(self,color, size):
-        self.randx = random.randrange(0, 100)
-        self.randy = random.randrange(0, 100)
-        self.shape= canvas.create_rectangle(0+self.randx,0+self.randx,size+self.randx,size+self.randx, fill=color)
+        self.shape = canvas.create_rectangle(0,0,size,size, fill=color)
         self.xspeed = 0
         self.yspeed = 0
         self.a=0
@@ -90,7 +83,6 @@ class Wheels:
             self.xspeed=0
             self.yspeed=-1
             self.i=1
-            #print("-y")
 
         if pos[1] >=(93+20)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==0:
             self.yspeed = 0

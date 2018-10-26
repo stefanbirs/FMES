@@ -2,7 +2,6 @@ import numpy
 
 class Node():
     """A node class for A* Pathfinding"""
-
     def __init__(self, parent=None, position=None):
         self.parent = parent
         self.position = position
@@ -13,7 +12,6 @@ class Node():
 
     def __eq__(self, other):
         return self.position == other.position
-
 
 def astar(tmaze, start, end):
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
@@ -102,8 +100,6 @@ def astar(tmaze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
-
-
 
 maze = [[0, 0, 0, 0, 1, 0, 0],
         [0, 0, 0, 0, 1, 0, 0],

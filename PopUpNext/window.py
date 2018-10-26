@@ -34,6 +34,8 @@ for i in range(len(tmaze)+1):
 """Goal"""
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
 
+
+""" Wheels """
 class Wheels:
     def __init__(self,color, size):
         self.shape= canvas.create_rectangle(0,0,size,size, fill=color)
@@ -102,6 +104,8 @@ class Wheels:
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
+
+
 
 wheels=Wheels("green",20)
 

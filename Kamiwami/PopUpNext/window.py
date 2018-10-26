@@ -47,7 +47,9 @@ canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[
 class Wheels:
 
     def __init__(self,color, size):
-        self.shape= canvas.create_rectangle(0,0,size,size, fill=color)
+        self.randx = random.randrange(0, 100)
+        self.randy = random.randrange(0, 100)
+        self.shape= canvas.create_rectangle(0+self.randx,0+self.randx,size+self.randx,size+self.randx, fill=color)
         self.xspeed = 0
         self.yspeed = 0
         self.a=0
@@ -58,9 +60,9 @@ class Wheels:
 
     def move(self):
         canvas.move(self.shape, self.xspeed, self.yspeed)
-        pos= canvas.coords(self.shape)
-        slutx=end[0]*(93+20)
-        sluty=end[1]*(93+20)
+        pos = canvas.coords(self.shape)
+        slutx = end[0]*(93+20)
+        sluty = end[1]*(93+20)
 
         if (pos[0],pos[1]) == (slutx,sluty) :
             self.xspeed=0

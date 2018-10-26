@@ -11,7 +11,11 @@ canvas=Canvas(tk, width=WIDTH, height=HEIGHT)
 canvas.pack()
 canvas.create_rectangle(0,0,WIDTH,HEIGHT)
 
+<<<<<<< HEAD
 """Huse"""
+=======
+""" House """
+>>>>>>> origin/master
 boxx=0
 for i in range(len(tmaze)-1):
     canvas.create_rectangle(20+boxx,20,20+93+boxx,20+93)
@@ -21,7 +25,12 @@ for i in range(len(tmaze)-1):
         boxy=boxy+93+20
     boxx=boxx+93+20
 
+<<<<<<< HEAD
 """Trafik"""
+=======
+
+"""Trafic"""
+>>>>>>> origin/master
 række=0
 kollone=0
 for i in range(len(tmaze)+1):
@@ -31,7 +40,7 @@ for i in range(len(tmaze)+1):
             kollone=(93+20)*(j-1)
             canvas.create_rectangle(række,kollone ,20+række,20+kollone, fill="red")
 
-"""Mål"""
+"""Goal"""
 canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
 
 class Car:

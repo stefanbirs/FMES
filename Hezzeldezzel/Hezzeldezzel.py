@@ -110,7 +110,7 @@ maze = [[0, 0, 0, 0, 1, 0, 0],
         [0, 0, 0, 0, 1, 0, 0],
         [0, 0, 0, 0, 1, 0, 0],
         [0, 0, 0, 0, 1, 0, 0],
-        [1, 0, 1, 1, 1, 0, 0],
+        [1, 1, 1, 1, 1, 0, 0],
         [0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 0, 0]]
 
@@ -264,28 +264,36 @@ a = [None]*len(åben)
 
 for i in range(len(a)):
     for j in range(len(a)):
-        print("i",i)
-        print("j",j)
         if i==j:
             continue
         if åben[i][0]==åben[j][0]+1 and åben[i][1]==åben[j][1] or åben[i][0]==åben[j][0]-1 and åben[i][1]==åben[j][1] or åben[i][1]==åben[j][1]+1 and åben[i][0]==åben[j][0] or åben[i][1]==åben[j][1]-1 and åben[i][0]==åben[j][0]:
-            a[i]=a[i],j
-            print("if",i)
-            print("if",j)
+            if a[i]== None:
+                a[i]=j
+            else:
+                a[i]=a[i],j
 
 
 
 
+lal=[]
+
+for i in range(len(a)):
+    for j in range(len(a)):
+        print("i",i)
+        print("j",j)
+        if i in a[j]:
+            lal.append(j)
+
+
+print(åben)
 print(a,"pik")
-
-
-
+print(lal)
 
 car=Car("green",20)
 
 while True:
     car.move()
     tk.update()
-    #time.sleep(0.01)
+    time.sleep(0.01)
 
 tk.mainloop()

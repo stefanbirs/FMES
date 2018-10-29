@@ -4,9 +4,9 @@ import random
 import numpy
 import time
 from pprint import pprint
-##################################################################
-##################################################################
-##################################################################
+################################################################################
+################################################################################
+################################################################################
 # A* algorithm
 class Node:
     """A node class for A* Pathfinding"""
@@ -131,72 +131,62 @@ def astar(tmaze, start, end):
             # Add the child to the open list
             open_list.append(child)
 
-maze = [[0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0]]
+maze = [[0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 1],
+        [0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0]]
 
 tmaze=[]
 rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
 for row in rez:
     tmaze.append(row)
 
-####################################################################
-####################################################################
+################################################################################
+################################################################################
+################################################################################
+NUM_OF_WHEELS = 10 # The number of wheels in the city map
 # Generates a coordinate list based on the size of the city map matrix
-coord_list = [(x,y) for x in range(len(tmaze)-1) for y in range(len(tmaze[0])-1)]
-# Select random numbers from 'coord_list' and places them in strt_list and dest_list
+coord_list = [] # coordinate List
 strt_list = [] # Start List
 dest_list = [] # Destination List
-# Selects 3 random coordinates from 'coord_list' and put them in strt_list and dest_list
-for i in range(5):
+path_list = [] # Path List
+for x in range(len(tmaze)-1): # iterates through number of columns
+    for y in range(len(tmaze[0])-1): # iterates through number of rows
+        if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
+            coord_list.append((x,y)) # Coordinate list that does not have traffic
+        elif tmaze[x][y] == 1: # else if there is traffic in this coordinate "1" do nothing
+            continue
+# Select random numbers from 'coord_list' and places them in strt_list and dest_list
+for i in range(NUM_OF_WHEELS):
     strt_list.append(random.choice(coord_list))
     dest_list.append(random.choice(coord_list))
-#strt_list = [(0,0), (0,0), (0,0)]
-#print('coodinate list:', coord_list)
-#print('start list:', strt_list)
-#print('Destination list:', dest_list)
 # Created a list of paths using A* algorithm
-path_list = []
-# Uses start and destination points from lists and iterates through them to generate 3 path
-for i in range(5):
+for i in range(NUM_OF_WHEELS):
     path_list.append(astar(tmaze, strt_list[i], dest_list[i]))
 print('Path list:', path_list)
-####################################################################
-####################################################################
-
-start = (3,3)
-end = (1,5)
-
-path1 = astar(tmaze, start, end)
-
-#print('path1', path1)
-
-
-##################################################################
-##################################################################
-##################################################################
-"Canvas and blocks"
-
-# Constants
-WIDTH = 700
-HEIGHT = 700
-
+################################################################################
+################################################################################
+################################################################################
+# Generates Canvas
+WIDTH = 700 # Width of canvas
+HEIGHT = 700 # Height of canvas
 # Canvas
 tk=Tk()
 canvas=Canvas(tk, width=WIDTH, height=HEIGHT)
 tk.title("City Map") # Title of window
-canvas.pack() # create window
-canvas.create_rectangle(0, 0, WIDTH, HEIGHT) # defining edges
-#########################################################################
-
-RWITDH = 15 # Road witdh
+canvas.pack() # Creates window
+canvas.configure(highlightthickness=0, borderwidth=0) # removes cut off on top and left edges
+#canvas.create_rectangle(0, 0, WIDTH, HEIGHT) # Defining edges
+################################################################################
+################################################################################
+################################################################################
+# Generates Building Blocks, Traffic Jams and Destination Blocks
+RWITDH = 20 # Road witdh
 RLENGHT = 93 # Road lenght
 RW_RL = RWITDH + RLENGHT # Sum of road witdh and lenght
-
 # Building Blocks
 boxx = 0
 for i in range(len(tmaze)-1):
@@ -206,7 +196,7 @@ for i in range(len(tmaze)-1):
         boxy = boxy + RW_RL
     boxx = boxx + RW_RL
 
-# Traffic jams
+# Traffic Jams
 row = col = 0 # row and column
 for i in range(len(tmaze)+1):
     for j in range(len(tmaze[0])+1):
@@ -215,17 +205,15 @@ for i in range(len(tmaze)+1):
             col = (RW_RL)*(j-1)
             canvas.create_rectangle(row, col, RWITDH + row, RWITDH + col, fill="red")
 
-# Destination
-for i in range (5):
+# Destination Blocks
+for i in range (NUM_OF_WHEELS):
     canvas.create_rectangle(dest_list[i][0]*(RW_RL), dest_list[i][1]*(RW_RL),
-                        RWITDH+dest_list[i][0]*(RW_RL), RWITDH+dest_list[i][1]*(RW_RL), fill="purple")
+                        RWITDH+dest_list[i][0]*(RW_RL), RWITDH+dest_list[i][1]*(RW_RL), fill="blue")
 
-    #canvas.create_rectangle(end[0]*(RW_RL), end[1]*(RW_RL),
-                        #RWITDH+end[0]*(RW_RL), RWITDH+end[1]*(RW_RL), fill="blue")
-
-#############################################################################
-# classes
-""" Wheels """
+################################################################################
+################################################################################
+################################################################################
+# The Wheels Class
 class Wheels:
     def __init__(self, size, path):
         self.shape = canvas.create_rectangle(path[0][0]*(RW_RL), path[0][1]*(RW_RL),
@@ -241,11 +229,6 @@ class Wheels:
     def move(self, path, end):
         canvas.move(self.shape, self.xspeed, self.yspeed)
         pos = canvas.coords(self.shape) # returns -> (x1,y1,x2,y2)
-        x1 = pos[0]
-        y1 = pos[1]
-        x2 = pos[2]
-        y2 = pos[3]
-
 
         if (pos[0],pos[1]) == (end[0]*(RW_RL), end[1]*(RW_RL)):
             self.xspeed = 0
@@ -300,22 +283,15 @@ class Wheels:
 ################################################################################
 ################################################################################
 ################################################################################
-
 # "Main"
-#wheels = Wheels(RWITDH, path1)
-wheels1 = Wheels(RWITDH, path_list[0])
-wheels2 = Wheels(RWITDH, path_list[1])
-wheels3 = Wheels(RWITDH, path_list[2])
-wheels4 = Wheels(RWITDH, path_list[3])
-wheels5 = Wheels(RWITDH, path_list[4])
+wheels = []
+for i in range(NUM_OF_WHEELS):
+    wheels.append(Wheels(RWITDH, path_list[i]))
 
 while True:
-    #wheels.move(path1, end)
-    wheels1.move(path_list[0], dest_list[0])
-    wheels2.move(path_list[1], dest_list[1])
-    wheels3.move(path_list[2], dest_list[2])
-    wheels4.move(path_list[3], dest_list[3])
-    wheels5.move(path_list[4], dest_list[4])
+
+    for i, wheel in enumerate(wheels):
+        wheel.move(path_list[i], dest_list[i])
     tk.update()
     time.sleep(0.01)
 

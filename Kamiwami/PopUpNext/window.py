@@ -163,6 +163,8 @@ for x in range(len(tmaze)-1): # iterates through number of columns
 for i in range(NUM_OF_WHEELS):
     strt_list.append(random.choice(coord_list))
     dest_list.append(random.choice(coord_list))
+print('start list:', strt_list)
+print('destination list:', dest_list)
 # Created a list of paths using A* algorithm
 for i in range(NUM_OF_WHEELS):
     path_list.append(astar(tmaze, strt_list[i], dest_list[i]))
@@ -196,6 +198,15 @@ for i in range(len(tmaze)-1):
         boxy = boxy + RW_RL
     boxx = boxx + RW_RL
 
+# Create a single Docking station for drone (bottom left corner)
+bot_rightx = (len(tmaze)-1)*(RW_RL) # row length of city map
+bot_righty = (len(tmaze[0])-1)*(RW_RL) # column length of city map
+dock = canvas.create_rectangle(bot_rightx, bot_righty, bot_rightx + RWITDH, bot_righty + RWITDH)
+dock_pos = canvas.coords(dock) # Dock position
+
+print("bot_rightx", bot_rightx)
+print("bot_righty", bot_righty)
+
 # Traffic Jams
 row = col = 0 # row and column
 for i in range(len(tmaze)+1):
@@ -218,6 +229,75 @@ class Wheels:
     def __init__(self, size, path):
         self.shape = canvas.create_rectangle(path[0][0]*(RW_RL), path[0][1]*(RW_RL),
                                             size+path[0][0]*(RW_RL), size+path[0][1]*(RW_RL), fill ="green")
+        self.xspeed = 0
+        self.yspeed = 0
+        self.a = 0
+        self.b = 1
+        self.x = 0
+        self.y = 1
+        self.i = 0
+
+    def move(self, path, end):
+        canvas.move(self.shape, self.xspeed, self.yspeed)
+        pos = canvas.coords(self.shape) # returns -> (x1,y1,x2,y2)
+
+
+        if (pos[0],pos[1]) == (end[0]*(RW_RL), end[1]*(RW_RL)):
+            self.xspeed = 0
+            self.yspeed = 0
+            self.i = 4
+            self.a = 0
+            self.b = 0
+
+        if path[self.a][self.x] < path[self.b][self.x]:
+            self.xspeed = 1
+            self.yspeed = 0
+            self.i = 0
+
+        if path[self.b][self.x] < path[self.a][self.x]:
+            self.xspeed = -1
+            self.yspeed = 0
+            self.i = 1
+
+        if path[self.a][self.y] < path[self.b][self.y]:
+            self.xspeed = 0
+            self.yspeed = 1
+            self.i = 0
+
+        if path[self.b][self.y] < path[self.a][self.y]:
+            self.xspeed = 0
+            self.yspeed = -1
+            self.i = 1
+
+        if pos[1]>=(RW_RL)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==0:
+            self.yspeed = 0
+            self.a = self.a + 1
+            self.b = self.b + 1
+            self.i = 3
+
+        if pos[0]>=(RW_RL)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==0:
+            self.xspeed = 0
+            self.a = self.a + 1
+            self.b = self.b + 1
+            self.i = 3
+
+        if pos[1]<=(RW_RL)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==1:
+            self.yspeed = 0
+            self.a = self.a + 1
+            self.b = self.b + 1
+            self.i = 3
+
+        if pos[0]<=(RW_RL)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==1:
+            self.xspeed = 0
+            self.a = self.a + 1
+            self.b = self.b + 1
+            self.i = 3
+
+# The Pod Class
+class Pod:
+    def __init__(self, size, path):
+        self.shape = canvas.create_oval(path[0][0]*(RW_RL), path[0][1]*(RW_RL),
+                                            size+path[0][0]*(RW_RL), size+path[0][1]*(RW_RL), fill ="grey")
         self.xspeed = 0
         self.yspeed = 0
         self.a = 0
@@ -280,6 +360,25 @@ class Wheels:
             self.a = self.a + 1
             self.b = self.b + 1
             self.i = 3
+
+# The Drone Class
+print("dock position", dock_pos)
+class Drone:
+    def __init__(self, size, dock_pos):
+        # cross shape
+        self.shape = canvas.create_line(dock_pos[0], dock_pos[1], dock_pos[2], dock_pos[3],
+                                        dock_pos[0], dock_pos[3], dock_pos[2], dock_pos[1])
+        self.xspeed = 0
+        self.yspeed = 0
+
+    def move(self):
+        pass
+
+
+
+
+
+
 ################################################################################
 ################################################################################
 ################################################################################
@@ -288,10 +387,17 @@ wheels = []
 for i in range(NUM_OF_WHEELS):
     wheels.append(Wheels(RWITDH, path_list[i]))
 
+pod = Pod(RWITDH, path_list[0])
+
+drone = Drone(RWITDH, dock_pos)
+
 while True:
 
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
+
+    pod.move(path_list[0], dest_list[0])
+    drone.move()
     tk.update()
     time.sleep(0.01)
 

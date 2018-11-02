@@ -118,6 +118,7 @@ maze = [[0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]]
 
+# Flips the matrix in the crossaxis to get the visuals the match x and y
 tmaze=[]
 rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
 for row in rez:

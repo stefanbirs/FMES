@@ -106,13 +106,19 @@ def astar(tmaze, start, end):
 
 
 
-maze = [[0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0],
-        [1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0]]
+maze = [[0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 tmaze=[]
 rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
@@ -121,7 +127,7 @@ for row in rez:
 
 
 start=(0,0)
-end=(5,1)
+end=(6,5)
 
 path = astar(tmaze, start, end)
 print(path)
@@ -143,37 +149,51 @@ canvas.pack()
 
 canvas.create_rectangle(0,0,WIDTH,HEIGHT)
 
+# Road width
+rd= 20
+
+# house width
+hw=int((WIDTH-(((len(maze)/2)+0.5)*rd))/((len(maze)/2)-0.5))
 
 
 """ Huse """
 boxx=0
-for i in range(len(tmaze)-1):
-    canvas.create_rectangle(20+boxx,20,20+93+boxx,20+93)
+for i in range(int((len(tmaze)-1)/2)):
     boxy=0
-    for i in range(len(tmaze[0])-1):
-        canvas.create_rectangle(20+boxx,20+boxy,20+93+boxx,20+93+boxy)
-        boxy=boxy+93+20
-    boxx=boxx+93+20
+    for i in range(int((len(tmaze[0])-1)/2)):
+        canvas.create_rectangle(rd+boxx,rd+boxy,rd+hw+boxx,rd+hw+boxy)
+        boxy=boxy+hw+rd
+    boxx=boxx+hw+rd
 
 
 """Trafik"""
 
-række=0
-kollone=0
-for i in range(len(tmaze)+1):
-    række=(93+20)*(i-1)
-    for j in range(len(tmaze[0])+1):
-        if tmaze[i-1][j-1] == 1:
-            kollone=(93+20)*(j-1)
-            canvas.create_rectangle(række,kollone ,20+række,20+kollone, fill="red")
+column=0
+row=0
+for i in range(len(tmaze)):
+    for j in range(len(tmaze[0])):
+        if tmaze[i][j] == 1 and not i % 2 == 0:
+            column=((hw+rd)*((i/2)-0.5))+rd
+            row=(hw+rd)*(j/2)
+            canvas.create_rectangle(column,row ,hw+column , 20+row, fill="red")
+        if tmaze[i][j] == 1 and not j % 2 == 0:
+            row=((hw+rd)*((j/2)-0.5))+rd
+            column=(hw+rd)*(i/2)
+            canvas.create_rectangle(column,row , 20+column , hw+row, fill="red")
+        if tmaze[i][j] == 1 and i % 2 == 0 and j % 2 == 0 :
+            row=((hw+rd)*(j/2))
+            column=((hw+rd)*(i/2))
+            canvas.create_rectangle(column,row , 20+column , row+20, fill="red")
+
+
 
 """Mål"""
-canvas.create_rectangle(end[0]*(93+20),end[1]*(93+20) ,20+end[0]*(93+20),20+end[1]*(93+20), fill="blue")
+canvas.create_rectangle(int(end[0]*((hw+rd)/2)),int(end[1]*((hw+rd)/2)) ,int(20+end[0]*((hw+rd)/2)),int(20+end[1]*((hw+rd)/2)), fill="blue")
 
 
 class Car:
     def __init__(self,color, size):
-        self.shape= canvas.create_rectangle(0,0,size,size, fill=color)
+        self.shape= canvas.create_rectangle(int(start[0]*((hw+rd)/2)),int(start[1]*((hw+rd)/2)),int(start[0]*((hw+rd)/2)+size),int(start[1]*((hw+rd)/2)+size), fill=color)
         self.xspeed = 0
         self.yspeed = 0
         self.a=0
@@ -186,11 +206,8 @@ class Car:
     def move(self):
         canvas.move(self.shape, self.xspeed, self.yspeed)
         pos= canvas.coords(self.shape)
-        slutx=end[0]*(93+20)
-        sluty=end[1]*(93+20)
-
-
-
+        slutx=int(end[0]*((hw+rd)/2))
+        sluty=int(end[1]*((hw+rd)/2))
 
         if (pos[0],pos[1]) == (slutx,sluty) :
             self.xspeed=0
@@ -198,8 +215,6 @@ class Car:
             self.i=4
             self.a=0
             self.b=0
-
-
 
         if path[self.a][self.x] < path[self.b][self.x]:
             self.xspeed=1
@@ -210,7 +225,6 @@ class Car:
             self.xspeed=-1
             self.yspeed=0
             self.i=1
-
 
         if path[self.a][self.y] < path[self.b][self.y]:
             self.xspeed=0
@@ -223,27 +237,27 @@ class Car:
             self.i=1
             #print("-y")
 
-        if pos[1] >=(93+20)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==0:
+        if pos[1] >=((hw+rd)/2)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==0:
             self.yspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
 
 
-        if pos[0] >=(93+20)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==0:
+        if pos[0] >=((hw+rd)/2)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==0:
             self.xspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
 
-        if pos[1] <=(93+20)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==1:
+        if pos[1] <=((hw+rd)/2)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==1:
             self.yspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
             self.i=3
 
 
-        if pos[0] <=(93+20)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==1:
+        if pos[0] <=((hw+rd)/2)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==1:
             self.xspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
@@ -258,7 +272,6 @@ for i in range(len(tmaze)):
         if tmaze[i][j] == 1:
             åben.append((i,j))
 
-print(åben)
 
 a = [None]*len(åben)
 
@@ -275,19 +288,17 @@ for i in range(len(a)):
 
 
 
-lal=[]
+# lal=[]
+#
+# for i in range(len(a)):
+#     for j in range(len(a)):
+#         print("i",i)
+#         print("j",j)
+#         if i in a[j]:
+#             lal.append(j)
 
-for i in range(len(a)):
-    for j in range(len(a)):
-        print("i",i)
-        print("j",j)
-        if i in a[j]:
-            lal.append(j)
 
-
-print(åben)
-print(a,"pik")
-print(lal)
+# print(lal)
 
 car=Car("green",20)
 

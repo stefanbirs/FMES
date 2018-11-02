@@ -25,13 +25,16 @@ canvas.configure(highlightthickness=0, borderwidth=0) # removes cut off on top a
 
 # Road width
 RD= 20
+
 # house width
 HW=int((WIDTH-(((len(maze)/2)+0.5)*RD))/((len(maze)/2)-0.5))
 
 
 """ House """
 # Makes houses for every second coordinate in the x and y axis
+boxx=0
 for i in range(int((len(tmaze)-1)/2)):
+    boxy=0
     for i in range(int((len(tmaze[0])-1)/2)):
         canvas.create_rectangle(RD+boxx,RD+boxy,RD+HW+boxx,RD+HW+boxy)
         boxy=boxy+HW+RD

@@ -1,9 +1,3 @@
-# Libaries
-from tkinter import *
-import random
-import numpy
-import time
-from pprint import pprint
 ################################################################################
 ####################### A* ALGORITHM ###########################################
 ################################################################################
@@ -181,8 +175,10 @@ def create_canvas(WIDTH, HEIGHT):
 # The Wheels Class
 class Wheels:
     def __init__(self, size, path):
-        self.shape = canvas.create_rectangle(path[0][0]*(RW_RL), path[0][1]*(RW_RL),
-                                            size+path[0][0]*(RW_RL), size+path[0][1]*(RW_RL), fill ="green")
+        self.shape = canvas.create_rectangle(path[0][0]*(RW_RL),
+                                             path[0][1]*(RW_RL),
+                                             path[0][0]*(RW_RL) + size,
+                                             path[0][1]*(RW_RL) + size, fill ="green")
         self.xspeed = 0
         self.yspeed = 0
         self.a = 0
@@ -322,6 +318,13 @@ class Drone:
 ################################################################################
 ################################ MAIN ##########################################
 ################################################################################
+# Libaries
+from tkinter import *
+import random
+import numpy
+import time
+from pprint import pprint
+
 #Constants
 WIDTH = 700 # Width of canvas
 HEIGHT = 700 # Height of canvas
@@ -339,6 +342,8 @@ maze = [[0, 0, 1, 0, 0, 0, 0],
         [0, 0, 1, 0, 0, 0, 0],
         [0, 0, 1, 0, 0, 0, 0]]
 tmaze = flip_matrix(maze)
+
+# generates multiple paths using A* algorithm
 strt_list, dest_list, path_list = multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar)
 
 canvas, tk = create_canvas(WIDTH, HEIGHT) # Generates canvas

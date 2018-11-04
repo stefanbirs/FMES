@@ -63,11 +63,11 @@ for x in range(len(tmaze)):
 
 """Goal"""
 # Creates a squere at the end cooroad_widthinate
-end_x_coord=int(end[0]*((house_width+road_width)/2))
+end_point_x_coord=int(end[0]*((house_width+road_width)/2))
 end_y_coord=int(end[1]*((house_width+road_width)/2))
 end_size_x=int(20+end[0]*((house_width+road_width)/2))
 end_size_y=int(20+end[1]*((house_width+road_width)/2))
-canvas.create_rectangle(end_x_coord, end_y_coord,end_size_x,end_size_y, fill="blue")
+canvas.create_rectangle(end_point_x_coord, end_y_coord,end_size_x,end_size_y, fill="blue")
 
 """ Wheels """
 # Since the wheels is moving this function is called every time the canvas is updated
@@ -89,90 +89,82 @@ class Wheels:
         self.x=0
         self.y=1
         # i makes sure that we are entering the right if statement
-        self.i=0
+        self.direction=0
 
 
     def move(self):
         canvas.move(self.shape, self.xspeed, self.yspeed)
 
         #saves the current position if the wheel
-        pos= canvas.coords(self.shape)
+        current_position= canvas.coords(self.shape)
 
         #indentify the end coordinates
-        slutx=int(end[0]*((house_width+road_width)/2))
-        sluty=int(end[1]*((house_width+road_width)/2))
+        end_point_x=int(end[0]*((house_width+road_width)/2))
+        end_point_y=int(end[1]*((house_width+road_width)/2))
 
-        if (pos[0],pos[1]) == (slutx,sluty) : #It only enters this statement if its at the end point
+        if (current_position[0],current_position[1]) == (end_point_x,end_point_y) : #It only enters this statement if its at the end point
             # It stops the wheel
             self.xspeed=0
             self.yspeed=0
             # Make sure that t dosn't enter another if statement
-            self.i=4
+            self.direction=4
             self.a=0
             self.b=0
 
-
         ############## Stering of the wheels direction and speed ############
 
-        # Sees if the x cooroad_widthinate in the array, path, is bigger that the previous one
-        if path[self.a][self.x] < path[self.b][self.x]:
-            # If it is make the wheel go positive in the x direction
+        #use these values to determine direction of travel
+        a_x=path[self.a][self.x]
+        b_x=path[self.b][self.x]
+        a_y=path[self.a][self.y]
+        b_y=path[self.b][self.y]
+
+        if a_x < b_x:
+            # positive in the x direction
             self.xspeed=1
             self.yspeed=0
-            # Indicate that the wheel is moving in a possitive direction
-            self.i=0
-
-        # Sees if the x cooroad_widthinate in the array, path, is smaller that the previous one
-        if path[self.b][self.x] < path[self.a][self.x]:
-            # If it is make the wheel go negative in the x direction
+            self.direction=0
+        elif b_x < a_x:
+            # negative in the x direction
             self.xspeed=-1
             self.yspeed=0
-            # Indicate that the wheel is moving in a negative direction
-            self.i=1
-
-        # Sees if the y cooroad_widthinate in the array, path, is bigger that the previous one
-        if path[self.a][self.y] < path[self.b][self.y]:
-            # If it is make the wheel go positive in the y direction
+            self.direction=1
+        elif a_y < b_y:
+            # positive in the y direction
             self.xspeed=0
             self.yspeed=1
-            # Indicate that the wheel is moving in a possitive direction
-            self.i=0
-
-        # Sees if the y cooroad_widthinate in the array, path, is smaller that the previous one
-        if path[self.b][self.y] < path[self.a][self.y]:
-            # If it is make the wheel go negative in the y direction
+            self.direction=0
+        elif b_y < a_y:
+            # negative in the y direction
             self.xspeed=0
             self.yspeed=-1
-            # Indicate that the wheel is moving in a negative direction
-            self.i=1
+            self.direction=1
 
+        ################ Checking the coordinates of the wheels ###################
 
-        ################ Checking the cooroad_widthinates of the wheels ###################
-
-        # When the wheels cooroad_widthinate has reatched a possition of a new cooroad_widthinate, the varibles a and b gets added by one.
+        # When the wheels cooroad_widthinate has reatched a position of a new coordinate, the varibles a and b gets added by one.
         # This is done to make the if statements above to look at the next step of the path
 
-        # looks if the wheel has reached a new cooroad_widthinate in the positive x direction
-        if pos[0] >=((house_width+road_width)/2)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==0:
+        if current_position[0] >=((house_width+road_width)/2)*b_x and a_y == b_y and self.direction==0:
             self.xspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
-            self.i=3
-        # looks if the wheel has reached a new cooroad_widthinate in the negative x direction
-        if pos[0] <=((house_width+road_width)/2)*path[self.b][self.x] and path[self.a][self.y] == path[self.b][self.y] and self.i==1:
+            self.direction=3
+        # looks if the wheel has reached a new coordinate in the negative x direction
+        elif current_position[0] <=((house_width+road_width)/2)*b_x and a_y == b_y and self.direction==1:
             self.xspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
-            self.i=3
-        # looks if the wheel has reached a new cooroad_widthinate in the positive y direction
-        if pos[1] >=((house_width+road_width)/2)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==0:
+            self.direction=3
+        # looks if the wheel has reached a new coordinate in the positive y direction
+        elif current_position[1] >=((house_width+road_width)/2)*b_y and a_x == b_x and self.direction==0:
             self.yspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
-            self.i=3
-        # looks if the wheel has reached a new cooroad_widthinate in the negative y direction
-        if pos[1] <=((house_width+road_width)/2)*path[self.b][self.y] and path[self.a][self.x] == path[self.b][self.x] and self.i==1:
+            self.direction=3
+        # looks if the wheel has reached a new coordinate in the negative y direction
+        elif current_position[1] <=((house_width+road_width)/2)*b_y and a_x == b_x and self.direction==1:
             self.yspeed = 0
             self.a = self.a + 1
             self.b = self.b + 1
-            self.i=3
+            self.direction=3

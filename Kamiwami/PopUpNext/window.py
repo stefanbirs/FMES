@@ -147,7 +147,7 @@ for row in rez:
 ################################################################################
 ################################################################################
 ################################################################################
-NUM_OF_WHEELS = 10 # The number of wheels in the city map
+NUM_OF_WHEELS = 100 # The number of wheels in the city map
 # Generates a coordinate list based on the size of the city map matrix
 coord_list = [] # coordinate List
 strt_list = [] # Start List

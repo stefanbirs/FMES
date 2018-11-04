@@ -6,7 +6,6 @@ from tkinter import *
 import random
 import time
 
-
 """___________________________________ Canvas _______________________________"""
 from tkinter import *
 import random

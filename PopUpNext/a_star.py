@@ -124,7 +124,6 @@ rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
 for row in rez:
     tmaze.append(row)
 
-
 start=(0,0)
 end=(6,5)
 

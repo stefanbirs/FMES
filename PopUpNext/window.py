@@ -23,17 +23,14 @@ canvas.pack()
 # removes cut off on top and left edges
 canvas.configure(highlightthickness=0, borderwidth=0) # removes cut off on top and left edges
 
-<<<<<<< HEAD
 rd = 20 # Road width
 hw = int((WIDTH-(((len(maze)/2)+0.5)*rd))/((len(maze)/2)-0.5)) # house width
-=======
+
 # Road width
 road_width= 20
 
 # house width
 house_width=int((WIDTH-(((len(maze)/2)+0.5)*road_width))/((len(maze)/2)-0.5))
-
->>>>>>> origin/master
 
 """ House """
 # Makes houses for every second cooroad_widthinate in the x and y axis

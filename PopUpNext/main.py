@@ -4,7 +4,6 @@ from window import *
 
 """ Wheels varible """
 wheels = Wheels("green",20)
-
 """ The game loop """
 while True:
     wheels.move()

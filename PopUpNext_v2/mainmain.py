@@ -136,7 +136,7 @@ NUM_OF_WHEELS = 100
 def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
     # Generates a coordinate list based on the size of the city map matrix
     coord_list = [] # coordinate List
-    for x in range(len(tmaze)-1): # iterates through number of columns
+    for x in range(len(tmaze)-1): # iterates through number of cols
         for y in range(len(tmaze[0])-1): # iterates through number of rows
             if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
                 coord_list.append((x,y)) # Coordinate list that does not have traffic
@@ -195,17 +195,17 @@ for i in range(int((len(tmaze)-1)/2)):
 for x in range(len(tmaze)):
     for y in range(len(tmaze[0])):
         if tmaze[x][y] == 1 and not x % 2 == 0: #Makes a rectangle between buildings in the x axis
-            column=((RLENGTH+RWITDH)*((x/2)-0.5))+RWITDH
-            row=(RLENGTH+RWITDH)*(y/2)
-            canvas.create_rectangle(column,row ,RLENGTH+column , 20+row, fill="red")
+            col = ((RLENGTH+RWITDH)*((x/2)-0.5))+RWITDH
+            row = (RLENGTH+RWITDH)*(y/2)
+            canvas.create_rectangle(col, row, col + RLENGTH, row + RWITDH, fill="red")
         if tmaze[x][y] == 1 and not y % 2 == 0: #Makes a rectangle between buildings in the y axis
-            row=((RLENGTH+RWITDH)*((y/2)-0.5))+RWITDH
-            column=(RLENGTH+RWITDH)*(x/2)
-            canvas.create_rectangle(column,row , 20+column , RLENGTH+row, fill="red")
-        if tmaze[x][y] == 1 and x % 2 == 0 and y % 2 == 0 : #Makes a squere on crossroads
-            row=((RLENGTH+RWITDH)*(y/2))
-            column=((RLENGTH+RWITDH)*(x/2))
-            canvas.create_rectangle(column,row , 20+column , row+20, fill="red")
+            row = ((RLENGTH+RWITDH)*((y/2)-0.5))+RWITDH
+            col = (RLENGTH+RWITDH)*(x/2)
+            canvas.create_rectangle(col, row, col + RWITDH, row + RLENGTH, fill="red")
+        if tmaze[x][y] == 1 and x % 2 == 0 and y % 2 == 0: #Makes a squere on crossroads
+            row = ((RLENGTH+RWITDH)*(y/2))
+            col = ((RLENGTH+RWITDH)*(x/2))
+            canvas.create_rectangle(col, row, col + RWITDH ,row + RWITDH, fill="red")
 
 # Destination ##################################################################
 # Creates a square at the destination coordinate
@@ -218,7 +218,6 @@ def create_destination(RWITDH, RLENGTH, NUM_OF_WHEELS, dest_list):
         canvas.create_rectangle(x1, y1, x2, y2, fill="blue")
 
 create_destination(RWITDH, RLENGTH, NUM_OF_WHEELS, dest_list)
-
 
 # Ground Module ################################################################
 class GrdMod:

@@ -132,7 +132,7 @@ for row in rez:
 #path = astar(tmaze, start, end)
 #print(path)
 # multiple paths ###############################################################
-NUM_OF_WHEELS = 100
+NUM_OF_WHEELS = 50
 def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
     # Generates a coordinate list based on the size of the city map matrix
     coord_list = [] # coordinate List
@@ -230,6 +230,7 @@ class GrdMod:
         x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
         y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
         self.shape = canvas.create_rectangle(x1, y1, x2, y2, fill="green")
+        print(self.shape)
         # The speed of the GrdMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -309,6 +310,134 @@ class GrdMod:
             self.a = self.a + 1
             self.b = self.b + 1
             self.i = 3 # control variable
+
+class FlyMod:
+    # Initializes varibles when object is created
+
+    def __init__(self, size, start):
+        self.shape=[]
+        # This is defining the start position of the GrdMod
+        x1 = int( start[0]*((RLENGTH+RWITDH)/2) )
+        y1 = int( start[1]*((RLENGTH+RWITDH)/2) )
+        x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
+        y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
+        print("%d,%d,%d,%d" %(x1,x2,y1,y2))
+        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags="quadcopter"),
+        canvas.create_line(x1, y2, x2, y1, fill="black",width=3, tags="quadcopter")]
+        print("This the shape %d %d" %(self.shape[0],self.shape[1]))
+        # The speed of the GrdMod
+        self.xspeed = self.yspeed = 0
+        # The varibels underneath is keeping track of part of the array, path, we are looking for
+        # i makes sure that we are entering the right if statement
+        self.i = 0 # control variable
+    #Methods
+    #fly to wheels with pods
+    #fly directly to Destination
+    #pick up pod
+    #drop off pod
+    #check if has pod
+    #check if at final dest
+    #check charge
+    def fly(self, path,end):
+        # saves the current position if the ground mod
+        cur_pos = canvas.bbox("quadcopter")[0],canvas.bbox("quadcopter")[1]
+        #print("BBOX- %d,%d,%d,%d" %(canvas.bbox("quadcopter")[0],canvas.bbox("quadcopter")[1],
+        #canvas.bbox("quadcopter")[2],canvas.bbox("quadcopter")[3]))
+        #print("Current Pos (%d,%d)" %(cur_pos[0],cur_pos[1]))
+        # indentify the end coordinates
+        end_point_x = int( end[0]*((RLENGTH+RWITDH)/2) )
+        end_point_y = int( end[1]*((RLENGTH+RWITDH)/2) )
+
+        # if ground module has reached its destination
+        #print("End Point (%d,%d)" %(end_point_x,end_point_y))
+
+        if (cur_pos[0],cur_pos[1]) == (end_point_x,end_point_y):
+            # It stops the ground mod
+            self.xspeed = self.yspeed = 0
+            self.a = self.b = 0
+            self.i = 4 # Make sure that it doesn't enter another if statement
+        else:
+            if((end_point_x-cur_pos[0])!=0):
+                slope= abs((end_point_y-cur_pos[1])/(end_point_x-cur_pos[0]))
+                if(end_point_y>cur_pos[1]):
+                    self.yspeed=slope
+                else:
+                    self.yspeed=-slope
+                if(end_point_x>cur_pos[0]):
+                    self.xspeed=1
+                else:
+                    self.xspeed=-1
+            else:
+                self.xspeed=0
+                slope=1
+                if(end_point_y>cur_pos[1]):
+                    self.yspeed=slope
+                else:
+                    self.yspeed=-slope
+
+            for num_elements in range(0,len(self.shape)):
+                #print("How")
+                canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            #self.a+=1
+            #self.b+=1
+        # Steering of the GrdMod i and speed ###########################
+        #use these values to determine i of travel
+        #
+        # a_x = path[self.a][self.x]
+        # b_x = path[self.b][self.x]
+        # a_y = path[self.a][self.y]
+        # b_y = path[self.b][self.y]
+        #
+        # if a_x < b_x:
+        #     # positive in the x i
+        #     self.xspeed = 1
+        #     self.yspeed = 0
+        #     self.i = 0 # control variable
+        # if b_x < a_x:
+        #     # negative in the x i
+        #     self.xspeed = -1
+        #     self.yspeed = 0
+        #     self.i = 1 # control variable
+        # if a_y < b_y:
+        #     # positive in the y i
+        #     self.xspeed = 0
+        #     self.yspeed = 1
+        #     self.i = 0 # control variable
+        # if b_y < a_y:
+        #     # negative in the y i
+        #     self.xspeed = 0
+        #     self.yspeed = -1
+        #     self.i = 1 # control variable
+
+        # # Checking the coordinates of the GrdMod ###############################
+        #
+        # # When the GrdMod coordinate has reached a position of a new
+        # # coordinate, the varibles a and b gets added by one.
+        # # This is done to make the if statements above to look at the next step of the path
+        # if cur_pos[0] >= ((RLENGTH+RWITDH)/2)*b_x and a_y == b_y and self.i == 0:
+        #     self.xspeed = 0
+        #     self.a = self.a + 1
+        #     self.b = self.b + 1
+        #     self.i = 3 # control variable
+        # # if the ground mod has reached a new coordinate in the negative x direction
+        # if cur_pos[0] <= ((RLENGTH+RWITDH)/2)*b_x and a_y == b_y and self.i == 1:
+        #     self.xspeed = 0
+        #     self.a = self.a + 1
+        #     self.b = self.b + 1
+        #     self.i = 3 # control variable
+        # # if the ground mod has reached a new coordinate in the positive y direction
+        # if cur_pos[1] >= ((RLENGTH+RWITDH)/2)*b_y and a_x == b_x and self.i == 0:
+        #     self.yspeed = 0
+        #     self.a = self.a + 1
+        #     self.b = self.b + 1
+        #     self.i = 3 # control variable
+        # # if the ground mod has reached a new coordinate in the negative y direction
+        # if cur_pos[1] <= ((RLENGTH+RWITDH)/2)*b_y and a_x == b_x and self.i == 1:
+        #     self.yspeed = 0
+        #     self.a = self.a + 1
+        #     self.b = self.b + 1
+        #     self.i = 3 # control variable
+
 ################################################################################
 # MAIN #########################################################################
 ################################################################################
@@ -316,11 +445,11 @@ class GrdMod:
 wheels = []
 
 for i in range(NUM_OF_WHEELS):
-    wheels.append(GrdMod(RWITDH, strt_list[i]))
+    wheels.append(FlyMod(RWITDH, strt_list[i]))
 
 while True:
     for i, wheel in enumerate(wheels):
-        wheel.move(path_list[i], dest_list[i])
+        wheel.fly(path_list[i], dest_list[i])
 
 
     tk.update()

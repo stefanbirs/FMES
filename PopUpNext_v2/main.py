@@ -337,10 +337,12 @@ class FlyMod:
         cur_pos=canvas.coords(self.shape[0])
         self.xspeed=0.0
         self.yspeed=0.0
-        self.speed=5
+        self.speed=30
         end_point_x = round(end[0]*((RLENGTH+RWITDH)/2) )
         end_point_y = round(end[1]*((RLENGTH+RWITDH)/2) )
+        print("End Point: %d,%d" %(end_point_x,end_point_y))
         print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
+        print()
         if((cur_pos[0]==end_point_x)and(cur_pos[1]==end_point_y)):
             self.xspeed = self.yspeed = 0.0
             return True
@@ -351,14 +353,13 @@ class FlyMod:
                 if(rise!=0):
                     slope= abs(rise/run)
                     self.xspeed=(run/abs(run))*self.speed/(slope+1)
-                    self.yspeed=(rise/abs(rise))*slope*self.xspeed
+                    self.yspeed=(rise/abs(rise))*slope*abs(self.xspeed)
                 else:
                     self.yspeed=0.0
                     self.xspeed=(run/abs(run))*self.speed
             else:
                 self.xspeed=0.0
                 self.yspeed=(rise/abs(rise))*self.speed
-
             if(abs(self.yspeed)>abs(rise)):
                 self.yspeed=rise
             if(abs(self.xspeed)>abs(run)):

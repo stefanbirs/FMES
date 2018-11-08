@@ -315,6 +315,9 @@ class FlyMod:
     # Initializes varibles when object is created
 
     def __init__(self, size, start):
+        self.pod_status=False
+        self.charge=100
+        self.speed=30
         x1 = int( start[0]*((RLENGTH+RWITDH)/2) )
         y1 = int( start[1]*((RLENGTH+RWITDH)/2) )
         x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
@@ -326,22 +329,26 @@ class FlyMod:
         self.xspeed = self.yspeed = 0
     #Methods
     #fly to wheels with pods
-    #fly directly to Destination
     #pick up pod
     #drop off pod
     #check if has pod
-    #check if at final dest
-    #check charge
+    def has_pod(self):
+        return self.pod_status
+    def charge(self):
+        threshold=20
+        if(self.charge>threshold):
+            return False
+        return True
+    #fly directly to Destination
     def fly(self, path,end):
-        # saves the current position if the ground mod
         cur_pos=canvas.coords(self.shape[0])
         self.xspeed=0.0
         self.yspeed=0.0
-        self.speed=30
+
         end_point_x = round(end[0]*((RLENGTH+RWITDH)/2) )
         end_point_y = round(end[1]*((RLENGTH+RWITDH)/2) )
-        print("End Point: %d,%d" %(end_point_x,end_point_y))
-        print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
+        #print("End Point: %d,%d" %(end_point_x,end_point_y))
+        #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
         print()
         if((cur_pos[0]==end_point_x)and(cur_pos[1]==end_point_y)):
             self.xspeed = self.yspeed = 0.0

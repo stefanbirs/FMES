@@ -136,7 +136,7 @@ NUM_OF_WHEELS = 100
 def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
     # Generates a coordinate list based on the size of the city map matrix
     coord_list = [] # coordinate List
-    for x in range(len(tmaze)-1): # iterates through number of cols
+    for x in range(len(tmaze)-1): # iterates through number of columns
         for y in range(len(tmaze[0])-1): # iterates through number of rows
             if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
                 coord_list.append((x,y)) # Coordinate list that does not have traffic

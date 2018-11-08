@@ -335,43 +335,34 @@ class FlyMod:
     def fly(self, path,end):
         # saves the current position if the ground mod
         cur_pos=canvas.coords(self.shape[0])
-        self.speed=2
-        #print("Current Pos (%d,%d)" %(cur_pos[0],cur_pos[1]))
-        # indentify the end coordinates
-        end_point_x = int(end[0]*((RLENGTH+RWITDH)/2) )
-        end_point_y = int(end[1]*((RLENGTH+RWITDH)/2) )
-
-        # if ground module has reached its destination
-        #print("End Point (%d,%d)" %(end_point_x,end_point_y))
-        if((cur_pos[0]<=end_point_x+self.speed)and(cur_pos[0]>=end_point_x-self.speed)
-        and(cur_pos[1]<=end_point_y+self.speed)and(cur_pos[1]>=end_point_y-self.speed)):
-            self.xspeed=(cur_pos[0]-end_point_x)
-            self.yspeed=(cur_pos[1]-end_point_y)
-            print("X: %f, Y: %f"%(self.xspeed,self.yspeed))
-            for num_elements in range(0,len(self.shape)):
-                canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+        self.xspeed=0.0
+        self.yspeed=0.0
+        self.speed=5
+        end_point_x = round(end[0]*((RLENGTH+RWITDH)/2) )
+        end_point_y = round(end[1]*((RLENGTH+RWITDH)/2) )
+        print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
+        if((cur_pos[0]==end_point_x)and(cur_pos[1]==end_point_y)):
             self.xspeed = self.yspeed = 0.0
             return True
         else:
-            if((end_point_x-cur_pos[0])!=0):
-                slope= abs((end_point_y-cur_pos[1])/(end_point_x-cur_pos[0]))
-                #print("Slope: %f"%slope)
-                if(end_point_y>cur_pos[1]):
-                    self.yspeed=float(slope*self.speed)
+            rise=(end_point_y-cur_pos[1])
+            run=(end_point_x-cur_pos[0])
+            if(run!=0):
+                if(rise!=0):
+                    slope= abs(rise/run)
+                    self.xspeed=(run/abs(run))*self.speed/(slope+1)
+                    self.yspeed=(rise/abs(rise))*slope*self.xspeed
                 else:
-                    self.yspeed=-float(slope*self.speed)
-                if(end_point_x>cur_pos[0]):
-                    self.xspeed=float(self.speed)
-                else:
-                    self.xspeed=-float(self.speed)
+                    self.yspeed=0.0
+                    self.xspeed=(run/abs(run))*self.speed
             else:
                 self.xspeed=0.0
-                slope=float(self.speed)
-                if(end_point_y>cur_pos[1]):
-                    self.yspeed=float(slope*self.speed)
-                else:
-                    self.yspeed=-float(slope*self.speed)
-            #print("Test Value: %f"%(self.xspeed+self.yspeed))
+                self.yspeed=(rise/abs(rise))*self.speed
+
+            if(abs(self.yspeed)>abs(rise)):
+                self.yspeed=rise
+            if(abs(self.xspeed)>abs(run)):
+                self.xspeed=run
             for num_elements in range(0,len(self.shape)):
                 canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
             return False

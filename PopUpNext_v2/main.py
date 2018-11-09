@@ -344,11 +344,19 @@ class FlyMod:
             return False
         return True
     #fly directly to Destination
+<<<<<<< HEAD
     def fly(self, end):
         pos = canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
         self.xspeed = 0.0
         self.yspeed = 0.0
+=======
+    def fly(self,end):
+        pos=canvas.coords(self.shape[0])
+        cur_pos=[pos[0], pos[1]]
+        self.xspeed=0.0
+        self.yspeed=0.0
+>>>>>>> Jacob
 
         dest_x = round(end[0]*((RLENGTH+RWITDH)/2) )
         dest_y = round(end[1]*((RLENGTH+RWITDH)/2) )

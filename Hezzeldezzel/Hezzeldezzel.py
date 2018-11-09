@@ -168,8 +168,7 @@ for i in range(int((len(tmaze)-1)/2)):
 
 """Traffic"""
 
-column=0
-row=0
+
 for i in range(len(tmaze)):
     for j in range(len(tmaze[0])):
         if tmaze[i][j] == 1 and not i % 2 == 0:

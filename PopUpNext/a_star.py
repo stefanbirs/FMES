@@ -137,13 +137,18 @@ maze = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
 #astar puts column first, row second
 
+# Flips the matrix in the crossaxis to get the visuals the match x and y
 tmaze=[]
 rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
 for row in rez:
     tmaze.append(row)
 
+<<<<<<< HEAD
 #nb: these are in the wrong order of indices. maze[start[1]][start[0]]
 start=(12,0)
+=======
+start=(0,0)
+>>>>>>> master
 end=(6,5)
 
 start1 = np.copy(start)

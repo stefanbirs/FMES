@@ -156,7 +156,7 @@ rd= 20
 hw=int((WIDTH-(((len(maze)/2)+0.5)*rd))/((len(maze)/2)-0.5))
 
 
-""" Huse """
+""" House """
 boxx=0
 for i in range(int((len(tmaze)-1)/2)):
     boxy=0
@@ -166,10 +166,9 @@ for i in range(int((len(tmaze)-1)/2)):
     boxx=boxx+hw+rd
 
 
-"""Trafik"""
+"""Traffic"""
 
-column=0
-row=0
+
 for i in range(len(tmaze)):
     for j in range(len(tmaze[0])):
         if tmaze[i][j] == 1 and not i % 2 == 0:
@@ -187,7 +186,7 @@ for i in range(len(tmaze)):
 
 
 
-"""Mål"""
+"""Goal"""
 canvas.create_rectangle(int(end[0]*((hw+rd)/2)),int(end[1]*((hw+rd)/2)) ,int(20+end[0]*((hw+rd)/2)),int(20+end[1]*((hw+rd)/2)), fill="blue")
 
 

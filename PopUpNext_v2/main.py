@@ -239,7 +239,12 @@ for row in rez:
 #start=(0,0)
 #end=(6,5)
 #path = astar(tmaze, start, end)
-#print(path)
+#if path == None:
+#    trafficBlock(maze, start1, end)
+
+#else:
+#    print(path)
+
 # multiple paths ###############################################################
 NUM_OF_WHEELS = 10
 def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):

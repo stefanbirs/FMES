@@ -244,11 +244,11 @@ class GrdMod:
         # saves the current position if the ground mod
         cur_pos = canvas.coords(self.shape) # Current position of ground module
         # indentify the end coordinates
-        end_point_x = int( end[0]*((RLENGTH+RWITDH)/2) )
-        end_point_y = int( end[1]*((RLENGTH+RWITDH)/2) )
+        dest_x = int( end[0]*((RLENGTH+RWITDH)/2) )
+        dest_y = int( end[1]*((RLENGTH+RWITDH)/2) )
 
         # if ground module has reached its destination
-        if (cur_pos[0],cur_pos[1]) == (end_point_x,end_point_y):
+        if (cur_pos[0],cur_pos[1]) == (dest_x,dest_y):
             # It stops the ground mod
             self.xspeed = self.yspeed = 0
             self.a = self.b = 0
@@ -317,14 +317,14 @@ class FlyMod:
     def __init__(self, size, start):
         self.pod_status=False
         self.charge=100
-        self.speed=30
+        self.speed=0.5
         x1 = int( start[0]*((RLENGTH+RWITDH)/2) )
         y1 = int( start[1]*((RLENGTH+RWITDH)/2) )
         x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
         y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags="quadcopter"),
-        canvas.create_line(x1, y2, x2, y1, fill="black",width=3, tags="quadcopter")]
+        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3),
+        canvas.create_line(x1, y2, x2, y1, fill="black",width=3)]
         #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
         self.xspeed = self.yspeed = 0
     #Methods
@@ -341,21 +341,23 @@ class FlyMod:
         return True
     #fly directly to Destination
     def fly(self, path,end):
-        cur_pos=canvas.coords(self.shape[0])
+        pos=canvas.coords(self.shape[0])
+        cur_pos=[pos[0], pos[1]]
         self.xspeed=0.0
         self.yspeed=0.0
 
-        end_point_x = round(end[0]*((RLENGTH+RWITDH)/2) )
-        end_point_y = round(end[1]*((RLENGTH+RWITDH)/2) )
-        #print("End Point: %d,%d" %(end_point_x,end_point_y))
+        dest_x = round(end[0]*((RLENGTH+RWITDH)/2) )
+        dest_y = round(end[1]*((RLENGTH+RWITDH)/2) )
+        dest=[dest_x,dest_y]
+        #print("End Point: %d,%d" %(dest_x,dest_y))
         #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
         print()
-        if((cur_pos[0]==end_point_x)and(cur_pos[1]==end_point_y)):
+        if cur_pos==dest:
             self.xspeed = self.yspeed = 0.0
             return True
         else:
-            rise=(end_point_y-cur_pos[1])
-            run=(end_point_x-cur_pos[0])
+            rise=(dest_y-cur_pos[1])
+            run=(dest_x-cur_pos[0])
             if(run!=0):
                 if(rise!=0):
                     slope= abs(rise/run)

@@ -321,10 +321,10 @@ class FlyMod:
         self.pod_status = False
         self.charge = 100
         self.speed = 2
-        x1 = int(start[0]*((RLENGTH+RWITDH)/2) )
-        y1 = int(start[1]*((RLENGTH+RWITDH)/2) )
-        x2 = int(start[0]*((RLENGTH+RWITDH)/2) + size )
-        y2 = int(start[1]*((RLENGTH+RWITDH)/2) + size )
+        x1 = round(start[0]*((RLENGTH+RWITDH)/2) )
+        y1 = round(start[1]*((RLENGTH+RWITDH)/2) )
+        x2 = round(start[0]*((RLENGTH+RWITDH)/2) + size )
+        y2 = round(start[1]*((RLENGTH+RWITDH)/2) + size )
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
         self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3, tags=("quadcopter%d"%id)),
@@ -394,12 +394,12 @@ class PodMod:
     def __init__(self, size, start, i):
         self.id = 'P' + str(i) #Gi ground module number i
         # This is defining the start position of the GrdMod
-        x1 = int(start[0]*((RLENGTH+RWITDH)/2) )
-        y1 = int(start[1]*((RLENGTH+RWITDH)/2) )
-        x2 = int(start[0]*((RLENGTH+RWITDH)/2) + size )
-        y2 = int(start[1]*((RLENGTH+RWITDH)/2) + size )
+        x1 = round(start[0]*((RLENGTH+RWITDH)/2) )
+        y1 = round(start[1]*((RLENGTH+RWITDH)/2) )
+        x2 = round(start[0]*((RLENGTH+RWITDH)/2) + size )
+        y2 = round(start[1]*((RLENGTH+RWITDH)/2) + size )
         self.shape = canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=("pod%d"%i))
-        print(canvas.gettags(self.shape))
+        #print(canvas.gettags(self.shape))
         # The speed of the GrdMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -419,16 +419,16 @@ class PodMod:
 
 
 
-def addtags(curr_tags, pairing_tags):
+def addtags(curr_tags, pairing_tag):
     for curr_tag in curr_tags:
-        canvas.addtag_withtag(pairing_tags, curr_tag)
-    print("Pairing: %s"%pairing_tags)
-    print(canvas.find_withtag(pairing_tags))
-def removetags(curr_tags,tags):
+        canvas.addtag_withtag(pairing_tag, curr_tag)
+    #print("Pairing: %s"%pairing_tags)
+    #print(canvas.find_withtag(pairing_tags))
+def removetags(curr_tags, pairing_tag):
     for curr_tag in curr_tags:
-        canvas.dtag(canvas.find_withtag(curr_tag),tags=tags)
-        pprint(canvas.gettags(canvas.find_withtag(curr_tag)))
-
+        canvas.dtag((canvas.find_withtag(curr_tag), pairing_tag))
+    #print("Pairing: %s"%pairing_tag)
+    #print(canvas.find_withtag(pairing_tag))
 
 ################################################################################
 # MAIN #########################################################################

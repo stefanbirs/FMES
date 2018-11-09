@@ -327,11 +327,16 @@ class FlyMod:
         y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3),
-        canvas.create_line(x1, y2, x2, y1, fill="black",width=3)]
-        #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
+        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3, tags="quadcopter"),
+        canvas.create_line(x1, y2, x2, y1, fill="black",width=3, tags="quadcopter")]
+
+
         self.xspeed = self.yspeed = 0
     #Methods
+    def addtags(self,tags):
+        for num_elements in range(len(self.shape)):
+            canvas.itemconfig(self.shape[num_elements],tags=tags)
+        pprint(canvas.gettags(self.shape[0]))
     #fly to wheels with pods
     #pick up pod
     #drop off pod
@@ -344,7 +349,7 @@ class FlyMod:
             return False
         return True
     #fly directly to Destination
-    def fly(self,end):
+    def fly(self,end,tag):
         pos=canvas.coords(self.shape[0])
         cur_pos=[pos[0], pos[1]]
         self.xspeed=0.0
@@ -377,8 +382,9 @@ class FlyMod:
                 self.yspeed = rise
             if(abs(self.xspeed) > abs(run)):
                 self.xspeed = run
-            for num_elements in range(0,len(self.shape)):
-                canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            ids_to_move=canvas.find_withtag("A1")
+            for num_elements in range(0,len(ids_to_move)):
+                canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
             return False
 
 # Pod Module ###################################################################
@@ -391,7 +397,8 @@ class PodMod:
         y1 = int( start[1]*((RLENGTH+RWITDH)/2) )
         x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
         y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
-        self.shape = canvas.create_oval(x1, y1, x2, y2, fill="grey")
+        self.shape = canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=("pod","%d"%i))
+        print(canvas.gettags(self.shape))
         # The speed of the GrdMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -408,44 +415,46 @@ class PodMod:
 
     # 3) check if has reached final destination
     # 4) check if has passengers
-
+    def addtags(self, tags):
+        canvas.itemconfig(self.shape,tags=tags)
+        pprint(canvas.gettags(self.shape))
 ################################################################################
 # MAIN #########################################################################
 ################################################################################
 
 # Ground module
 wheels = []
+pods = []
 for i in range(NUM_OF_WHEELS):
     wheels.append(GrdMod(RWITDH, strt_list[i], i))
 
 # Pod module
-pod = PodMod(RWITDH, strt_list[0], 0) # creating pod at first wheel position
-
-
+# pod = PodMod(RWITDH, strt_list[0], 0) # creating pod at first wheel position
+for i in range(NUM_OF_WHEELS):
+    pods.append(PodMod(RWITDH, strt_list[i], i))
 
 # fly module
 drones = []
-done_check=[]
-check_at_dest=0
+done_check = []
+check_at_dest = 0
 for i in range(NUM_OF_WHEELS):
     drones.append(FlyMod(RWITDH, strt_list[i]))
+    drones[i].addtags("A1")
     done_check.append(False)
-
 print("Ground Mod:")
 pprint(vars(wheels[0]))
 print("Pod Mod:")
-pprint(vars(pod))
 
 while True:
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
 
-    pod.move(path_list[0], dest_list[0])
+        pods[i].move(path_list[i], dest_list[i])
 
     for i, drone in enumerate(drones):
         if done_check[i] == False:
             check_at_dest = 0
-            done_check[i] = drone.fly(dest_list[i])
+            done_check[i] = drone.fly(dest_list[i],"A1")
         else:
             check_at_dest += 1
             #if check_at_dest == len(wheels):

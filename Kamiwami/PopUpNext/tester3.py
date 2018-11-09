@@ -133,7 +133,7 @@ for row in rez:
 #path = astar(tmaze, start, end)
 #print(path)
 # multiple paths ###############################################################
-NUM_OF_WHEELS = 10
+NUM_OF_WHEELS = 1
 def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
     # Generates a coordinate list based on the size of the city map matrix
     coord_list = [] # coordinate List
@@ -231,7 +231,6 @@ class GrdMod:
         x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
         y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
         self.shape = canvas.create_rectangle(x1, y1, x2, y2, fill="green")
-        print(self.shape)
         # The speed of the GrdMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -315,72 +314,6 @@ class GrdMod:
 
         return cur_pos, dest, id
 
-class FlyMod:
-    # Initializes varibles when object is created
-    def __init__(self, size, start):
-        self.pod_status = False
-        self.charge = 100
-        self.speed = 2
-        x1 = int( start[0]*((RLENGTH+RWITDH)/2) )
-        y1 = int( start[1]*((RLENGTH+RWITDH)/2) )
-        x2 = int( start[0]*((RLENGTH+RWITDH)/2) + size )
-        y2 = int( start[1]*((RLENGTH+RWITDH)/2) + size )
-
-        #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [canvas.create_line(x1, y1, x2, y2, fill="black",width=3),
-        canvas.create_line(x1, y2, x2, y1, fill="black",width=3)]
-        #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
-        self.xspeed = self.yspeed = 0
-    #Methods
-    #fly to wheels with pods
-    #pick up pod
-    #drop off pod
-    #check if has pod
-    def has_pod(self):
-        return self.pod_status
-    def charge(self):
-        threshold = 20
-        if(self.charge>threshold):
-            return False
-        return True
-    #fly directly to Destination
-    def fly(self, end):
-        pos = canvas.coords(self.shape[0])
-        cur_pos = [pos[0], pos[1]]
-        self.xspeed = 0.0
-        self.yspeed = 0.0
-
-        dest_x = round(end[0]*((RLENGTH+RWITDH)/2) )
-        dest_y = round(end[1]*((RLENGTH+RWITDH)/2) )
-        dest = [dest_x,dest_y]
-        #print("End Point: %d,%d" %(dest_x,dest_y))
-        #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
-        print()
-        if cur_pos == dest:
-            self.xspeed = self.yspeed = 0.0
-            return True
-        else:
-            rise = (dest_y-cur_pos[1])
-            run = (dest_x-cur_pos[0])
-            if(run != 0):
-                if(rise != 0):
-                    slope = abs(rise/run)
-                    self.xspeed = (run/abs(run))*self.speed/(slope+1)
-                    self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
-                else:
-                    self.yspeed = 0.0
-                    self.xspeed = (run/abs(run))*self.speed
-            else:
-                self.xspeed = 0.0
-                self.yspeed = (rise/abs(rise))*self.speed
-            if(abs(self.yspeed) > abs(rise)):
-                self.yspeed = rise
-            if(abs(self.xspeed) > abs(run)):
-                self.xspeed = run
-            for num_elements in range(0,len(self.shape)):
-                canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-            return False
-
 # Pod Module ###################################################################
 class PodMod:
     # Initializes varibles when object is created
@@ -421,16 +354,6 @@ for i in range(NUM_OF_WHEELS):
 # Pod module
 pod = PodMod(RWITDH, strt_list[0], 0) # creating pod at first wheel position
 
-
-
-# fly module
-drones = []
-done_check=[]
-check_at_dest=0
-for i in range(NUM_OF_WHEELS):
-    drones.append(FlyMod(RWITDH, strt_list[i]))
-    done_check.append(False)
-
 print("Ground Mod:")
 pprint(vars(wheels[0]))
 print("Pod Mod:")
@@ -440,17 +363,8 @@ while True:
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
 
-    pod.move(path_list[0], dest_list[0])
+        pod.move(path_list[0], dest_list[0])
 
-    for i, drone in enumerate(drones):
-        if done_check[i] == False:
-            check_at_dest = 0
-            done_check[i] = drone.fly(dest_list[i])
-        else:
-            check_at_dest += 1
-            #if check_at_dest == len(wheels):
-                #time.sleep(0.5)
-                #quit()
     tk.update()
     time.sleep(0.01)
 

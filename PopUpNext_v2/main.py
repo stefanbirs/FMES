@@ -402,7 +402,7 @@ class PodMod:
         #print(canvas.gettags(self.shape))
         # The speed of the GrdMod
         self.xspeed = self.yspeed = 0
-        # The varibels underneath is keeping track of part of the array, path, we are looking for
+        # The varibles underneath is keeping track of part of the array, path, we are looking for
         self.a = self.x = 0
         self.b = self.y = 1
         # i makes sure that we are entering the right if statement

@@ -340,7 +340,7 @@ class FlyMod:
             return False
         return True
     #fly directly to Destination
-    def fly(self, path,end):
+    def fly(self,end):
         pos=canvas.coords(self.shape[0])
         cur_pos=[pos[0], pos[1]]
         self.xspeed=0.0

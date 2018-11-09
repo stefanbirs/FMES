@@ -28,6 +28,92 @@ def AllCombinations(my_list, empty_list):
         a = itertools.combinations(my_list, i)
         for subset in a:
             empty_list.append(list(subset))
+            
+def trafficBlock(maze, start1, end):
+        #Take away traffic blocks
+    maze_simple = np.copy(maze)
+    for i in range(0, len(maze)):
+        for j in range(0, len(maze[0])):
+            if maze_simple[j][i] == 1:
+              maze_simple[j][i] = 0
+              
+              #print("Hi")
+    
+    #Find quickest path if no traffic
+    
+    tmaze3=[]
+    rez3 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
+    for row in rez3:
+        tmaze3.append(row)
+    path_nt = astar(tmaze3, start1, end)  #path_nt is no traffic path
+    
+    one_count = 0  #variable indicates indice of traffic
+    
+    one_indices = [] #Stores the indicies of traffic
+    one_coordinates = [] #Stores the coordinates of the traffic blocks
+    j = 0;
+
+    
+    #Find where traffic is on this path
+    
+    for i in path_nt:
+        if maze[i[1]][i[0]] == 1:  #check correct indexing
+            one_indices.append(one_count)
+            one_coordinates.append(i)
+            j+=1
+        one_count += 1
+    count = 0
+    
+
+    comb_indices = []
+    AllCombinations(one_coordinates, comb_indices)
+    count = 0
+    test_maze = np.copy(maze)
+    
+    for i in comb_indices :
+        for j in i:
+            test_maze[j[1]][j[0]] = 0
+        
+        tmaze2=[]
+        rez2 = [[test_maze[j][i] for j in range(len(test_maze))] for i in range(len(test_maze[0]))]
+        for row in rez2:
+            tmaze2.append(row)
+
+        path = astar(tmaze2, start1, end)
+        
+        if path != None:
+            traff_ind = i
+            break
+        
+        test_maze = np.copy(maze)
+        count += 1
+        
+    sur_ind = np.zeros(len(traff_ind)) #also need to check for lists of lists of lists
+    sur_count = 0
+    path_count = 0
+    
+    #finds index of traffic in path list
+    for k in traff_ind :  #need to make this work for list lists lists
+        for p in path :
+            if k == p:
+                sur_ind[sur_count] = path_count
+                sur_count += 1
+            path_count += 1
+        path_count = 0
+        
+     
+      
+    path_arr = [astar(tmaze, start1, path[int(sur_ind[0]-1)][::-1])]
+    
+    if sur_ind.size > 2:
+    
+        for i in range(1, len(sur_ind)):
+            path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
+        
+    path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
+    
+    print(path_arr)
+    
 
 def astar(tmaze, start, end):
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
@@ -155,7 +241,8 @@ path = astar(tmaze, start1, end)
 count = 0
 
 if path == None:
-
+    trafficBlock(maze, start1, end)
+"""
     
     #Take away traffic blocks
     maze_simple = np.copy(maze)
@@ -246,3 +333,4 @@ if path == None:
         
     
 print(path)
+"""

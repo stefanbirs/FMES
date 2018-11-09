@@ -1,4 +1,6 @@
 import random
+import numpy
+
 
 print("Hello world!");
 for i in range(5):
@@ -12,6 +14,7 @@ y = 4
 
 while x < y:
     print(x)
+
     x = x + 1
 
 def hello_x_times(x):

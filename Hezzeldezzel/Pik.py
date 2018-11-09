@@ -1,21 +1,21 @@
 
 class Node():
-    """A node class for A* Pathfinding"""
+"""A node class for A* Pathfinding"""
 
-    def __init__(self, parent=None, position=None):
-        self.parent = parent
-        self.position = position
+def __init__(self, parent=None, position=None):
+    self.parent = parent
+    self.position = position
 
-        self.g = 0
-        self.h = 0
-        self.f = 0
+    self.g = 0
+    self.h = 0
+    self.f = 0
 
-    def __eq__(self, other):
-        return self.position == other.position
+def __eq__(self, other):
+    return self.position == other.position
 
 
 def astar(maze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
+"""Returns a list of tuples as a path from the given start to the given end in the given maze"""
 
     # Create start and end node
     start_node = Node(None, start)
@@ -106,25 +106,25 @@ def astar(maze, start, end):
 
 def main():
 
-    maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0]]
+maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0]]
 
-    start = (0, 0)
-    end = (3, 6)
+start = (0, 0)
+end = (3, 6)
 
-    path = astar(maze, start, end)
-    print(path)
+path = astar(maze, start, end)
+print(path)
 
 
 
 
 if __name__ == '__main__':
-    main()
+main()

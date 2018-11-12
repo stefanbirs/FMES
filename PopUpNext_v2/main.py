@@ -320,7 +320,7 @@ class FlyMod:
     def __init__(self, size, start,id):
         self.pod_status = False
         self.charge = 100
-        self.speed = 2
+        self.speed = 5
         x1 = round(start[0]*((RLENGTH+RWITDH)/2) )
         y1 = round(start[1]*((RLENGTH+RWITDH)/2) )
         x2 = round(start[0]*((RLENGTH+RWITDH)/2) + size )

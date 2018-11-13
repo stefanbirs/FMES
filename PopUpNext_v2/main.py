@@ -3,6 +3,8 @@ from tkinter import *
 import random
 import time
 from pprint import pprint
+import math
+import itertools
 ################################################################################
 # A* ###########################################################################
 ################################################################################
@@ -33,9 +35,10 @@ def AllCombinations(my_list, empty_list):
         for subset in a:
             empty_list.append(list(subset))
             
-def trafficBlock(maze, start1, end):
+def trafficBlock(maze, start1, end, empty_fly_arr):
     """Returns an array that requires flying
     path_arr = [[start,critical_traffic_1),(critcial_traffic_1, critical_traffic_2),...,(critical_traffic_N,end]]
+    adds start and end coordinates to empty_fly_arr
     """
     #Remove traffic
     maze_simple = np.copy(maze)
@@ -121,6 +124,21 @@ def trafficBlock(maze, start1, end):
             path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
         
     path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
+    
+    start_coor = path_arr[0][-1]
+    
+    count = 0
+    
+    for i in path_arr:
+        if count > 0:
+            end_coor = i[0]
+            empty_fly_arr.append([start_coor,end_coor])
+            start_coor = i[-1]
+        else:
+            count += 1
+            
+        
+        
     
     print(path_arr)
 

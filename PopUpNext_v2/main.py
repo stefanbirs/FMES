@@ -1,170 +1,29 @@
+################################################################################
+# IMPORTING FILES AND LIBRARIES ################################################
+################################################################################
+# Files
+import a_star # contains A* algorithm and some other functions
+import citymap # contains functions that create components in citymap and canvas
+import constants as const # paramaters that don't change often
+import parameters as param # paramaters that might change often
+import modules as mod # contains the Drive, Fly and Pod modules
+# Libraries
 import numpy
 from tkinter import *
 import random
 import time
 from pprint import pprint
+
+
 ################################################################################
-# A* ###########################################################################
+# START ########################################################################
 ################################################################################
-class Node():
-    """A node class for A* Pathfinding"""
+# generates multiple random start and end positions
+strt_list, dest_list = a_star.random_start_dest(param.tmaze, const.NUM_OF_WHEELS)
+# generates multiple paths for the given start and end positions
+path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_list, dest_list)
 
-    def __init__(self, parent=None, position=None):
-        self.parent = parent
-        self.position = position
-
-        self.g = 0
-        self.h = 0
-        self.f = 0
-
-    def __eq__(self, other):
-        return self.position == other.position
-
-def astar(tmaze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
-
-    # Create start and end node
-    start_node = Node(None, start)
-    #start_node.g = start_node.h = start_node.f = 0
-    end_node = Node(None, end)
-    #end_node.g = end_node.h = end_node.f = 0
-
-    # Initialize both open and closed list
-    open_list = []
-    closed_list = []
-
-    # Add the start node
-    open_list.append(start_node)
-
-    # Loop until you find the end
-    while len(open_list) > 0:
-
-        # Get the current node
-        current_node = open_list[0]
-        current_index = 0
-        for index, item in enumerate(open_list):
-
-            if item.f < current_node.f:
-                current_node = item
-                current_index = index
-
-        # Pop current off open list, add to closed list
-        open_list.pop(current_index)
-        closed_list.append(current_node)
-
-        # Found the goal
-        if current_node == end_node:
-            path = []
-            current = current_node
-
-            while current is not None:
-                path.append(current.position)
-                current = current.parent
-
-            return path[::-1] # Return reversed path
-
-        # Generate children
-        children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: # Adjacent squares
-
-            # Get node position
-            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
-
-            # Make sure within range
-            if node_position[0] > (len(tmaze) - 1) or node_position[0] < 0 or node_position[1] > (len(tmaze[len(tmaze)-1]) -1) or node_position[1] < 0:
-                continue
-
-            # Make sure walkable terrain
-            if tmaze[node_position[0]][node_position[1]] != 0:
-                continue
-
-            if Node(current_node, node_position) in closed_list:
-                continue
-
-            # Create new node
-            new_node = Node(current_node, node_position)
-
-            # Append
-            children.append(new_node)
-
-        # Loop through children
-        for child in children:
-
-            # Child is on the closed list
-            for closed_child in closed_list:
-                if child == closed_child:
-                    continue
-
-            # Create the f, g, and h values
-            child.g = current_node.g + 1
-            child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
-            child.f = child.g + child.h
-
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
-
-            # Add the child to the open list
-            open_list.append(child)
-
-maze = [[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-        [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1],
-        [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
-        [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0],
-        [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-        [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]]
-
-# Flips the matrix in the crossaxis to get the visuals the match x and y
-tmaze=[]
-rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
-for row in rez:
-    tmaze.append(row)
-
-#start=(0,0)
-#end=(6,5)
-#path = astar(tmaze, start, end)
-#print(path)
-# multiple paths ###############################################################
-NUM_OF_WHEELS = 10
-def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
-    # Generates a coordinate list based on the size of the city map matrix
-    coord_list = [] # coordinate List
-    for x in range(len(tmaze)-1): # iterates through number of columns
-        for y in range(len(tmaze[0])-1): # iterates through number of rows
-            if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
-                coord_list.append((x,y)) # Coordinate list that does not have traffic
-            elif tmaze[x][y] == 1: # else if there is traffic in this coordinate "1" do nothing
-                continue
-            elif tmaze[x][y] == 2: # else if there is traffic in this coordinate "1" do nothing
-                continue
-    # Select random numbers from 'coord_list' and places them in strt_list and dest_list
-    strt_list = [] # Start List
-    dest_list = [] # Destination List
-    for i in range(NUM_OF_WHEELS):
-        strt_list.append(random.choice(coord_list))
-        dest_list.append(random.choice(coord_list))
-    print('start list:', strt_list)
-    print('destination list:', dest_list)
-    # Created a list of paths using A* algorithm
-    path_list = [] # Path List
-    for i in range(NUM_OF_WHEELS):
-        path_list.append(astar(tmaze, strt_list[i], dest_list[i]))
-    print('Path list:', path_list)
-    return strt_list, dest_list, path_list
-
-strt_list, dest_list, path_list = multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar)
-################################################################################
-# WINDOW #######################################################################
-################################################################################
-
+<<<<<<< HEAD
 tk=Tk()
 
 # Defining the size of the canvas
@@ -411,11 +270,18 @@ class PodMod:
     # 1) follow airmod/grdmod
     def move(self, path, end):
         GrdMod.move(self, path, end)
+=======
 
-    # 2) check if it's not on airmod/grdmod
 
-    # 3) check if has reached final destination
-    # 4) check if has passengers
+################################################################################
+# Generates City Maps Component ################################################
+################################################################################
+citymap.create_houses(param.tmaze) # Generates Houses
+citymap.create_traffic(param.tmaze) # Generates Traffic
+citymap.create_destination(dest_list) # Generates Destination blocks
+>>>>>>> kamybranch
+
+
 
 
 
@@ -431,11 +297,11 @@ def removetags(curr_tags, pairing_tag):
     #print(canvas.find_withtag(pairing_tag))
 
 ################################################################################
-# MAIN #########################################################################
+# Creating  Drive, Pod and Fly Modules #########################################
 ################################################################################
-
-# Ground module
+# Drive module
 wheels = []
+<<<<<<< HEAD
 pods = []
 for i in range(NUM_OF_WHEELS):
     wheels.append(GrdMod(RWITDH, strt_list[i], i))
@@ -457,11 +323,38 @@ for i in range(NUM_OF_WHEELS):
     done_check.append(False)
 print("Ground Mod:")
 pprint(vars(wheels[0]))
+=======
+for i in range(const.NUM_OF_WHEELS):
+    wheels.append(mod.DriveMod(strt_list[i]))
 
+# Pod module
+pods = []
+for i in range(const.NUM_OF_WHEELS):
+    pods.append(mod.PodMod(strt_list[i]))
+
+# Fly module
+drones = []
+for i in range(const.NUM_OF_WHEELS):
+    drones.append(mod.FlyMod(strt_list[i]))
+
+print("Drive Mod:")
+pprint(vars(wheels[0]))
+print("Pod Mod:")
+pprint(vars(pods[0]))
+print("Fly Mod:")
+pprint(vars(drones[0]))
+
+
+>>>>>>> kamybranch
+
+################################################################################
+# Main Loop ####################################################################
+################################################################################
 while True:
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
 
+<<<<<<< HEAD
         #pods[i].move(path_list[i], dest_list[i])
 
     for i, drone in enumerate(drones):
@@ -474,6 +367,20 @@ while True:
                 #time.sleep(0.5)
                 #quit()
     tk.update()
+=======
+    for i, pod in enumerate(pods):
+        pod.move(path_list[i], dest_list[i])
+
+    for i, drone in enumerate(drones):
+        drone.fly(dest_list[i])
+
+    citymap.tk.update()
+>>>>>>> kamybranch
     time.sleep(0.01)
 
-tk.mainloop()
+
+
+################################################################################
+# END ##########################################################################
+################################################################################
+citymap.tk.mainloop()

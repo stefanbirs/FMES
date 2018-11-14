@@ -210,7 +210,8 @@ class FlyMod:
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-                self.charge-=(self.xspeed+self.yspeed)
+                self.charge-=(abs(self.xspeed)+abs(self.yspeed))
+                print(self.charge)
                 return False
 
 

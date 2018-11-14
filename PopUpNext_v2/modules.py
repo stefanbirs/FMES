@@ -130,7 +130,7 @@ class FlyMod:
         FlyMod.id+=1
         self.charge = 100*const.PIXEL_CHARGE
         self.threshold = 40*const.PIXEL_CHARGE
-        self.speed = 2
+        self.speed = 5
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
@@ -210,11 +210,9 @@ class FlyMod:
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-                self.charge-=(abs(self.xspeed)+abs(self.yspeed))
-                print(self.charge)
+                #self.charge-=round(abs(self.xspeed)+abs(self.yspeed))
+                #print(self.charge)
                 return False
-
-
 
 
 ################################################################################

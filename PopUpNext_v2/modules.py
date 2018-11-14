@@ -8,13 +8,16 @@ import citymap
 ################################################################################
 class DriveMod:
     # Initializes varibles when object is created
-    def __init__(self, start, id):
+    id=0
+    def __init__(self, start):
         # This is defining the start position of the DriveMod
+        self.id=DriveMod.id
+        DriveMod.id+=1
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green",tags="Drive%d"%id)
+        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green",tags="drive%d"%self.id)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -23,8 +26,14 @@ class DriveMod:
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
 
-    def move(self, path, end):
-        citymap.canvas.move(self.shape, self.xspeed, self.yspeed)
+    def move(self, path, end,tag="none"):
+        if(tag!="none"):
+            ids_to_move=canvas.find_withtag(tag)
+            print(ids_to_move)
+            for num_elements in range(0,len(ids_to_move)):
+                citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+        else:
+            citymap.canvas.move(self.shape, self.xspeed, self.yspeed)
         # saves the current position if the ground mod
         pos = citymap.canvas.coords(self.shape) # Current position of ground module
         cur_pos = [pos[0], pos[1]]
@@ -105,7 +114,10 @@ class DriveMod:
 ################################################################################
 class FlyMod:
     # Initializes varibles when object is created
-    def __init__(self, start,id):
+    id=0
+    def __init__(self, start):
+        self.id=FlyMod.id
+        FlyMod.id+=1
         self.pod_status = False
         self.charge = 100
         self.speed = 2
@@ -115,8 +127,8 @@ class FlyMod:
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=("Fly%d"%id)),
-        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=("Fly%d"%id))]
+        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=("fly%d"%self.id)),
+        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=("fly%d"%self.id))]
         #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
         self.xspeed = self.yspeed = 0
     #Methods
@@ -132,7 +144,7 @@ class FlyMod:
             return False
         return True
     #fly directly to Destination
-    def fly(self, end):
+    def fly(self, end,tag="none"):
         pos = citymap.canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
         self.xspeed = 0.0
@@ -164,8 +176,14 @@ class FlyMod:
                 self.yspeed = rise
             if(abs(self.xspeed) > abs(run)):
                 self.xspeed = run
-            for num_elements in range(0,len(self.shape)):
-                citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            if(tag!="none"):
+                ids_to_move=citymap.canvas.find_withtag(tag)
+                print(ids_to_move)
+                for num_elements in range(0,len(ids_to_move)):
+                    citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+            else:
+                for num_elements in range(self.shape):
+                    citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
             return False
 
 
@@ -177,13 +195,16 @@ class FlyMod:
 ################################################################################
 class PodMod:
     # Initializes varibles when object is created
+    id=0
     def __init__(self, start):
         # This is defining the start position of the DriveMod
+        self.id=PodMod.id
+        PodMod.id+=1
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey")
+        self.shape = citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags="pod%d"%self.id)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -193,15 +214,22 @@ class PodMod:
         self.i = 0 # control variable
 
     # 1) follow airmod/DriveMod
-    def move(self, path, end):
-        DriveMod.move(self, path, end)
-
     # 2) check if it's not on airmod/DriveMod
     # 3) check if has reached final destination
     # 4) check if has passengers
 
 
-
+class CommonFunctions:
+    def add_tags(curr_tags, pairing_tag):
+        for curr_tag in curr_tags:
+            citymap.canvas.addtag_withtag(pairing_tag, curr_tag)
+        #print("Pairing: %s"%pairing_tags)
+        #print(canvas.find_withtag(pairing_tags))
+    def remove_tags(curr_tags, pairing_tag):
+        for curr_tag in curr_tags:
+            citymap.canvas.dtag((citymap.canvas.find_withtag(curr_tag), pairing_tag))
+        #print("Pairing: %s"%pairing_tag)
+        #print(canvas.find_withtag(pairing_tag))
 
 
 ################################################################################

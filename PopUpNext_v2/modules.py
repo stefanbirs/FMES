@@ -182,7 +182,7 @@ class FlyMod:
                 for num_elements in range(0,len(ids_to_move)):
                     citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
             else:
-                for num_elements in range(self.shape):
+                for num_elements in range(0,len(self.shape)):
                     citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
             return False
 

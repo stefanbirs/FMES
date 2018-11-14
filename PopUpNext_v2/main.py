@@ -31,7 +31,7 @@ path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_l
 citymap.create_houses(param.tmaze) # Generates Houses
 citymap.create_traffic(param.tmaze) # Generates Traffic
 citymap.create_destination(dest_list) # Generates Destination blocks
-
+citymap.create_hub()
 
 
 ################################################################################
@@ -60,8 +60,6 @@ print("Pod Mod:")
 pprint(vars(pods[0]))
 print("Fly Mod:")
 pprint(vars(drones[0]))
-
-
 
 ################################################################################
 # Main Loop ####################################################################

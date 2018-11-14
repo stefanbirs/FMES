@@ -29,15 +29,15 @@ def create_traffic(tmaze):
             if tmaze[x][y] == 1 and not x % 2 == 0: #Makes a rectangle between buildings in the x axis
                 col = ((const.RLENGTH+const.RWITDH)*((x/2)-0.5))+const.RWITDH
                 row = (const.RLENGTH+const.RWITDH)*(y/2)
-                canvas.create_rectangle(col, row, col + const.RLENGTH, row + const.RWITDH, fill="red")
+                canvas.create_rectangle(col, row, col + const.RLENGTH, row + const.RWITDH, fill="red",tags="traffic")
             if tmaze[x][y] == 1 and not y % 2 == 0: #Makes a rectangle between buildings in the y axis
                 row = ((const.RLENGTH+const.RWITDH)*((y/2)-0.5))+const.RWITDH
                 col = (const.RLENGTH+const.RWITDH)*(x/2)
-                canvas.create_rectangle(col, row, col + const.RWITDH, row + const.RLENGTH, fill="red")
+                canvas.create_rectangle(col, row, col + const.RWITDH, row + const.RLENGTH, fill="red",tags="traffic")
             if tmaze[x][y] == 1 and x % 2 == 0 and y % 2 == 0: #Makes a squere on crossroads
                 row = ((const.RLENGTH+const.RWITDH)*(y/2))
                 col = ((const.RLENGTH+const.RWITDH)*(x/2))
-                canvas.create_rectangle(col, row, col + const.RWITDH ,row + const.RWITDH, fill="red")
+                canvas.create_rectangle(col, row, col + const.RWITDH ,row + const.RWITDH, fill="red",tags="traffic")
 
 
 
@@ -51,8 +51,13 @@ def create_destination(dest_list):
         y1 = int( dest_list[i][1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( dest_list[i][0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
         y2 = int( dest_list[i][1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
-        canvas.create_rectangle(x1, y1, x2, y2, fill="blue")
-
+        canvas.create_rectangle(x1, y1, x2, y2, fill="blue",tags="dest")
+def create_hub():
+    x1 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) )
+    y1 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) )
+    x2 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
+    y2 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
+    canvas.create_rectangle(x1, y1, x2, y2, fill="black",tags="hub")
 
 
 ################################################################################

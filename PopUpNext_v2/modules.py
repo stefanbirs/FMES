@@ -128,7 +128,8 @@ class FlyMod:
     def __init__(self, start):
         self.id=FlyMod.id
         FlyMod.id+=1
-        self.charge = 100
+        self.charge = 100*const.PIXEL_CHARGE
+        self.threshold = 40*const.PIXEL_CHARGE
         self.speed = 2
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
@@ -152,7 +153,6 @@ class FlyMod:
                 return True
         return False
     def charge(self):
-        threshold = 20
         if(self.charge > threshold):
             return False
         return True
@@ -162,48 +162,56 @@ class FlyMod:
             if "pair" in tag:
                 return tag
         return ""
+    def charge_for_dest(self,end):
+        pos = citymap.canvas.coords(self.shape[0])
+        dist_travel=[pos[0]-end[0],pos[1]-end[1]]
+        tot_dist=abs(dist_travel[0])+abs(dist_travel[1])
+        if (self.charge-tot_dist)>self.threshold:
+            return True
+        return False
     #fly directly to Destination
     def fly(self, end):
-        pos = citymap.canvas.coords(self.shape[0])
-        cur_pos = [pos[0], pos[1]]
-        self.xspeed = 0.0
-        self.yspeed = 0.0
+        if self.charge_for_dest(end)==True or end==const.HUB:
+            pos = citymap.canvas.coords(self.shape[0])
+            cur_pos = [pos[0], pos[1]]
+            self.xspeed = 0.0
+            self.yspeed = 0.0
 
-        dest_x = round(end[0]*((const.RLENGTH+const.RWITDH)/2) )
-        dest_y = round(end[1]*((const.RLENGTH+const.RWITDH)/2) )
-        dest = [dest_x,dest_y]
-        #print("End Point: %d,%d" %(dest_x,dest_y))
-        #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
-        if cur_pos == dest:
-            self.xspeed = self.yspeed = 0.0
-            return True
-        else:
-            rise = (dest_y-cur_pos[1])
-            run = (dest_x-cur_pos[0])
-            if(run != 0):
-                if(rise != 0):
-                    slope = abs(rise/run)
-                    self.xspeed = (run/abs(run))*self.speed/(slope+1)
-                    self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
+            dest_x = round(end[0]*((const.RLENGTH+const.RWITDH)/2) )
+            dest_y = round(end[1]*((const.RLENGTH+const.RWITDH)/2) )
+            dest = [dest_x,dest_y]
+            #print("End Point: %d,%d" %(dest_x,dest_y))
+            #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
+            if cur_pos == dest:
+                self.xspeed = self.yspeed = 0.0
+                return True
+            else:
+                rise = (dest_y-cur_pos[1])
+                run = (dest_x-cur_pos[0])
+                if(run != 0):
+                    if(rise != 0):
+                        slope = abs(rise/run)
+                        self.xspeed = (run/abs(run))*self.speed/(slope+1)
+                        self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
+                    else:
+                        self.yspeed = 0.0
+                        self.xspeed = (run/abs(run))*self.speed
                 else:
-                    self.yspeed = 0.0
-                    self.xspeed = (run/abs(run))*self.speed
-            else:
-                self.xspeed = 0.0
-                self.yspeed = (rise/abs(rise))*self.speed
-            if(abs(self.yspeed) > abs(rise)):
-                self.yspeed = rise
-            if(abs(self.xspeed) > abs(run)):
-                self.xspeed = run
-            if(self.has_pod()==True):
-                ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
-                for num_elements in range(0,len(ids_to_move)):
-                    citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
-            else:
-                for num_elements in range(0,len(self.shape)):
-                    citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-            return False
-
+                    self.xspeed = 0.0
+                    self.yspeed = (rise/abs(rise))*self.speed
+                if(abs(self.yspeed) > abs(rise)):
+                    self.yspeed = rise
+                if(abs(self.xspeed) > abs(run)):
+                    self.xspeed = run
+                if(self.has_pod()==True):
+                    ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
+                    for num_elements in range(0,len(ids_to_move)):
+                        citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+                else:
+                    for num_elements in range(0,len(self.shape)):
+                        citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+                self.charge-=(self.xspeed+self.yspeed)
+                return False
 
 
 

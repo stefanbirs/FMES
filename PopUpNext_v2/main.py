@@ -52,7 +52,7 @@ drones = []
 done_check=[]
 for i in range(const.NUM_OF_WHEELS):
     drones.append(mod.FlyMod(strt_list[i]))
-    mod.CommonFunctions.add_tags(["fly%d"%i,"drive%d"%i],"pair%d"%i)
+    mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)
     done_check.append(False)
 print("Drive Mod:")
 pprint(vars(wheels[0]))
@@ -67,12 +67,12 @@ pprint(vars(drones[0]))
 # Main Loop ####################################################################
 ################################################################################
 while True:
-    #for i, wheel in enumerate(wheels):
-        #wheel.move(path_list[i], dest_list[i])
+    for i, wheel in enumerate(wheels):
+        wheel.move(path_list[i], dest_list[i])
     for i, drone in enumerate(drones):
         if done_check[i] == False:
             check_at_dest = 0
-            done_check[i] = drone.fly(dest_list[i],"pair%d"%i)
+            done_check[i] = drone.fly(dest_list[i])
         else:
             check_at_dest += 1
             #if check_at_dest == len(wheels):

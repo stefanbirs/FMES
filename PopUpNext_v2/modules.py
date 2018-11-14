@@ -25,11 +25,21 @@ class DriveMod:
         self.b = self.y = 1
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
-
+    def has_pod(self):
+        tags=citymap.canvas.gettags(self.shape)
+        for tag in tags:
+            if "pair" in tag:
+                return True
+        return False
+    def pairing_tag(self):
+        tags=citymap.canvas.gettags(self.shape)
+        for tag in tags:
+            if "pair" in tag:
+                return tag
+        return ""
     def move(self, path, end,tag="none"):
-        if(tag!="none"):
-            ids_to_move=canvas.find_withtag(tag)
-            print(ids_to_move)
+        if(self.has_pod()==True):
+            ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0,len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
         else:
@@ -118,7 +128,6 @@ class FlyMod:
     def __init__(self, start):
         self.id=FlyMod.id
         FlyMod.id+=1
-        self.pod_status = False
         self.charge = 100
         self.speed = 2
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
@@ -137,14 +146,24 @@ class FlyMod:
     #drop off pod
     #check if has pod
     def has_pod(self):
-        return self.pod_status
+        tags=citymap.canvas.gettags(self.shape[0])
+        for tag in tags:
+            if "pair" in tag:
+                return True
+        return False
     def charge(self):
         threshold = 20
         if(self.charge > threshold):
             return False
         return True
+    def pairing_tag(self):
+        tags=citymap.canvas.gettags(self.shape[0])
+        for tag in tags:
+            if "pair" in tag:
+                return tag
+        return ""
     #fly directly to Destination
-    def fly(self, end,tag="none"):
+    def fly(self, end):
         pos = citymap.canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
         self.xspeed = 0.0
@@ -176,9 +195,8 @@ class FlyMod:
                 self.yspeed = rise
             if(abs(self.xspeed) > abs(run)):
                 self.xspeed = run
-            if(tag!="none"):
-                ids_to_move=citymap.canvas.find_withtag(tag)
-                print(ids_to_move)
+            if(self.has_pod()==True):
+                ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
                 for num_elements in range(0,len(ids_to_move)):
                     citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
             else:

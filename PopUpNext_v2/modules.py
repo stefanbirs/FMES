@@ -8,13 +8,13 @@ import citymap
 ################################################################################
 class DriveMod:
     # Initializes varibles when object is created
-    def __init__(self, start):
+    def __init__(self, start, id):
         # This is defining the start position of the DriveMod
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green")
+        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green",tags="Drive%d"%id)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -105,7 +105,7 @@ class DriveMod:
 ################################################################################
 class FlyMod:
     # Initializes varibles when object is created
-    def __init__(self, start):
+    def __init__(self, start,id):
         self.pod_status = False
         self.charge = 100
         self.speed = 2
@@ -115,8 +115,8 @@ class FlyMod:
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3),
-        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3)]
+        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=("Fly%d"%id)),
+        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=("Fly%d"%id))]
         #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
         self.xspeed = self.yspeed = 0
     #Methods

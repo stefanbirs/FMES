@@ -1,6 +1,4 @@
-import numpy as np
-import math
-import itertools
+import numpy
 
 class Node():
     """A node class for A* Pathfinding"""
@@ -31,10 +29,7 @@ def AllCombinations(my_list, empty_list):
 
 def astar(tmaze, start, end):
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
-    #Enables intuitive accessung of maze
-    start = (start[1],start[0])
-    end = (end[1], end[0])
-    
+
     # Create start and end node
     start_node = Node(None, start)
     #start_node.g = start_node.h = start_node.f = 0
@@ -122,36 +117,28 @@ def astar(tmaze, start, end):
 
 
 maze = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
-       [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
-       [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
-       [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]]
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-#astar puts column first, row second
 
-# Flips the matrix in the crossaxis to get the visuals the match x and y
 tmaze=[]
 rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
 for row in rez:
     tmaze.append(row)
 
-<<<<<<< HEAD
-#nb: these are in the wrong order of indices. maze[start[1]][start[0]]
-start=(12,0)
-=======
-start=(0,0)
->>>>>>> master
-end=(6,5)
 
-start1 = np.copy(start)
+start1=(0,13)
+end=(6,5)
 
 
 path = astar(tmaze, start1, end)
@@ -160,29 +147,27 @@ path = astar(tmaze, start1, end)
 count = 0
 
 if path == None:
-
     
     #Take away traffic blocks
-    maze_simple = np.copy(maze)
+    maze_simple = maze
     for i in range(0, len(maze)):
         for j in range(0, len(maze[0])):
-            if maze_simple[j][i] == 1:
-              maze_simple[j][i] = 0
-              
+            if maze_simple[i][j] == 1:
+              maze_simple[i][j] = 0
               #print("Hi")
     
     #Find quickest path if no traffic
     
-    tmaze3=[]
-    rez3 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
-    for row in rez3:
-        tmaze3.append(row)
-    path_nt = astar(tmaze3, start1, end)  #path_nt is no traffic path
+    tmaze2=[]
+    rez2 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
+    for row in rez2:
+        tmaze2.append(row)
+    path_nt = astar(tmaze2, start1, end)  #path_nt is no traffic path
     
     one_count = 0  #variable indicates indice of traffic
     
-    one_indices = [] #Stores the indicies of traffic
-    one_coordinates = [] #Stores the coordinates of the traffic blocks
+    one_indices = [0] #Stores the indicies of traffic
+    one_coordinates = [0] #Stores the coordinates of the traffic blocks
     j = 0;
     
     one_count_indices = 0  #used to access one_indices
@@ -190,35 +175,75 @@ if path == None:
     #Find where traffic is on this path
     
     for i in path_nt:
-        if maze[i[1]][i[0]] == 1:  #check correct indexing
-            one_indices.append(one_count)
-            one_coordinates.append(i)
+        if maze[i[0]][i[1]] == 1:  #check correct indexing
+            one_indices[j] = one_count
+            one_coordinates[j] = i
             j+=1
         one_count += 1
     count = 0
     
+"""    
+    
+    while path_check == None and:
+        #Check for rmeoving one traffic piece
+        if count <= len(one_coordinates):
+            if (one_coordinates[count][0] !=  one_coordinates[count+1][0]) :
+                start = (one_coordinates[count][0]+1,one_coordinates[count][1])
+            else:
+                start = (one_coordinates[count][0],one_coordinates[count][1]+1)
+            start_coord[count] = start
+            #Check if path is now open
+            path_check = astar(tmaze, start, end)
+        else:
+            
+            
+        
+    path_arr[]
+        
+    #Now need to check all cooridnates
+        
+        
+    
+    while one_count < len(path_nt):
+        
+    
+    
+    
+    
+    
+    #need to make a new path after each time you skip a piece of traffic to see if free but need to try 
+    #all combinations, you will be shifting the starting point
+    
+    
+    
+              
 
+    
+    
+print(path)
+
+"""
     comb_indices = []
-    AllCombinations(one_coordinates, comb_indices)
+    AllCombinations(one_coordinates, comb_ind)
     count = 0
-    test_maze = np.copy(maze)
+    test_maze = maze
     
     for i in comb_indices :
         for j in i:
-            test_maze[j[1]][j[0]] = 0
+            test_maze[j[0],j[1]] = 0
         
-        tmaze2=[]
-        rez2 = [[test_maze[j][i] for j in range(len(test_maze))] for i in range(len(test_maze[0]))]
-        for row in rez2:
-            tmaze2.append(row)
+        tmaze=[]
+        rez = [[test_maze[j][i] for j in range(len(test_maze))] for i in range(len(test_maze[0]))]
+        for row in rez:
+            tmaze.append(row)
 
-        path = astar(tmaze2, start1, end)
+        path = astar(tmaze, start1, end)
         
         if path != None:
             traff_ind = i
             break
         
-        test_maze = np.copy(maze)
+        test_maze = maze
         count += 1
         
     sur_ind = np.zeros(len(traff_ind)) #also need to check for lists of lists of lists
@@ -234,18 +259,19 @@ if path == None:
             path_count += 1
         path_count = 0
         
-     
-      
-    path_arr = [astar(tmaze, start1, path[int(sur_ind[0]-1)][::-1])]
-    
-    if sur_ind.size > 2:
-    
-        for i in range(1, len(sur_ind)):
-            path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
+    #Unnecessary: clean up by changing var names
+    tmaze=[]
+    rez = [[maze[j][i] for j in range(len(maze))] for i in range(len(maze[0]))]
+    for row in rez:
+        tmaze.append(row)
         
-    path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
+        
+    path_arr = [astar(tmaze, start1, path[sur_ind[0]-1])]
     
-
+    for i in range(0, len(sur_ind)):
+        path_arr.append(astar(tmaze), path[sur_ind[i]+1], path[sur_ind[i+1]-1])
+    
+    path_arr.append(astar(tmaze, path[sur_ind[-1]+1], end))
         
     
         

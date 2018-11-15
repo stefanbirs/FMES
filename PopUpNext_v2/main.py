@@ -49,7 +49,7 @@ for i in range(const.NUM_OF_WHEELS):
 
 # Fly module
 drones = []
-done_check=[]
+done_check = []
 for i in range(const.NUM_OF_WHEELS):
     drones.append(mod.FlyMod(strt_list[i]))
     mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)

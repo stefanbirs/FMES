@@ -13,7 +13,6 @@ from tkinter import *
 import random
 import time
 from pprint import pprint
-<<<<<<< HEAD
 ################################################################################
 # A* ###########################################################################
 ################################################################################
@@ -283,9 +282,6 @@ def multiple_astar_paths(tmaze, NUM_OF_WHEELS, astar):
         path_list.append(astar(tmaze, strt_list[i], dest_list[i]))
     print('Path list:', path_list)
     return strt_list, dest_list, path_list
-=======
-
->>>>>>> master
 
 ################################################################################
 # START ########################################################################

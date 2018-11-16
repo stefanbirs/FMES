@@ -36,6 +36,7 @@ class DriveMod:
         tags = citymap.canvas.gettags(self.shape)
         for tag in tags:
             if "pair" in tag:
+                #print("Drive %s"%tag)
                 return tag
         return ""
     def move(self, path, end, tag="none"):
@@ -131,7 +132,7 @@ class FlyMod:
         FlyMod.id += 1
         self.charge = 100*const.PIXEL_CHARGE
         self.threshold = 40*const.PIXEL_CHARGE
-        self.speed = 2
+        self.speed = 3
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
@@ -147,17 +148,27 @@ class FlyMod:
     #fly to wheels with pods
     #pick up pod
     def pick_up_pod(self,pod):
+        pod_tag=pod.tag
         pos = citymap.canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
         pod_pos = citymap.canvas.coords(pod.shape)
-        pod_cur_pos = [pos[0], pos[1]]
+        pod_cur_pos = [pod_pos[0], pod_pos[1]]
+        #print("Current Pos: %d,%d"%(cur_pos[0],cur_pos[1]))
+        #print("Pod Pos: %d, %d"%(pod_cur_pos[0],pod_cur_pos[1]))
         at_dest=False
-        while(at_dest!=True):
+        if (self.has_pod()==False):
             at_dest=self.fly(pod_cur_pos)
-        CommonFunctions.add_tags([self.tag, pod_tag],"P100")
-        at_dest=False
-        while(at_dest!=True):
-            at_dest=self.fly(pod.final_dest)
+            #print(at_dest)
+            if at_dest==True:
+                #print(at_dest)
+                CommonFunctions.remove_tags([self.tag,pod_tag])
+                CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
+        elif self.has_pod()==True:
+            dest_x = int(pod.final_dest[0]*((const.RLENGTH+const.RWITDH)/2) )
+            dest_y = int(pod.final_dest[1]*((const.RLENGTH+const.RWITDH)/2) )
+            print("Final Dest: %d,%d"%(dest_x,dest_y))
+            dest = [dest_x, dest_y]
+            at_dest_2=self.fly(dest)
     #drop off pod
     #check if has pod
     def has_pod(self):
@@ -174,6 +185,7 @@ class FlyMod:
         tags=citymap.canvas.gettags(self.shape[0])
         for tag in tags:
             if "pair" in tag:
+                #print("Fly %s"%tag)
                 return tag
         return ""
     def charge_for_dest(self,end):
@@ -186,8 +198,8 @@ class FlyMod:
         return False
     #fly directly to Destination
     def fly(self, end):
-        dest_x = round(end[0]*((const.RLENGTH+const.RWITDH)/2) )
-        dest_y = round(end[1]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_x = (end[0]*1 )
+        dest_y = (end[1]*1 )
         dest = [dest_x,dest_y]
         result=self.charge_for_dest(dest)
         #print(result)
@@ -226,9 +238,9 @@ class FlyMod:
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-                self.charge-=2
-                print(self.charge)
-                print("Xspeed: %d, Yspeed: %d"%(self.xspeed,self.yspeed))
+                #self.charge-=2
+                #print(self.charge)
+                #print("Xspeed: %d, Yspeed: %d"%(self.xspeed,self.yspeed))
                 return False
 
 
@@ -244,7 +256,7 @@ class PodMod:
         # This is defining the start position of the DriveMod
         self.id = PodMod.id
         PodMod.id += 1
-        PodMod.final_dest=end
+        self.final_dest=end
         self.tag="pod%d"%self.id
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
@@ -266,14 +278,24 @@ class PodMod:
 
 
 class CommonFunctions:
-    def add_tags(curr_tags, pairing_tag):
+    def add_tags(pairing_tag, curr_tags):
         for curr_tag in curr_tags:
             citymap.canvas.addtag_withtag(pairing_tag, curr_tag)
-        #print("Pairing: %s"%pairing_tags)
-        #print(canvas.find_withtag(pairing_tags))
-    def remove_tags(curr_tags, pairing_tag):
+            #print("This %s has added the tag %s" %(curr_tag,pairing_tag))
+    def remove_tags(curr_tags):
         for curr_tag in curr_tags:
-            citymap.canvas.dtag((citymap.canvas.find_withtag(curr_tag), pairing_tag))
+            items=citymap.canvas.find_withtag(curr_tag)
+            for item in items:
+                all_tags=citymap.canvas.gettags(item)
+                print(all_tags)
+                for tag in all_tags:
+                    if ("pod" in tag or "drive" in tag or "fly" in tag):
+                        print("Stays: %s"%tag)
+                    else:
+                        citymap.canvas.dtag(item, tag)
+                        #print("This %d has %s being removed" %(item,tag))
+                        for tag in citymap.canvas.gettags(item):
+                            print("Post deleting: %s"%tag)
         #print("Pairing: %s"%pairing_tag)
         #print(canvas.find_withtag(pairing_tag))
 

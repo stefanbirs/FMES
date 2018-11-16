@@ -342,10 +342,8 @@ while True:
     for i, drone in enumerate(drones):
          drone.fly(dest_list[i])
 
-
     citymap.tk.update()
     time.sleep(0.01)
-
 
 
 ################################################################################

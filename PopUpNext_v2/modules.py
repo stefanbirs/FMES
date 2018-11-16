@@ -166,7 +166,7 @@ class FlyMod:
         pos = citymap.canvas.coords(self.shape[0])
         dist_travel=[pos[0]-end[0],pos[1]-end[1]]
         tot_dist=abs(dist_travel[0])+abs(dist_travel[1])
-        print(tot_dist)
+        #print(tot_dist)
         if (self.charge-tot_dist)>self.threshold:
             return True
         return False

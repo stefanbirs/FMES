@@ -215,7 +215,8 @@ class FlyMod:
 
 
 
-
+''' The default of the tkinter toolkit draws new items on top of existing ones.
+ If we want drones to pick up pods they have to be declared sequentially'''
 ################################################################################
 # Pod Module ###################################################################
 ################################################################################

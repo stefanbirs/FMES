@@ -44,38 +44,37 @@ for i in range(const.NUM_OF_WHEELS):
 
 # Pod module
 pods = []
-for i in range(const.NUM_OF_WHEELS):
+for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i]))
 
 # Fly module
 drones = []
-done_check = []
-for i in range(const.NUM_OF_WHEELS):
-    drones.append(mod.FlyMod(strt_list[i]))
-    mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)
-    done_check.append(False)
-print("Drive Mod:")
-pprint(vars(wheels[0]))
-print("Pod Mod:")
-pprint(vars(pods[0]))
-print("Fly Mod:")
-pprint(vars(drones[0]))
+for i in range(const.NUM_OF_DRONES):
+    drones.append(mod.FlyMod(const.HUB))
+    #mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)
+
+# print("Drive Mod:")
+# pprint(vars(wheels[0]))
+# print("Pod Mod:")
+# pprint(vars(pods[0]))
+# print("Fly Mod:")
+# pprint(vars(drones[0]))
 
 ################################################################################
 # Main Loop ####################################################################
 ################################################################################
 while True:
+    # seperate Number_of_wheels with: numofwheels, numofdrones, numofpods
+    # make one drone start at hub
+    # make pod start on wheels
+    # make pod move with wheels using tags
+
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
-    for i, drone in enumerate(drones):
-        if done_check[i] == False:
-            check_at_dest = 0
-            done_check[i] = drone.fly(dest_list[i])
-        else:
-            check_at_dest += 1
-            #if check_at_dest == len(wheels):
-                #time.sleep(0.5)
-                #quit()
+    #for i, drone in enumerate(drones):
+         #drone.fly(dest_list[i])
+
+
     citymap.tk.update()
     time.sleep(0.01)
 

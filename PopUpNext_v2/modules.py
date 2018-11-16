@@ -8,16 +8,16 @@ import citymap
 ################################################################################
 class DriveMod:
     # Initializes varibles when object is created
-    id=0
+    id = 0
     def __init__(self, start):
         # This is defining the start position of the DriveMod
-        self.id=DriveMod.id
-        DriveMod.id+=1
+        self.id = DriveMod.id
+        DriveMod.id += 1
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green",tags="drive%d"%self.id)
+        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green", tags="drive%d"%self.id)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -26,20 +26,20 @@ class DriveMod:
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
     def has_pod(self):
-        tags=citymap.canvas.gettags(self.shape)
+        tags = citymap.canvas.gettags(self.shape)
         for tag in tags:
             if "pair" in tag:
                 return True
         return False
     def pairing_tag(self):
-        tags=citymap.canvas.gettags(self.shape)
+        tags = citymap.canvas.gettags(self.shape)
         for tag in tags:
             if "pair" in tag:
                 return tag
-        return ""
-    def move(self, path, end,tag="none"):
-        if(self.has_pod()==True):
-            ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
+        return ""                                # WHY THIS?
+    def move(self, path, end, tag="none"):
+        if(self.has_pod() == True):
+            ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0,len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
         else:
@@ -124,10 +124,10 @@ class DriveMod:
 ################################################################################
 class FlyMod:
     # Initializes varibles when object is created
-    id=0
+    id = 0
     def __init__(self, start):
-        self.id=FlyMod.id
-        FlyMod.id+=1
+        self.id = FlyMod.id
+        FlyMod.id += 1
         self.charge = 100*const.PIXEL_CHARGE
         self.threshold = 40*const.PIXEL_CHARGE
         self.speed = 2
@@ -203,8 +203,8 @@ class FlyMod:
                     self.yspeed = rise
                 if(abs(self.xspeed) > abs(run)):
                     self.xspeed = run
-                if(self.has_pod()==True):
-                    ids_to_move=citymap.canvas.find_withtag(self.pairing_tag())
+                if(self.has_pod() == True):
+                    ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
                     for num_elements in range(0,len(ids_to_move)):
                         citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
                 else:
@@ -222,11 +222,11 @@ class FlyMod:
 ################################################################################
 class PodMod:
     # Initializes varibles when object is created
-    id=0
+    id = 0
     def __init__(self, start):
         # This is defining the start position of the DriveMod
-        self.id=PodMod.id
-        PodMod.id+=1
+        self.id = PodMod.id
+        PodMod.id += 1
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )

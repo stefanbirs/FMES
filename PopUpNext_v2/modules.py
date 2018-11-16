@@ -36,7 +36,7 @@ class DriveMod:
         for tag in tags:
             if "pair" in tag:
                 return tag
-        return ""                                # WHY THIS?
+        return ""
     def move(self, path, end, tag="none"):
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
@@ -166,20 +166,22 @@ class FlyMod:
         pos = citymap.canvas.coords(self.shape[0])
         dist_travel=[pos[0]-end[0],pos[1]-end[1]]
         tot_dist=abs(dist_travel[0])+abs(dist_travel[1])
+        print(tot_dist)
         if (self.charge-tot_dist)>self.threshold:
             return True
         return False
     #fly directly to Destination
     def fly(self, end):
-        if self.charge_for_dest(end)==True or end==const.HUB:
+        dest_x = round(end[0]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_y = round(end[1]*((const.RLENGTH+const.RWITDH)/2) )
+        dest = [dest_x,dest_y]
+        result=self.charge_for_dest(dest)
+        #print(result)
+        if result==True:
             pos = citymap.canvas.coords(self.shape[0])
             cur_pos = [pos[0], pos[1]]
             self.xspeed = 0.0
             self.yspeed = 0.0
-
-            dest_x = round(end[0]*((const.RLENGTH+const.RWITDH)/2) )
-            dest_y = round(end[1]*((const.RLENGTH+const.RWITDH)/2) )
-            dest = [dest_x,dest_y]
             #print("End Point: %d,%d" %(dest_x,dest_y))
             #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
             if cur_pos == dest:
@@ -210,7 +212,9 @@ class FlyMod:
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-                #self.charge-=(self.xspeed+self.yspeed)
+                self.charge-=2
+                print(self.charge)
+                print("Xspeed: %d, Yspeed: %d"%(self.xspeed,self.yspeed))
                 return False
 
 

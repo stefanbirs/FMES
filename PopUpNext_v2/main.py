@@ -51,7 +51,7 @@ for i in range(const.NUM_OF_PODS):
 drones = []
 for i in range(const.NUM_OF_DRONES):
     drones.append(mod.FlyMod(const.HUB))
-    #mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)
+    mod.CommonFunctions.add_tags(["drive%d"%i,"pod%d"%i],"pair%d"%i)
 
 # print("Drive Mod:")
 # pprint(vars(wheels[0]))
@@ -71,8 +71,8 @@ while True:
 
     for i, wheel in enumerate(wheels):
         wheel.move(path_list[i], dest_list[i])
-    #for i, drone in enumerate(drones):
-         #drone.fly(dest_list[i])
+    for i, drone in enumerate(drones):
+         drone.fly(dest_list[i])
 
 
     citymap.tk.update()

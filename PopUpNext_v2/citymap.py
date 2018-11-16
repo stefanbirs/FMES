@@ -27,6 +27,7 @@ def create_houses(tmaze):
 def create_traffic(tmaze):
     for x in range(len(tmaze)):
         for y in range(len(tmaze[0])):
+            # make into functions
             if tmaze[x][y] == 1 and not x % 2 == 0: #Makes a rectangle between buildings in the x axis
                 col = ((const.RLENGTH+const.RWITDH)*((x/2)-0.5))+const.RWITDH
                 row = (const.RLENGTH+const.RWITDH)*(y/2)

@@ -13,11 +13,12 @@ class DriveMod:
         # This is defining the start position of the DriveMod
         self.id = DriveMod.id
         DriveMod.id += 1
+        self.tag="drive%d"%self.id
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green", tags="drive%d"%self.id)
+        self.shape = citymap.canvas.create_rectangle(x1, y1, x2, y2, fill="green", tags=self.tag)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for
@@ -137,13 +138,26 @@ class FlyMod:
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
-        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=("fly%d"%self.id)),
-        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=("fly%d"%self.id))]
+        self.tag=("fly%d"%self.id)
+        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=self.tag),
+        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=self.tag)]
         #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
         self.xspeed = self.yspeed = 0
     #Methods
     #fly to wheels with pods
     #pick up pod
+    def pick_up_pod(self,pod):
+        pos = citymap.canvas.coords(self.shape[0])
+        cur_pos = [pos[0], pos[1]]
+        pod_pos = citymap.canvas.coords(pod.shape)
+        pod_cur_pos = [pos[0], pos[1]]
+        at_dest=False
+        while(at_dest!=True):
+            at_dest=self.fly(pod_cur_pos)
+        CommonFunctions.add_tags([self.tag, pod_tag],"P100")
+        at_dest=False
+        while(at_dest!=True):
+            at_dest=self.fly(pod.final_dest)
     #drop off pod
     #check if has pod
     def has_pod(self):
@@ -226,15 +240,17 @@ class FlyMod:
 class PodMod:
     # Initializes varibles when object is created
     id = 0
-    def __init__(self, start):
+    def __init__(self, start,end):
         # This is defining the start position of the DriveMod
         self.id = PodMod.id
         PodMod.id += 1
+        PodMod.final_dest=end
+        self.tag="pod%d"%self.id
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
         y2 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags="pod%d"%self.id)
+        self.shape = citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=self.tag)
         # The speed of the DriveMod
         self.xspeed = self.yspeed = 0
         # The varibels underneath is keeping track of part of the array, path, we are looking for

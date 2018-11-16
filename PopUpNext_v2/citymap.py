@@ -63,7 +63,7 @@ def create_hub():
     y1 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) )
     x2 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
     y2 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
-    canvas.create_rectangle(x1, y1, x2, y2, fill="black",tags="hub")
+    canvas.create_rectangle(x1, y1, x2, y2,tags="hub")
 ################################################################################
 # Creating the canvas ##########################################################
 ################################################################################

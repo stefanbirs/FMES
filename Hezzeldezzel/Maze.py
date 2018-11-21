@@ -44,41 +44,32 @@ for i in range(len(amaze)):
             column=((hw+rd)*((i/2)-0.5))+rd
             row=(hw+rd)*(j/2)
             a.append(canvas.create_rectangle(column,row ,hw+column , 20+row, fill=""))
-            b.append(i)
-            b.append(j)
         if amaze[i][j] != 2 and not j % 2 == 0:
             row=((hw+rd)*((j/2)-0.5))+rd
             column=(hw+rd)*(i/2)
             a.append(canvas.create_rectangle(column,row , 20+column , hw+row, fill=""))
-            b.append(i)
-            b.append(j)
         if amaze[i][j] != 2 and i % 2 == 0 and j % 2 == 0 :
             row=((hw+rd)*(j/2))
             column=((hw+rd)*(i/2))
             a.append(canvas.create_rectangle(column,row , 20+column , row+20, fill=""))
-            b.append(i)
-            b.append(j)
         if amaze[i][j]==2:
             a.append(0)
-            b.append(i)
-            b.append(j)
-print(b)
+
 while True :
+
+
 
     for i in range(len(Trafmaze)):
         for j in range(len(Trafmaze)):
-            if amaze[i][j]==1:
-                Trafmaze[i][j]=random.randrange(1,2000)
+            trafchance=random.randrange(1,1000)
+            if amaze[i][j]==1 and Trafmaze[i][j]==0:
+                Trafmaze[i][j]=200
             if Trafmaze[i][j]>0:
                 Trafmaze[i][j]=Trafmaze[i][j]-1
-            if Trafmaze[i][j]==1:
+            if Trafmaze[i][j]==0:
                 amaze[i][j]=0
-                continue
-            if amaze[i][j]==0:
-                NoTrafmaze[i][j]=random.randrange(1,2000)
-            if NoTrafmaze[i][j]>0:
-                NoTrafmaze[i][j]=NoTrafmaze[i][j]-1
-            if NoTrafmaze[i][j]==1:
+
+            if amaze[i][j]==0 and trafchance==1:
                 amaze[i][j]=1
 
 

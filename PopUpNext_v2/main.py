@@ -23,7 +23,8 @@ strt_list, dest_list = a_star.random_start_dest(param.tmaze, const.NUM_OF_WHEELS
 # generates multiple paths for the given start and end positions
 #path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_list, dest_list)
 
-
+strt_list = [(2, 2)]
+dest_list = [(10, 10)]
 
 #strt_list = [(0, 10), (6, 6), (3, 2)]
 #dest_list = [(6, 6), (0, 10), (6, 6)]
@@ -39,6 +40,7 @@ citymap.create_hub()
 # Creating  Drive, Pod and Fly Modules #########################################
 ################################################################################
 # Drive module
+
 wheels = []
 for i in range(const.NUM_OF_WHEELS):
     wheels.append(mod.DriveMod(strt_list[i], dest_list[i]))

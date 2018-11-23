@@ -47,12 +47,13 @@ for i in range(const.NUM_OF_WHEELS):
 pods = []
 for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i],dest_list[i]))
+    mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
 
 # Fly module
 drones = []
 for i in range(const.NUM_OF_DRONES):
     drones.append(mod.FlyMod(const.HUB))
-    mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
+
 
 # print("Drive Mod:")
 # pprint(vars(wheels[0]))

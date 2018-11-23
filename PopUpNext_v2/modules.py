@@ -16,7 +16,7 @@ class DriveMod:
         # This is defining the start position of the DriveMod
         self.id = DriveMod.id
         DriveMod.id += 1
-        self.tag="drive%d"%self.id
+        self.tag = "drive%d"%self.id
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )
         x2 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) + const.SHAPE_SIZE )
@@ -276,7 +276,7 @@ class PodMod:
         # This is defining the start position of the DriveMod
         self.id = PodMod.id
         PodMod.id += 1
-        self.final_dest=end
+        self.final_dest = end
         self.tag="pod%d"%self.id
         x1 = int( start[0]*((const.RLENGTH+const.RWITDH)/2) )
         y1 = int( start[1]*((const.RLENGTH+const.RWITDH)/2) )

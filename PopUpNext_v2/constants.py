@@ -12,7 +12,7 @@ TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
 
 NUM_OF_WHEELS = 3
-NUM_OF_DRONES = 0
+NUM_OF_DRONES = 2
 NUM_OF_PODS = 3
 
 #

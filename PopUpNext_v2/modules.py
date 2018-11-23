@@ -12,8 +12,6 @@ class DriveMod:
     # Initializes varibles when object is created
     id = 0
 
-
-################################################################################
     def __init__(self, start, end):
         # This is defining the start position of the DriveMod
         self.id = DriveMod.id
@@ -51,16 +49,11 @@ class DriveMod:
             if "pair" in tag:
                 #print("Drive %s"%tag)
                 return tag
-<<<<<<< HEAD
-        return ""
-    def move(self, path, end, tag="none"):
-=======
         return ""                       # WHY THIS?
 
 ################################################################################
     def drive(self, tag="none"):
 
->>>>>>> kamybranch
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
@@ -83,7 +76,7 @@ class DriveMod:
             self.xspeed = self.yspeed = 0
             self.a = self.b = 0
             self.i = 4 # Make sure that it doesn't enter another if statement
-            continue
+
 
         elif cur_pos != dest:
             # Steering of the DriveMod i and speed ###########################

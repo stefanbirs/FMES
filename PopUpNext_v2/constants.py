@@ -10,15 +10,11 @@ SHAPE_SIZE = RWITDH
 TMAZE_COLS = len(param.tmaze) # number of columns
 TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
-<<<<<<< HEAD
-NUM_OF_WHEELS = 10
-NUM_OF_DRONES = 10
-NUM_OF_PODS = 10
-=======
-NUM_OF_WHEELS = 100
+
+NUM_OF_WHEELS = 3
 NUM_OF_DRONES = 0
-NUM_OF_PODS = 0
->>>>>>> kamybranch
+NUM_OF_PODS = 3
+
 #
 PIXEL_CHARGE = 20
 #

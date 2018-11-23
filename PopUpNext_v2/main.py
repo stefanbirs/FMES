@@ -21,10 +21,12 @@ from pprint import pprint
 # generates multiple random start and end positions
 strt_list, dest_list = a_star.random_start_dest(param.tmaze, const.NUM_OF_WHEELS)
 # generates multiple paths for the given start and end positions
-path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_list, dest_list)
+#path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_list, dest_list)
 
 
 
+#strt_list = [(0, 10), (6, 6), (3, 2)]
+#dest_list = [(6, 6), (0, 10), (6, 6)]
 ################################################################################
 # Generates City Maps Component ################################################
 ################################################################################
@@ -33,14 +35,13 @@ citymap.create_traffic(param.tmaze) # Generates Traffic
 citymap.create_destination(dest_list) # Generates Destination blocks
 citymap.create_hub()
 
-
 ################################################################################
 # Creating  Drive, Pod and Fly Modules #########################################
 ################################################################################
 # Drive module
 wheels = []
 for i in range(const.NUM_OF_WHEELS):
-    wheels.append(mod.DriveMod(strt_list[i]))
+    wheels.append(mod.DriveMod(strt_list[i], dest_list[i]))
 
 # Pod module
 pods = []
@@ -68,8 +69,10 @@ while True:
     # make one drone start at hub
     # make pod start on wheels
     # make pod move with wheels using tags
+    # make A* for each object (method in class)
 
     for i, wheel in enumerate(wheels):
+<<<<<<< HEAD
         wheel.move(path_list[i], dest_list[i])
     for i, drone in enumerate(drones):
          drone.pick_up_pod(pods[i])
@@ -77,6 +80,13 @@ while True:
          #print(citymap.canvas.gettags(drones[i].shape[0]))
          #print("Pods")
          #print(citymap.canvas.gettags(pods[i].shape))
+=======
+        wheel.drive()
+    #for i, drone in enumerate(drones):
+         #drone.fly(dest_list[i])
+
+
+>>>>>>> kamybranch
     citymap.tk.update()
     time.sleep(0.01)
 

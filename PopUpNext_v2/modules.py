@@ -1,6 +1,8 @@
 import constants as const
 import parameters as param
+import a_star
 import citymap
+import time
 
 
 ################################################################################
@@ -9,7 +11,10 @@ import citymap
 class DriveMod:
     # Initializes varibles when object is created
     id = 0
-    def __init__(self, start):
+
+
+################################################################################
+    def __init__(self, start, end):
         # This is defining the start position of the DriveMod
         self.id = DriveMod.id
         DriveMod.id += 1
@@ -26,32 +31,50 @@ class DriveMod:
         self.b = self.y = 1
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
+
+        self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
+
+
+################################################################################
     def has_pod(self):
         tags = citymap.canvas.gettags(self.shape)
         for tag in tags:
             if "pair" in tag:
                 return True
         return False
+
+
+################################################################################
     def pairing_tag(self):
         tags = citymap.canvas.gettags(self.shape)
         for tag in tags:
             if "pair" in tag:
                 #print("Drive %s"%tag)
                 return tag
+<<<<<<< HEAD
         return ""
     def move(self, path, end, tag="none"):
+=======
+        return ""                       # WHY THIS?
+
+################################################################################
+    def drive(self, tag="none"):
+
+>>>>>>> kamybranch
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
-            for num_elements in range(0,len(ids_to_move)):
+            for num_elements in range(0, len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
         else:
             citymap.canvas.move(self.shape, self.xspeed, self.yspeed)
+
         # saves the current position if the ground mod
         pos = citymap.canvas.coords(self.shape) # Current position of ground module
         cur_pos = [pos[0], pos[1]]
+
         # indentify the end coordinates
-        dest_x = int( end[0]*((const.RLENGTH+const.RWITDH)/2) )
-        dest_y = int( end[1]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_x = int( self.path[-1][0]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_y = int( self.path[-1][1]*((const.RLENGTH+const.RWITDH)/2) )
         dest = [dest_x, dest_y]
 
         # if ground module has reached its destination
@@ -60,64 +83,68 @@ class DriveMod:
             self.xspeed = self.yspeed = 0
             self.a = self.b = 0
             self.i = 4 # Make sure that it doesn't enter another if statement
+            continue
 
-        # Steering of the DriveMod i and speed ###########################
-        #use these values to determine i of travel
-        a_x = path[self.a][self.x]
-        b_x = path[self.b][self.x]
-        a_y = path[self.a][self.y]
-        b_y = path[self.b][self.y]
+        elif cur_pos != dest:
+            # Steering of the DriveMod i and speed ###########################
+            #use these values to determine i of travel
+            a_x = self.path[self.a][self.x]
+            b_x = self.path[self.b][self.x]
+            a_y = self.path[self.a][self.y]
+            b_y = self.path[self.b][self.y]
 
-        if a_x < b_x:
-            # positive in the x i
-            self.xspeed = 1
-            self.yspeed = 0
-            self.i = 0 # control variable
-        if b_x < a_x:
-            # negative in the x i
-            self.xspeed = -1
-            self.yspeed = 0
-            self.i = 1 # control variable
-        if a_y < b_y:
-            # positive in the y i
-            self.xspeed = 0
-            self.yspeed = 1
-            self.i = 0 # control variable
-        if b_y < a_y:
-            # negative in the y i
-            self.xspeed = 0
-            self.yspeed = -1
-            self.i = 1 # control variable
+            if a_x < b_x:
+                # positive in the x i
+                self.xspeed = 1
+                self.yspeed = 0
+                self.i = 0 # control variable
+            if b_x < a_x:
+                # negative in the x i
+                self.xspeed = -1
+                self.yspeed = 0
+                self.i = 1 # control variable
+            if a_y < b_y:
+                # positive in the y i
+                self.xspeed = 0
+                self.yspeed = 1
+                self.i = 0 # control variable
+            if b_y < a_y:
+                # negative in the y i
+                self.xspeed = 0
+                self.yspeed = -1
+                self.i = 1 # control variable
 
-        # Checking the coordinates of the DriveMod
-        # When the DriveMod coordinate has reached a position of a new
-        # coordinate, the varibles a and b gets added by one.
-        # This is done to make the if statements above to look at the next step of the path
-        if cur_pos[0] >= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 0:
-            self.xspeed = 0
-            self.a = self.a + 1
-            self.b = self.b + 1
-            self.i = 3 # control variable
-        # if the ground mod has reached a new coordinate in the negative x direction
-        if cur_pos[0] <= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 1:
-            self.xspeed = 0
-            self.a = self.a + 1
-            self.b = self.b + 1
-            self.i = 3 # control variable
-        # if the ground mod has reached a new coordinate in the positive y direction
-        if cur_pos[1] >= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 0:
-            self.yspeed = 0
-            self.a = self.a + 1
-            self.b = self.b + 1
-            self.i = 3 # control variable
-        # if the ground mod has reached a new coordinate in the negative y direction
-        if cur_pos[1] <= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 1:
-            self.yspeed = 0
-            self.a = self.a + 1
-            self.b = self.b + 1
-            self.i = 3 # control variable
+            def calc_new_path():
+                self.path.pop(0) # removes first entery of the path
+                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
+                #print("path", self.path)
 
+            # Checking the coordinates of the DriveMod
+            # When the DriveMod coordinate has reached a position of a new
+            # coordinate, the varibles a and b gets added by one.
+            # This is done to make the if statements above to look at the next step of the path
+            if cur_pos[0] >= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 0:
+                self.i = 3 # control variable
+                self.xspeed = 0
+                calc_new_path()
 
+            # if the ground mod has reached a new coordinate in the negative x direction
+            if cur_pos[0] <= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 1:
+                self.i = 3 # control variable
+                self.xspeed = 0
+                calc_new_path()
+
+            # if the ground mod has reached a new coordinate in the positive y direction
+            if cur_pos[1] >= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 0:
+                self.i = 3 # control variable
+                self.yspeed = 0
+                calc_new_path()
+
+            # if the ground mod has reached a new coordinate in the negative y direction
+            if cur_pos[1] <= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 1:
+                self.i = 3 # control variable
+                self.yspeed = 0
+                calc_new_path()
 
 
 

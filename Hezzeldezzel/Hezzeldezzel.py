@@ -306,4 +306,6 @@ while True:
     tk.update()
     time.sleep(0.01)
 
+print("pik")
+
 tk.mainloop()

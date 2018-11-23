@@ -7,16 +7,15 @@ import constants as const
 # Makes houses for every second coordinate in the x and y axis
 def create_houses(tmaze):
     box_x = 0
-    for x in range(int((len(tmaze)-1)/2)):
+    for i in range(int((len(tmaze)-1)/2)):
         box_y = 0
-        for y in range(int((len(tmaze[0])-1)/2)):
+        for i in range(int((len(tmaze[0])-1)/2)):
             canvas.create_rectangle(box_x + const.RWITDH,
                                     box_y + const.RWITDH,
                                     box_x + const.RWITDH + const.RLENGTH,
                                     box_y + const.RWITDH + const.RLENGTH )
             box_y = box_y + const.RLENGTH + const.RWITDH
         box_x = box_x + const.RLENGTH + const.RWITDH
-
 
 
 
@@ -54,17 +53,14 @@ def create_destination(dest_list):
         x2 = int( dest_list[i][0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
         y2 = int( dest_list[i][1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
         canvas.create_rectangle(x1, y1, x2, y2, fill="blue",tags="dest")
-
-################################################################################
-# Hub ##########################################################################
-################################################################################
-# Creates a square at the hub coordinate
 def create_hub():
     x1 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) )
     y1 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) )
     x2 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
     y2 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
-    canvas.create_rectangle(x1, y1, x2, y2,tags="hub")
+    canvas.create_rectangle(x1, y1, x2, y2, fill="black",tags="hub")
+
+
 ################################################################################
 # Creating the canvas ##########################################################
 ################################################################################
@@ -80,6 +76,7 @@ def create_canvas():
 ################################################################################
 # RUNNING CANVAS METHOD ########################################################
 ################################################################################
+
 tk, canvas = create_canvas()
 
 

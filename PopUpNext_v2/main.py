@@ -72,21 +72,10 @@ while True:
     # make A* for each object (method in class)
 
     for i, wheel in enumerate(wheels):
-<<<<<<< HEAD
         wheel.drive()
     #for i, drone in enumerate(drones):
          #drone.fly(dest_list[i])
 
-
-=======
-        wheel.move(path_list[i], dest_list[i])
-    for i, drone in enumerate(drones):
-         drone.pick_up_pod(pods[i])
-         #print("Drones")
-         #print(citymap.canvas.gettags(drones[i].shape[0]))
-         #print("Pods")
-         #print(citymap.canvas.gettags(pods[i].shape))
->>>>>>> master
     citymap.tk.update()
     time.sleep(0.01)
 

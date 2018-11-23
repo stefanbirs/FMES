@@ -51,16 +51,11 @@ class DriveMod:
             if "pair" in tag:
                 #print("Drive %s"%tag)
                 return tag
-<<<<<<< HEAD
         return ""                       # WHY THIS?
 
 ################################################################################
     def drive(self, tag="none"):
 
-=======
-        return ""
-    def move(self, path, end, tag="none"):
->>>>>>> master
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):

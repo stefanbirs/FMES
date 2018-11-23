@@ -48,16 +48,16 @@ def create_traffic(tmaze):
 # Creates a square at the destination coordinate
 def create_destination(dest_list):
     for i in range (len(dest_list)):
-        x1 = int( dest_list[i][0]*((const.RLENGTH+const.RWITDH)/2) )
-        y1 = int( dest_list[i][1]*((const.RLENGTH+const.RWITDH)/2) )
-        x2 = int( dest_list[i][0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
-        y2 = int( dest_list[i][1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
+        x1 = int( dest_list[i][0] * const.MULTIPLIER )
+        y1 = int( dest_list[i][1] * const.MULTIPLIER )
+        x2 = int( dest_list[i][0] * const.MULTIPLIER + const.RWITDH )
+        y2 = int( dest_list[i][1] * const.MULTIPLIER + const.RWITDH )
         canvas.create_rectangle(x1, y1, x2, y2, fill="blue",tags="dest")
 def create_hub():
-    x1 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) )
-    y1 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) )
-    x2 = int(const.HUB[0]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
-    y2 = int(const.HUB[1]*((const.RLENGTH+const.RWITDH)/2) + const.RWITDH )
+    x1 = int(const.HUB[0] * const.MULTIPLIER )
+    y1 = int(const.HUB[1] * const.MULTIPLIER )
+    x2 = int(const.HUB[0] * const.MULTIPLIER + const.RWITDH )
+    y2 = int(const.HUB[1] * const.MULTIPLIER + const.RWITDH )
     canvas.create_rectangle(x1, y1, x2, y2, fill="black",tags="hub")
 
 

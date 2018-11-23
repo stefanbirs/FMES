@@ -76,11 +76,11 @@ class DriveMod:
             self.xspeed = self.yspeed = 0
             self.a = self.b = 0
             self.i = 4 # Make sure that it doesn't enter another if statement
-            return 0
+            continue
 
-        # Steering of the DriveMod i and speed ###########################
-        #use these values to determine i of travel
-        if len(self.path) >= 2:
+        elif cur_pos != dest:
+            # Steering of the DriveMod i and speed ###########################
+            #use these values to determine i of travel
             a_x = self.path[self.a][self.x]
             b_x = self.path[self.b][self.x]
             a_y = self.path[self.a][self.y]
@@ -107,73 +107,37 @@ class DriveMod:
                 self.yspeed = -1
                 self.i = 1 # control variable
 
+            def calc_new_path():
+                self.path.pop(0) # removes first entery of the path
+                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
+                #print("path", self.path)
+
             # Checking the coordinates of the DriveMod
             # When the DriveMod coordinate has reached a position of a new
             # coordinate, the varibles a and b gets added by one.
             # This is done to make the if statements above to look at the next step of the path
             if cur_pos[0] >= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 0:
-                self.xspeed = 0
-                #self.a = self.a + 1
-                #self.b = self.b + 1
-                self.path.pop(0) # removes first entery of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-
                 self.i = 3 # control variable
+                self.xspeed = 0
+                calc_new_path()
+
             # if the ground mod has reached a new coordinate in the negative x direction
             if cur_pos[0] <= ((const.RLENGTH+const.RWITDH)/2)*b_x and a_y == b_y and self.i == 1:
-                self.xspeed = 0
-                #self.a = self.a + 1
-                #self.b = self.b + 1
-                self.path.pop(0) # removes first entery of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-
                 self.i = 3 # control variable
+                self.xspeed = 0
+                calc_new_path()
+
             # if the ground mod has reached a new coordinate in the positive y direction
             if cur_pos[1] >= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 0:
-                self.yspeed = 0
-                #self.a = self.a + 1
-                #self.b = self.b + 1
-                self.path.pop(0) # removes first entery of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-
                 self.i = 3 # control variable
+                self.yspeed = 0
+                calc_new_path()
+
             # if the ground mod has reached a new coordinate in the negative y direction
             if cur_pos[1] <= ((const.RLENGTH+const.RWITDH)/2)*b_y and a_x == b_x and self.i == 1:
-                self.yspeed = 0
-                #self.a = self.a + 1
-                #self.b = self.b + 1
-                self.path.pop(0) # removes first entery of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-
                 self.i = 3 # control variable
-
-## testing with dynamic traffic ################################################
-            if len(self.path) == 6:
-                x = 4
-                y = 8
-                param.tmaze[x][y] = 1
-                # make into function
-                row = ((const.RLENGTH+const.RWITDH)*(y/2))
-                col = ((const.RLENGTH+const.RWITDH)*(x/2))
-                citymap.canvas.create_rectangle(col, row, col + const.RWITDH ,row + const.RWITDH, fill="red",tags="traffic")
-
-            if len(self.path) == 3:
-                x = 6
-                y = 7
-                param.tmaze[x][y] = 1
-                # make into function
-                row = ((const.RLENGTH+const.RWITDH)*(y/2))
-                col = ((const.RLENGTH+const.RWITDH)*(x/2))
-                sq1 = citymap.canvas.create_rectangle(col, row, col + const.RWITDH ,row + const.RWITDH, fill="red",tags="traffic")
-
-
-            #self.path.pop(0) # removes first entery of the path
-            self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-                #citymap.create_traffic(param.tmaze) # Generates Traffic
-            #self.path.pop(0) # removes first entery of the path
-            #self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-
-            print("path", self.path)
+                self.yspeed = 0
+                calc_new_path()
 
 
 

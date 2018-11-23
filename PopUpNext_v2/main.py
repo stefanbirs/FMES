@@ -25,8 +25,8 @@ strt_list, dest_list = a_star.random_start_dest(param.tmaze, const.NUM_OF_WHEELS
 
 
 
-strt_list = [(0, 10)]
-dest_list = [(6, 6)]
+#strt_list = [(0, 10), (6, 6), (3, 2)]
+#dest_list = [(6, 6), (0, 10), (6, 6)]
 ################################################################################
 # Generates City Maps Component ################################################
 ################################################################################
@@ -34,7 +34,6 @@ citymap.create_houses(param.tmaze) # Generates Houses
 citymap.create_traffic(param.tmaze) # Generates Traffic
 citymap.create_destination(dest_list) # Generates Destination blocks
 citymap.create_hub()
-
 
 ################################################################################
 # Creating  Drive, Pod and Fly Modules #########################################

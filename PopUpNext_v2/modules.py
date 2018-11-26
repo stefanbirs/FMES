@@ -52,7 +52,7 @@ class DriveMod:
             if "pair" in tag:
                 #print("Drive %s"%tag)
                 return tag
-        return ""                       # WHY THIS?
+        return ""
 
 ################################################################################
     def drive(self, tag="none"):
@@ -192,7 +192,7 @@ class FlyMod:
         pod_tag=pod.tag
         pos = citymap.canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
-        pod_pos = citymap.canvas.coords(pod.shape)
+        pod_pos = citymap.canvas.coords(pod.shape[0])
         pod_cur_pos = [pod_pos[0], pod_pos[1]]
         #print("Current Pos: %d,%d"%(cur_pos[0],cur_pos[1]))
         #print("Pod Pos: %d, %d"%(pod_cur_pos[0],pod_cur_pos[1]))
@@ -226,7 +226,6 @@ class FlyMod:
         tags=citymap.canvas.gettags(self.shape[0])
         for tag in tags:
             if "pair" in tag:
-                #print("Fly %s"%tag)
                 return tag
         return ""
     def charge_for_dest(self,end):
@@ -239,8 +238,9 @@ class FlyMod:
         return False
     #fly directly to Destination
     def fly(self, end):
-        dest_x = (end[0]*1 )
-        dest_y = (end[1]*1 )
+        #currently doesnt account for astar positions, but shouldnt need to
+        dest_x = (end[0])
+        dest_y = (end[1])
         dest = [dest_x,dest_y]
         result=self.charge_for_dest(dest)
         #print(result)
@@ -249,8 +249,6 @@ class FlyMod:
             cur_pos = [pos[0], pos[1]]
             self.xspeed = 0.0
             self.yspeed = 0.0
-            #print("End Point: %d,%d" %(dest_x,dest_y))
-            #print("Current Position: %d,%d" %(cur_pos[0],cur_pos[1]))
             if cur_pos == dest:
                 self.xspeed = self.yspeed = 0.0
                 return True
@@ -279,9 +277,6 @@ class FlyMod:
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
-                #self.charge-=2
-                #print(self.charge)
-                #print("Xspeed: %d, Yspeed: %d"%(self.xspeed,self.yspeed))
                 return False
 
 
@@ -303,14 +298,10 @@ class PodMod:
         y1 = int( start[1] * const.MULTIPLIER )
         x2 = int( start[0] * const.MULTIPLIER + const.SHAPE_SIZE )
         y2 = int( start[1] * const.MULTIPLIER + const.SHAPE_SIZE )
-        self.shape = citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=self.tag)
-        # The speed of the DriveMod
-        self.xspeed = self.yspeed = 0
-        # The varibels underneath is keeping track of part of the array, path, we are looking for
-        self.a = self.x = 0
-        self.b = self.y = 1
-        # i makes sure that we are entering the right if statement
-        self.i = 0 # control variable
+        self.shape=[citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=self.tag),
+        citymap.canvas.create_text( x2, y2,text=self.id,tags=self.tag,anchor="nw")]
+        citymap.canvas.create_text(end[0]* const.MULTIPLIER + const.SHAPE_SIZE,
+        end[1]*const.MULTIPLIER + const.SHAPE_SIZE,text=self.id,anchor="nw")
 
     # 1) follow airmod/DriveMod
     # 2) check if it's not on airmod/DriveMod
@@ -330,13 +321,10 @@ class CommonFunctions:
                 all_tags=citymap.canvas.gettags(item)
                 #print(all_tags)
                 for tag in all_tags:
-                    if ("pod" in tag or "drive" in tag or "fly" in tag):
-                        print("Stays: %s"%tag)
-                    else:
+                    if not ("pod" in tag or "drive" in tag or "fly" in tag):
                         citymap.canvas.dtag(item, tag)
                         #print("This %d has %s being removed" %(item,tag))
-                        for tag in citymap.canvas.gettags(item):
-                            print("Post deleting: %s"%tag)
+                            #print("Post deleting: %s"%tag)
         #print("Pairing: %s"%pairing_tag)
         #print(canvas.find_withtag(pairing_tag))
 

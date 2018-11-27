@@ -20,6 +20,10 @@ from pprint import pprint
 ################################################################################
 # generates multiple random start and end positions
 strt_list, dest_list = a_star.random_start_dest(param.tmaze, const.NUM_OF_WHEELS)
+# generates multiple paths for the given start and end positions
+#path_list = a_star.multiple_astar_paths(param.tmaze, const.NUM_OF_WHEELS, strt_list, dest_list)
+
+
 #strt_list = [(0, 10), (6, 6), (3, 2)]
 #dest_list = [(6, 6), (0, 10), (6, 6)]
 ################################################################################

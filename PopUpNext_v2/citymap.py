@@ -1,5 +1,6 @@
 from tkinter import *
 import constants as const
+import random
 
 ################################################################################
 # Houses #######################################################################
@@ -53,13 +54,17 @@ def create_destination(dest_list):
         x2 = int( dest_list[i][0] * const.MULTIPLIER + const.RWITDH )
         y2 = int( dest_list[i][1] * const.MULTIPLIER + const.RWITDH )
         canvas.create_rectangle(x1, y1, x2, y2, fill="blue",tags="dest")
+
+
+################################################################################
+# HUB ##########################################################################
+################################################################################
 def create_hub():
     x1 = int(const.HUB[0] * const.MULTIPLIER )
     y1 = int(const.HUB[1] * const.MULTIPLIER )
     x2 = int(const.HUB[0] * const.MULTIPLIER + const.RWITDH )
     y2 = int(const.HUB[1] * const.MULTIPLIER + const.RWITDH )
     canvas.create_rectangle(x1, y1, x2, y2, fill="black",tags="hub")
-
 
 ################################################################################
 # Creating the canvas ##########################################################

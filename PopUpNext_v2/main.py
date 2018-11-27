@@ -8,7 +8,7 @@ import constants as const # paramaters that don't change often
 import parameters as param # paramaters that might change often
 import modules as mod # contains the Drive, Fly and Pod modules
 # Libraries
-import numpy
+import numpy as np
 from tkinter import *
 import random
 import time
@@ -33,6 +33,8 @@ citymap.create_houses(param.tmaze) # Generates Houses
 citymap.create_traffic(param.tmaze) # Generates Traffic
 citymap.create_destination(dest_list) # Generates Destination blocks
 citymap.create_hub()
+
+
 
 ################################################################################
 # Creating  Drive, Pod and Fly Modules #########################################
@@ -66,11 +68,11 @@ for i in range(const.NUM_OF_DRONES):
 # Main Loop ####################################################################
 ################################################################################
 while True:
-    # seperate Number_of_wheels with: numofwheels, numofdrones, numofpods
-    # make one drone start at hub
-    # make pod start on wheels
-    # make pod move with wheels using tags
-    # make A* for each object (method in class)
+
+    # make three different maps (low traffic, medium traffic, high traffic)
+    # if there is no path, pick pod with drone and drop at destination
+    # start cars with pod on them (at random positions and defined positions)
+    # add time to the equation
 
     for i, wheel in enumerate(wheels):
         wheel.drive()

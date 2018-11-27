@@ -57,7 +57,7 @@ drones = []
 for i in range(const.NUM_OF_DRONES):
     drones.append(mod.FlyMod(const.HUB))
 pod_moving=True
-
+mod.GenerateResults.init_pod_data()
 # print("Drive Mod:")
 # pprint(vars(wheels[0]))
 # print("Pod Mod:")
@@ -85,8 +85,9 @@ while pod_moving==True:
         #drone.fly(dest_list[i])
 
     citymap.tk.update()
-    time.sleep(0.01)
+    time.sleep(const.SLEEP_TIME)
 mod.GenerateResults.export_txt(pods)
+mod.GenerateResults.generate_graphs()
 ################################################################################
 # END ##########################################################################
 ################################################################################

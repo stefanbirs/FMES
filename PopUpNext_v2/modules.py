@@ -3,8 +3,12 @@ import parameters as param
 import a_star
 import citymap
 import time
-
-
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go
+import plotly.offline as offline
+offline.init_notebook_mode()
+pod_data = [[] for i in range(const.NUM_OF_PODS)]
 ################################################################################
 # Ground Module ################################################################
 ################################################################################
@@ -309,6 +313,7 @@ class PodMod:
         return False
 
 class CommonFunctions:
+
     def add_tags(pairing_tag, curr_tags):
         for curr_tag in curr_tags:
             citymap.canvas.addtag_withtag(pairing_tag, curr_tag)
@@ -328,12 +333,19 @@ class CommonFunctions:
         return_tag=split_tag[0]+'='+str(number)
         #print(return_tag)
         return return_tag
+
     def add_cost(pairing_tag,value,sender):
         items=citymap.canvas.find_withtag(pairing_tag)
         for item in items:
             all_tags=citymap.canvas.gettags(item)
             for tag in all_tags:
                 #print(tag)
+                if "pod" in tag:
+                    split_tag=tag.replace("pod","")
+                    id=int(split_tag)
+                    new_cost=pod_data[id][len(pod_data[id])-1]+value
+                    #print(new_cost)
+                    pod_data[id].append(new_cost)
                 if ("d_cost" in tag and sender=="drone") or ("w_cost" in tag and sender=="wheel"):
                     #print(tag)
                     new_cost=CommonFunctions.add_cost_to_tag(tag,value)
@@ -345,16 +357,57 @@ class CommonFunctions:
 
 class GenerateResults:
     def export_txt(pods):
-        file=open("PopUpResults.txt","w+")
+        file=open("PopUpResultsGeneral.txt","w+")
         for i in range(0,len(pods)):
             pod_id=citymap.canvas.find_withtag(pods[i].tag)
             #print(pod_id[1])
             all_tags=citymap.canvas.gettags(pod_id[0])
+            file.write("\r\n")
             for tag in all_tags:
                 #print(tag)
                 file.write(tag)
                 file.write("\r\n")
+
         file.close()
+        for i in range(0,const.NUM_OF_PODS):
+            file=open("PopUpResults%d.txt"%pods[i].id,"w+")
+            for count in range(0,len(pod_data[i])):
+                file.write(str(pod_data[i][count]))
+                file.write("\r\n")
+            file.close()
+    def generate_graphs():
+        trace = [[] for i in range(const.NUM_OF_PODS)]
+        for i in range(0,const.NUM_OF_PODS):
+            x_data=[]
+            for count in range(0,len(pod_data[i])):
+                x_data.append(count*const.SLEEP_TIME)
+            y_data = pod_data[i]
+            trace[i]=go.Scatter(
+                x = x_data,
+                y = y_data,
+                mode = 'lines',
+                name="Pod%d"%i
+            )
+            #plotly.offline.plot({
+            #"data": [trace[i]],
+            #"layout": go.Layout(
+            #    title="Pod Data",
+            #    yaxis=dict(title = 'Cost'),
+            #    xaxis=dict(title = 'Time (seconds)'))
+            #}, auto_open=True)
+        data=[]
+        for i in range(0,len(trace)):
+            data.append(trace[i])
+        plotly.offline.plot({
+        "data": trace,
+        "layout": go.Layout(
+            title="Pod Data",
+            yaxis=dict(title = 'Cost'),
+            xaxis=dict(title = 'Time (seconds)'))
+        }, auto_open=True)
+    def init_pod_data():
+        for i in range(0,const.NUM_OF_PODS):
+            pod_data[i].append(0)
 
 ################################################################################
 # END ##########################################################################

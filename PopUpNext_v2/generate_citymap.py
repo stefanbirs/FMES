@@ -1,11 +1,6 @@
 import numpy as np
 import random as rand
 
-eq_len = 31
-len_x = eq_len # maze length x
-len_y = eq_len # maze length y
-size = (len_x, len_y)
-
 def generate_city(size, traffic_desity):
     '''Generates matrix with 0's(free road), 1's(traffic) and 2's(buildings)'''
     # generates matrix with 0's and 1's with given size and traffic desity

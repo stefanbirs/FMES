@@ -17,4 +17,9 @@ maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]]
 tmaze = a_star.flip_matrix(maze) # Flipped City Map
 
-tmaze = generate_citymap.generate_city((21, 21), (0.1))
+eq_len = 25
+len_x = eq_len # maze length x
+len_y = eq_len # maze length y
+size = (len_x, len_y)
+
+tmaze = generate_citymap.generate_city(size, (0.2))

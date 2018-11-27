@@ -1,4 +1,5 @@
 import a_star
+import generate_citymap
 
 # City Map
 maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -13,5 +14,7 @@ maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
         [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
         [0, 2, 0, 2, 1, 2, 0, 2, 1, 2, 0, 2, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]]
+        [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]]
 tmaze = a_star.flip_matrix(maze) # Flipped City Map
+
+tmaze = generate_citymap.generate_city((21, 21), (0.1))

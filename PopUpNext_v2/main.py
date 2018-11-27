@@ -69,7 +69,6 @@ for i in range(const.NUM_OF_DRONES):
 ################################################################################
 while True:
 
-    # number pod with destination
     # make three different maps (low traffic, medium traffic, high traffic)
     # if there is no path, pick pod with drone and drop at destination
     # start cars with pod on them (at random positions and defined positions)

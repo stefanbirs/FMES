@@ -174,8 +174,8 @@ class FlyMod:
 
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
         self.tag=("fly%d"%self.id)
-        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=3,tags=self.tag),
-        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=3,tags=self.tag)]
+        self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=2,tags=self.tag),
+        citymap.canvas.create_line(x1, y2, x2, y1, fill="black",width=2,tags=self.tag)]
         #print("This the shape %d %d" %(self.shape[0],self.shape[1]))
         self.xspeed = self.yspeed = 0
     #Methods

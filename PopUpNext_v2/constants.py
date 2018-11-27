@@ -4,6 +4,9 @@ CWIDTH = 700 # CANVAS WIDTH
 CHEIGHT = 700 # CANVAS LENGTH
 #
 
+SLEEP_TIME=0.01
+#
+
 RWITDH = int ( (CWIDTH/4)  /   (len(param.tmaze)/2) + 0.5 )  # ROAD WIDTH
 RLENGTH = int( (CWIDTH-(((len(param.tmaze)/2)+0.5)*RWITDH)) / ((len(param.tmaze)/2)-0.5) ) # ROAD LENGTH
 SHAPE_SIZE = RWITDH

@@ -6,7 +6,8 @@ import time
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-
+import plotly.offline as offline
+offline.init_notebook_mode()
 pod_data = [[] for i in range(const.NUM_OF_PODS)]
 ################################################################################
 # Ground Module ################################################################
@@ -375,18 +376,35 @@ class GenerateResults:
                 file.write("\r\n")
             file.close()
     def generate_graphs():
+        trace = [[] for i in range(const.NUM_OF_PODS)]
         for i in range(0,const.NUM_OF_PODS):
             x_data=[]
             for count in range(0,len(pod_data[i])):
                 x_data.append(count*const.SLEEP_TIME)
             y_data = pod_data[i]
-
-            trace = go.Scatter(
+            trace[i]=go.Scatter(
                 x = x_data,
-                y = y_data
+                y = y_data,
+                mode = 'lines',
+                name="Pod%d"%i
             )
-            data = [trace]
-            py.iplot(data, filename='Pod%d'%i)
+            #plotly.offline.plot({
+            #"data": [trace[i]],
+            #"layout": go.Layout(
+            #    title="Pod Data",
+            #    yaxis=dict(title = 'Cost'),
+            #    xaxis=dict(title = 'Time (seconds)'))
+            #}, auto_open=True)
+        data=[]
+        for i in range(0,len(trace)):
+            data.append(trace[i])
+        plotly.offline.plot({
+        "data": trace,
+        "layout": go.Layout(
+            title="Pod Data",
+            yaxis=dict(title = 'Cost'),
+            xaxis=dict(title = 'Time (seconds)'))
+        }, auto_open=True)
     def init_pod_data():
         for i in range(0,const.NUM_OF_PODS):
             pod_data[i].append(0)

@@ -2,3 +2,4 @@
 yo.py
 *.pyc
 *.pyc
+**/_pycache_

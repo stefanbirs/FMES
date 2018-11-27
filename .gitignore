@@ -3,3 +3,4 @@ yo.py
 *.pyc
 *.pyc
 **/_pycache_
+*.txt

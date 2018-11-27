@@ -3,8 +3,12 @@ import parameters as param
 import a_star
 import citymap
 import time
-
-
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go
+import plotly.offline as offline
+offline.init_notebook_mode()
+pod_data = [[] for i in range(const.NUM_OF_PODS)]
 ################################################################################
 # Ground Module ################################################################
 ################################################################################
@@ -56,11 +60,11 @@ class DriveMod:
 
 ################################################################################
     def drive(self, tag="none"):
-
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+            CommonFunctions.add_cost(self.pairing_tag(),const.WHEEL_COST,"wheel")
         else:
             citymap.canvas.move(self.shape, self.xspeed, self.yspeed)
 
@@ -194,17 +198,10 @@ class FlyMod:
             at_dest=self.fly(pod_cur_pos)
             #print(at_dest)
             if at_dest==True:
-                #print(at_dest)
                 CommonFunctions.remove_tags([self.tag,pod_tag])
                 CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
         elif self.has_pod()==True:
-            dest_x = int(pod.final_dest[0]* const.MULTIPLIER )
-            dest_y = int(pod.final_dest[1]* const.MULTIPLIER )
-            #print("Final Dest: %d,%d"%(dest_x,dest_y))
-            dest = [dest_x, dest_y]
-            at_dest_2=self.fly(dest)
-    #drop off pod
-    #check if has pod
+            self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
         for tag in tags:
@@ -236,7 +233,6 @@ class FlyMod:
         dest_y = (end[1])
         dest = [dest_x,dest_y]
         result=self.charge_for_dest(dest)
-        #print(result)
         if result==True:
             pos = citymap.canvas.coords(self.shape[0])
             cur_pos = [pos[0], pos[1]]
@@ -267,9 +263,11 @@ class FlyMod:
                     ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
                     for num_elements in range(0,len(ids_to_move)):
                         citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+                    CommonFunctions.add_cost(self.pairing_tag(),const.DRONE_COST,"drone")
                 else:
                     for num_elements in range(0,len(self.shape)):
                         citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+
                 return False
 
 
@@ -285,28 +283,40 @@ class PodMod:
         # This is defining the start position of the DriveMod
         self.id = PodMod.id
         PodMod.id += 1
-        self.final_dest = end
+        dest_x = int(end[0]* const.MULTIPLIER )
+        dest_y = int(end[1]* const.MULTIPLIER )
+        self.dest = [dest_x, dest_y]
         self.tag="pod%d"%self.id
         x1 = int( start[0] * const.MULTIPLIER )
         y1 = int( start[1] * const.MULTIPLIER )
         x2 = int( start[0] * const.MULTIPLIER + const.SHAPE_SIZE )
         y2 = int( start[1] * const.MULTIPLIER + const.SHAPE_SIZE )
-        self.shape=[citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=self.tag),
+        self.shape=[citymap.canvas.create_oval(x1, y1, x2, y2, fill="grey",tags=[self.tag,"d_cost=0","w_cost=0"]),
         citymap.canvas.create_text( x2, y2,text=self.id,tags=self.tag,anchor="nw")]
         citymap.canvas.create_text(end[0]* const.MULTIPLIER + const.SHAPE_SIZE,
         end[1]*const.MULTIPLIER + const.SHAPE_SIZE,text=self.id,anchor="nw")
+        #print(citymap.canvas.gettags(self.shape[0]))
+        self.d_cost=0
+        self.w_cost=0
 
     # 1) follow airmod/DriveMod
     # 2) check if it's not on airmod/DriveMod
     # 3) check if has reached final destination
     # 4) check if has passengers
-
+    def at_dest(self):
+        pos = citymap.canvas.coords(self.shape[0])
+        cur_pos = [pos[0], pos[1]]
+        self.xspeed = 0.0
+        self.yspeed = 0.0
+        if cur_pos == self.dest:
+            return True
+        return False
 
 class CommonFunctions:
+
     def add_tags(pairing_tag, curr_tags):
         for curr_tag in curr_tags:
             citymap.canvas.addtag_withtag(pairing_tag, curr_tag)
-            #print("This %s has added the tag %s" %(curr_tag,pairing_tag))
     def remove_tags(curr_tags):
         for curr_tag in curr_tags:
             items=citymap.canvas.find_withtag(curr_tag)
@@ -314,13 +324,90 @@ class CommonFunctions:
                 all_tags=citymap.canvas.gettags(item)
                 #print(all_tags)
                 for tag in all_tags:
-                    if not ("pod" in tag or "drive" in tag or "fly" in tag):
+                    if not ("pod" in tag or "drive" in tag or "fly" in tag or "cost" in tag):
                         citymap.canvas.dtag(item, tag)
-                        #print("This %d has %s being removed" %(item,tag))
-                            #print("Post deleting: %s"%tag)
-        #print("Pairing: %s"%pairing_tag)
-        #print(canvas.find_withtag(pairing_tag))
+    def add_cost_to_tag(tag,value):
+        split_tag=tag.split('=')
+        number=int(split_tag[1])
+        number+=value
+        return_tag=split_tag[0]+'='+str(number)
+        #print(return_tag)
+        return return_tag
 
+    def add_cost(pairing_tag,value,sender):
+        items=citymap.canvas.find_withtag(pairing_tag)
+        for item in items:
+            all_tags=citymap.canvas.gettags(item)
+            for tag in all_tags:
+                #print(tag)
+                if "pod" in tag:
+                    split_tag=tag.replace("pod","")
+                    id=int(split_tag)
+                    new_cost=pod_data[id][len(pod_data[id])-1]+value
+                    #print(new_cost)
+                    pod_data[id].append(new_cost)
+                if ("d_cost" in tag and sender=="drone") or ("w_cost" in tag and sender=="wheel"):
+                    #print(tag)
+                    new_cost=CommonFunctions.add_cost_to_tag(tag,value)
+                    citymap.canvas.addtag_withtag(new_cost,item)
+                    citymap.canvas.dtag(item, tag)
+                    #print(citymap.canvas.gettags(item))
+                    break
+
+
+class GenerateResults:
+    def export_txt(pods):
+        file=open("PopUpResultsGeneral.txt","w+")
+        for i in range(0,len(pods)):
+            pod_id=citymap.canvas.find_withtag(pods[i].tag)
+            #print(pod_id[1])
+            all_tags=citymap.canvas.gettags(pod_id[0])
+            file.write("\r\n")
+            for tag in all_tags:
+                #print(tag)
+                file.write(tag)
+                file.write("\r\n")
+
+        file.close()
+        for i in range(0,const.NUM_OF_PODS):
+            file=open("PopUpResults%d.txt"%pods[i].id,"w+")
+            for count in range(0,len(pod_data[i])):
+                file.write(str(pod_data[i][count]))
+                file.write("\r\n")
+            file.close()
+    def generate_graphs():
+        trace = [[] for i in range(const.NUM_OF_PODS)]
+        for i in range(0,const.NUM_OF_PODS):
+            x_data=[]
+            for count in range(0,len(pod_data[i])):
+                x_data.append(count*const.SLEEP_TIME)
+            y_data = pod_data[i]
+            trace[i]=go.Scatter(
+                x = x_data,
+                y = y_data,
+                mode = 'lines',
+                name="Pod%d"%i
+            )
+            #plotly.offline.plot({
+            #"data": [trace[i]],
+            #"layout": go.Layout(
+            #    title="Pod Data",
+            #    yaxis=dict(title = 'Cost'),
+            #    xaxis=dict(title = 'Time (seconds)'))
+            #}, auto_open=True)
+        data=[]
+        for i in range(0,len(trace)):
+            data.append(trace[i])
+        plotly.offline.plot({
+        "data": trace,
+        "layout": go.Layout(
+            title="Pod Data",
+            yaxis=dict(title = 'Cost'),
+            xaxis=dict(title = 'Time (seconds)'))
+        }, auto_open=True)
+    def init_pod_data():
+        for i in range(0,const.NUM_OF_PODS):
+            pod_data[i].append(0)
 
 ################################################################################
 # END ##########################################################################

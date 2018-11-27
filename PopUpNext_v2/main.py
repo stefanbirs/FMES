@@ -78,11 +78,12 @@ while pod_moving==True:
     for i, wheel in enumerate(wheels):
         wheel.drive()
     for i, drone in enumerate(drones):
-        drone.pick_up_pod(pods[i])
+        if(wheels[i].path==None and pods[i].at_dest()==False):
+            #print(wheels[i].tag)
+            drone.pick_up_pod(pods[i])
         pod_at_dest[i]=pods[i].at_dest()
         if pod_at_dest[i]==False:
             pod_moving=True
-        #drone.fly(dest_list[i])
 
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)

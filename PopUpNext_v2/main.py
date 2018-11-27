@@ -8,7 +8,7 @@ import constants as const # paramaters that don't change often
 import parameters as param # paramaters that might change often
 import modules as mod # contains the Drive, Fly and Pod modules
 # Libraries
-import numpy
+import numpy as np
 from tkinter import *
 import random
 import time
@@ -33,6 +33,8 @@ citymap.create_houses(param.tmaze) # Generates Houses
 citymap.create_traffic(param.tmaze) # Generates Traffic
 citymap.create_destination(dest_list) # Generates Destination blocks
 citymap.create_hub()
+
+
 
 ################################################################################
 # Creating  Drive, Pod and Fly Modules #########################################

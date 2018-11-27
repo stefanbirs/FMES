@@ -13,7 +13,7 @@ TMAZE_COLS = len(param.tmaze) # number of columns
 TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
 
-NUM_OF_WHEELS = 1
+NUM_OF_WHEELS = 5
 NUM_OF_DRONES = 0
 NUM_OF_PODS = 0
 

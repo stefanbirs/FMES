@@ -79,13 +79,6 @@ class DriveMod:
             self.a = self.b = 0
             self.i = 4 # Make sure that it doesn't enter another if statement
 
-            ####################################################################
-            # IMPLIEMENT TRAFFIC BLOCK HERE!
-            #
-            #
-            ####################################################################
-
-
         # If path, move to destination #########################################
         else:
             # if reached its destination, STOP!

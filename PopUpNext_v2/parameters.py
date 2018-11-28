@@ -25,4 +25,4 @@ len_x = eq_len # maze length x
 len_y = eq_len # maze length y
 size = (len_x, len_y)
 
-tmaze = generate_citymap.generate_city(size, (0.25))
+tmaze = generate_citymap.generate_city(size, (0.2))

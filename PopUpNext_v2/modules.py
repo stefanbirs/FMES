@@ -153,10 +153,10 @@ class DriveMod:
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
-
-                if(dest!=cur_pos):
-                    #print("not at end point: %s" %self.tag)
-                    CommonFunctions.add_cost(self.pairing_tag(),const.WHEEL_COST,"wheel")
+            cost_value=const.WHEEL_COST
+            if(self.xspeed==0 and self.yspeed==0):
+                cost_value=0
+            CommonFunctions.add_cost(self.pairing_tag(),cost_value,"wheel")
         else:
             citymap.canvas.move(self.shape, self.xspeed, self.yspeed)
 
@@ -239,11 +239,12 @@ class FlyMod:
         if result==True:
             pos = citymap.canvas.coords(self.shape[0])
             cur_pos = [pos[0], pos[1]]
+            at_dest=False
             self.xspeed = 0.0
             self.yspeed = 0.0
             if cur_pos == dest:
                 self.xspeed = self.yspeed = 0.0
-                return True
+                at_dest=True
             else:
                 rise = (dest_y-cur_pos[1])
                 run = (dest_x-cur_pos[0])
@@ -262,16 +263,19 @@ class FlyMod:
                     self.yspeed = rise
                 if(abs(self.xspeed) > abs(run)):
                     self.xspeed = run
-                if(self.has_pod() == True):
-                    ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
-                    for num_elements in range(0,len(ids_to_move)):
-                        citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
-                    CommonFunctions.add_cost(self.pairing_tag(),const.DRONE_COST,"drone")
-                else:
-                    for num_elements in range(0,len(self.shape)):
-                        citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+        if(self.has_pod() == True):
+            ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
+            for num_elements in range(0,len(ids_to_move)):
+                citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
 
-                return False
+            cost_value=const.DRONE_COST
+            if(self.xspeed==0 and self.yspeed==0):
+                cost_value=0
+            CommonFunctions.add_cost(self.pairing_tag(),cost_value,"drone")
+        else:
+            for num_elements in range(0,len(self.shape)):
+                citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+        return at_dest
 
 
 

@@ -2,6 +2,7 @@ import random
 import numpy as np
 from tkinter import *
 import time
+import numpy.matlib
 
 WIDTH = 700
 HEIGHT = 700
@@ -26,58 +27,21 @@ amaze = [[0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0],
         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-rd= 20
+s=(2,2)
+a=np.empty([2, 2])
 
-# house width
-hw=int((WIDTH-(((len(amaze)/2)+0.5)*rd))/((len(amaze)/2)-0.5))
+#a=np.array([[canvas.create_rectangle(20,20 ,40 , 40, fill="blue"),canvas.create_rectangle(60,20 ,80 , 40, fill="blue")],[canvas.create_rectangle(20,60 ,40 , 80, fill="blue"),canvas.create_rectangle(60,60 ,80 , 80, fill="blue")]])
 
-s = (len(amaze),len(amaze[0]))
-Trafmaze=np.zeros(s)
-NoTrafmaze=np.zeros(s)
+a[0][0]=canvas.create_rectangle(20,20 ,40 , 40, fill="blue")
 
-for i in range(len(Trafmaze)):
-    for j in range(len(Trafmaze)):
-        if amaze[i][j]==1:
-            Trafmaze[i][j]=random.randrange(1,2000)
-        if Trafmaze[i][j]>0:
-            Trafmaze[i][j]=Trafmaze[i][j]-1
-        if Trafmaze[i][j]==1:
-            amaze[i][j]=0
+b=a[0][0]
 
-for i in range(len(NoTrafmaze)):
-    for j in range(len(NoTrafmaze)):
-        if amaze[i][j]==0:
-            NoTrafmaze[i][j]=random.randrange(1,2000)
-        if NoTrafmaze[i][j]>1:
-            NoTrafmaze[i][j]=NoTrafmaze[i][j]-1
-        if NoTrafmaze[i][j]==1:
-            amaze[i][j]=1
+#b=a[0]
 
-class Dotclass:
-
-    def upright(self):
-        self.column=50
-        self.row=50
-        self.shape = canvas.create_rectangle(self.column,self.row ,50+self.column , 50+self.row, fill="red")
-pik=Dotclass()
-
-i=0
-bob=[]
-lal=pik.upright()
-
-# bob.append(lal)
-# print(pik.upright())
-
-while True:
+canvas.itemconfig(b, fill="red", outline="black")
 
 
 
-    #
-    # if i>200:
-    #     canvas.delete(bob[0])
-    #
-    # i=i+1
-
-    tk.after(10, pik.upright())
+print(a[0][0])
 
 tk.mainloop()

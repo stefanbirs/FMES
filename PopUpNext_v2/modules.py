@@ -32,6 +32,9 @@ class DriveMod:
 
         self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
 
+        self.start=start
+        self.end=end
+
 
 ################################################################################
     def has_pod(self):
@@ -66,9 +69,16 @@ class DriveMod:
         cur_pos = [pos[0], pos[1]]
 
         # indentify the end coordinates
-        dest_x = int( self.path[-1][0]*((const.RLENGTH+const.RWITDH)/2) )
-        dest_y = int( self.path[-1][1]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_x = int( self.end[0]*((const.RLENGTH+const.RWITDH)/2) )
+        dest_y = int( self.end[1]*((const.RLENGTH+const.RWITDH)/2) )
         dest = [dest_x, dest_y]
+
+        def calc_new_path():
+            self.path.pop(0) # removes first entery of the path
+            self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
+            #print("path", self.path)
+
+
 
         # if ground module has reached its destination
         if cur_pos == dest:
@@ -78,7 +88,12 @@ class DriveMod:
             self.i = 4 # Make sure that it doesn't enter another if statement
 
 
-        elif cur_pos != dest:
+        if cur_pos != dest :
+
+            if self.path == None:
+                path_arr = a_star.trafficBlock(param.maze, self.start, self.end)
+                self.path=path_arr[0]
+
             # Steering of the DriveMod i and speed ###########################
             #use these values to determine i of travel
             a_x = self.path[self.a][self.x]
@@ -107,10 +122,8 @@ class DriveMod:
                 self.yspeed = -1
                 self.i = 1 # control variable
 
-            def calc_new_path():
-                self.path.pop(0) # removes first entery of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-                #print("path", self.path)
+
+
 
             # Checking the coordinates of the DriveMod
             # When the DriveMod coordinate has reached a position of a new
@@ -138,6 +151,7 @@ class DriveMod:
                 self.i = 3 # control variable
                 self.yspeed = 0
                 calc_new_path()
+
 
 
 

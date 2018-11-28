@@ -235,11 +235,11 @@ class FlyMod:
         dest_x = (end[0])
         dest_y = (end[1])
         dest = [dest_x,dest_y]
+        at_dest=False
         result=self.charge_for_dest(dest)
         if result==True:
             pos = citymap.canvas.coords(self.shape[0])
             cur_pos = [pos[0], pos[1]]
-            at_dest=False
             self.xspeed = 0.0
             self.yspeed = 0.0
             if cur_pos == dest:

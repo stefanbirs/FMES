@@ -33,7 +33,6 @@ hw=int((WIDTH-(((len(amaze)/2)+0.5)*rd))/((len(amaze)/2)-0.5))
 
 s = (len(amaze),len(amaze[0]))
 Trafmaze=np.zeros(s)
-NoTrafmaze=np.zeros(s)
 
 a = [[amaze[j][i] for j in range(len(amaze))] for i in range(len(amaze[0]))]
 
@@ -58,26 +57,29 @@ for i in range(len(amaze)):
 
 trafictime=[1000,2000,3000]
 while True :
-    for i in range(len(Trafmaze)):
-        for j in range(len(Trafmaze)):
-            trafchance=random.randrange(1,10000)
-            if amaze[i][j]==1 and Trafmaze[i][j]==0:
-                Trafmaze[i][j]=trafictime[random.randrange(0,3)]
-            if Trafmaze[i][j]>0:
-                Trafmaze[i][j]=Trafmaze[i][j]-1
-            if Trafmaze[i][j]==0:
-                amaze[i][j]=0
-            if amaze[i][j]==0 and trafchance==1:
-                amaze[i][j]=1
+    def color_traffic(amaze):
+        for i in range(len(Trafmaze)):
+            for j in range(len(Trafmaze)):
+                trafchance=random.randrange(1,10000)
+                if amaze[i][j]==1 and Trafmaze[i][j]==0:
+                    Trafmaze[i][j]=trafictime[random.randrange(0,3)]
+                if Trafmaze[i][j]>0:
+                    Trafmaze[i][j]=Trafmaze[i][j]-1
+                if Trafmaze[i][j]==0:
+                    amaze[i][j]=0
+                if amaze[i][j]==0 and trafchance==1:
+                    amaze[i][j]=1
 
-            if amaze[i][j] == 1 and Trafmaze[i][j]> trafictime[1] :
-                canvas.itemconfig(a[i][j], fill="red", outline="black")
-            if amaze[i][j] == 1 and Trafmaze[i][j]> trafictime[0] and Trafmaze[i][j]<= trafictime[1] :
-                canvas.itemconfig(a[i][j], fill="orange", outline="black")
-            if amaze[i][j] == 1 and Trafmaze[i][j]<=trafictime[0] :
-                canvas.itemconfig(a[i][j], fill="yellow", outline="black")
-            if amaze[i][j] == 0 :
-                canvas.itemconfig(a[i][j], fill="", outline="")
+                if amaze[i][j] == 1 and Trafmaze[i][j]> trafictime[1] :
+                    canvas.itemconfig(a[i][j], fill="red", outline="black")
+                if amaze[i][j] == 1 and Trafmaze[i][j]> trafictime[0] and Trafmaze[i][j]<= trafictime[1] :
+                    canvas.itemconfig(a[i][j], fill="orange", outline="black")
+                if amaze[i][j] == 1 and Trafmaze[i][j]<=trafictime[0] :
+                    canvas.itemconfig(a[i][j], fill="yellow", outline="black")
+                if amaze[i][j] == 0 :
+                    canvas.itemconfig(a[i][j], fill="", outline="")
+
+    color_traffic(amaze)
 
     tk.update()
 

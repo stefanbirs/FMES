@@ -135,6 +135,19 @@ def trafficBlock(maze, start1, end):
 
 
 
+def AllCombinations(my_list, empty_list):
+    """Fills an empty list with all possible combinations from my_list"""
+    count = 0
+    for i in range(1, len(my_list)+1):
+        #Number of combinations for given i
+        count += math.factorial(len(my_list))/(math.factorial(i)*math.factorial(len(my_list)-i))
+
+    for i in range(1, len(my_list)+1):
+        a = itertools.combinations(my_list, i)
+        for subset in a:
+            empty_list.append(list(subset))
+
+
 ################################################################################
 # A* Algorithm #################################################################
 ################################################################################
@@ -143,9 +156,7 @@ def astar(tmaze, start, end):
 
     # Create start and end node
     start_node = Node(None, start)
-    #start_node.g = start_node.h = start_node.f = 0
     end_node = Node(None, end)
-    #end_node.g = end_node.h = end_node.f = 0
 
     # Initialize both open and closed list
     open_list = []
@@ -225,6 +236,105 @@ def astar(tmaze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
+
+
+################################################################################
+# A* Algorithm for trafficBlock ################################################
+################################################################################
+def trafficBlock_astar(maze, start, end):
+    """Returns an array that requires flying
+    path_arr = [[start,critical_traffic_1),(critcial_traffic_1, critical_traffic_2),...,(critical_traffic_N,end]]
+    """
+    #start = (start[1],start[0])
+    #end = (end[1], end[0])
+
+    tmaze = flip_matrix(maze)
+
+    #Remove traffic
+    maze_simple = np.copy(maze)
+    for i in range(0, len(maze)):
+        for j in range(0, len(maze[0])):
+            if maze_simple[j][i] == 1:
+              maze_simple[j][i] = 0
+
+
+    #Find quickest path if no traffic
+    tmaze3=[]
+    rez3 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
+    for row in rez3:
+        tmaze3.append(row)
+    path_nt = astar(tmaze3, start, end)  #path_nt is no traffic path
+
+    one_count = 0  #variable indicates indice of traffic
+
+    one_indices = [] #Stores the indicies of traffic
+    one_coordinates = [] #Stores the coordinates of the traffic blocks
+    j = 0;
+
+
+    #Find where traffic is on this path
+    for i in path_nt:
+        if maze[i[1]][i[0]] == 1:
+            one_indices.append(one_count)
+            one_coordinates.append(i)
+            j+=1
+        one_count += 1
+    count = 0
+
+
+    comb_indices = []
+    AllCombinations(one_coordinates, comb_indices) #all possible combinaions of traffic indices
+    count = 0
+    test_maze = np.copy(maze)
+
+    #i is a combination of different traffic indices
+    #j is the traffic indices constituting the combination
+    #This loop iterates through all combinations, removing traffic at tests indices and seeing
+    #if a path is possible
+    for i in comb_indices :
+        for j in i:
+            test_maze[j[1]][j[0]] = 0
+
+        tmaze2=[]
+        rez2 = [[test_maze[j][i] for j in range(len(test_maze))] for i in range(len(test_maze[0]))]
+        for row in rez2:
+            tmaze2.append(row)
+
+        path = astar(tmaze2, start, end)
+
+        if path != None:
+            traff_ind = i
+            break
+
+        test_maze = np.copy(maze)
+        count += 1
+
+    sur_ind = np.zeros(len(traff_ind)) #stores indice of removed traffic
+    sur_count = 0
+    path_count = 0
+
+    #finds index of traffic in path list
+    for k in traff_ind :
+        for p in path :
+            if k == p:
+                sur_ind[sur_count] = path_count
+                sur_count += 1
+            path_count += 1
+        path_count = 0
+
+
+    #Fill path_arr with different components of rravel
+
+    path_arr = [astar(tmaze, start, path[int(sur_ind[0]-1)][::-1])]
+
+    if sur_ind.size > 2:
+
+        for i in range(1, len(sur_ind)):
+            path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
+
+    path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
+
+    print(path_arr)
 
 
 

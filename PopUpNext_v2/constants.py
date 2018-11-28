@@ -3,19 +3,27 @@ import parameters as param
 CWIDTH = 700 # CANVAS WIDTH
 CHEIGHT = 700 # CANVAS LENGTH
 #
-RWITDH = 20 # ROAD WIDTH
-RLENGTH = int( (CWIDTH-(((len(param.maze)/2)+0.5)*RWITDH)) / ((len(param.maze)/2)-0.5) ) # ROAD LENGTH
+
+SLEEP_TIME=0.01
+#
+
+RWITDH = int ( (CWIDTH/4)  /   (len(param.tmaze)/2) + 0.5 )  # ROAD WIDTH
+RLENGTH = int( (CWIDTH-(((len(param.tmaze)/2)+0.5)*RWITDH)) / ((len(param.tmaze)/2)-0.5) ) # ROAD LENGTH
 SHAPE_SIZE = RWITDH
+
+MULTIPLIER = (RLENGTH+RWITDH)/2
 #
 TMAZE_COLS = len(param.tmaze) # number of columns
 TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
 
-NUM_OF_WHEELS = 3
-NUM_OF_DRONES = 0
-NUM_OF_PODS = 3
+NUM_OF_WHEELS = 20
+NUM_OF_DRONES = 20
+NUM_OF_PODS = 20
 
 #
 PIXEL_CHARGE = 20
+DRONE_COST=8
+WHEEL_COST=1
 #
 HUB = [0, 0]

@@ -4,3 +4,4 @@ yo.py
 *.pyc
 **/_pycache_
 *.txt
+*.html

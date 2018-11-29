@@ -17,9 +17,9 @@ TMAZE_COLS = len(param.tmaze) # number of columns
 TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
 
-NUM_OF_WHEELS = 25
-NUM_OF_DRONES = 25
-NUM_OF_PODS = 25
+NUM_OF_WHEELS = 10
+NUM_OF_DRONES = 10
+NUM_OF_PODS = 10
 
 #
 PIXEL_CHARGE = 20

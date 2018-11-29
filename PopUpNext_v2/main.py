@@ -83,7 +83,7 @@ while pod_moving==True:
         pod_at_dest[i]=pods[i].at_dest()
         if pod_at_dest[i]==False:
             pod_moving=True
-        #drone.fly(dest_list[i])
+        #drone.fly(pods[i].dest)
 
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)

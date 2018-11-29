@@ -23,9 +23,6 @@ len_x = eq_len # maze length x
 len_y = eq_len # maze length y
 size = (len_x, len_y)
 
-<<<<<<< HEAD
+
 # generates City Map with traffic density
 tmaze = generate_citymap.generate_city(size, (0.1))
-=======
-tmaze = generate_citymap.generate_city(size, (0.25))
->>>>>>> master

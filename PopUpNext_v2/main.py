@@ -78,7 +78,8 @@ while pod_moving==True:
     for i, wheel in enumerate(wheels):
         wheel.drive()
     for i, drone in enumerate(drones):
-        drone.pick_up_pod(pods[i])
+        if (wheels[i].path==None):
+            drone.pick_up_pod(pods[i])
         pod_at_dest[i]=pods[i].at_dest()
         if pod_at_dest[i]==False:
             pod_moving=True

@@ -23,7 +23,7 @@ def get_data(file_name,name_val):
     )
     file.close()
     return trace
-data_1=get_data("G2WithDrone4th.txt","WithDrone")
+data_1=get_data("G3WithDrone.txt","WithDrone")
 data_2=get_data("G2WithoutDrone1st.txt","WithoutDrone")
 plotly.offline.plot({
 "data": [data_1,data_2],

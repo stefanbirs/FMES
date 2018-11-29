@@ -426,7 +426,7 @@ class GenerateResults:
                 avg_time_arr.append(pod_data[i][-1])
         print("Average Cost: %f"%(np.mean(avg_time_arr)))
         print("Density: %f"%const.DENSITY)
-        file_name="G2WithDrone4th.txt"
+        file_name="G3WithDrone.txt"
         file=open(file_name,"a+")
         data_entry="%f,%f\r\n"%(const.DENSITY,(np.mean(avg_time_arr)))
         file.write(data_entry)

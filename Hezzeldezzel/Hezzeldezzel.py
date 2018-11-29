@@ -1,5 +1,5 @@
 
-import numpy
+import numpy as np
 
 class Node():
     """A node class for A* Pathfinding"""
@@ -131,7 +131,46 @@ end=(6,5)
 
 path = astar(tmaze, start, end)
 print(path)
+"""___________________________________Trafic ___________________________________"""
 
+s = (len(maze),len(maze[0]))
+Trafmaze=np.zeros(s)
+NoTrafmaze=np.zeros(s)
+
+a = [[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
+
+for i in range(len(maze)):
+    for j in range(len(maze[0])):
+        if maze[i][j] != 2 and not j % 2 == 0:
+            column=((hw+rd)*((j/2)-0.5))+rd
+            row=(hw+rd)*(i/2)
+            a[i][j]=canvas.create_rectangle(column,row ,hw+column , 20+row, fill="")
+        if maze[i][j] != 2 and not i % 2 == 0:
+            row=((hw+rd)*((i/2)-0.5))+rd
+            column=(hw+rd)*(j/2)
+            a[i][j]=canvas.create_rectangle(column,row , 20+column , hw+row, fill="")
+        if maze[i][j] != 2 and i % 2 == 0 and j % 2 == 0 :
+            row=((hw+rd)*(i/2))
+            column=((hw+rd)*(j/2))
+            a[i][j]=canvas.create_rectangle(column,row , 20+column , row+20, fill="")
+            continue
+        if maze[i][j]==2:
+            a[i][j]=0
+
+
+trafictime=[1000,2000,3000]
 
 
 """___________________________________ Canvas _______________________________"""
@@ -286,25 +325,32 @@ for i in range(len(a)):
 
 
 
-
-# lal=[]
-#
-# for i in range(len(a)):
-#     for j in range(len(a)):
-#         print("i",i)
-#         print("j",j)
-#         if i in a[j]:
-#             lal.append(j)
-
-
-# print(lal)
-
 car=Car("green",20)
 
 while True:
     car.move()
     tk.update()
     time.sleep(0.01)
+    for i in range(len(Trafmaze)):
+        for j in range(len(Trafmaze)):
+            trafchance=random.randrange(1,10000)
+            if maze[i][j]==1 and Trafmaze[i][j]==0:
+                Trafmaze[i][j]=trafictime[random.randrange(0,3)]
+            if Trafmaze[i][j]>0:
+                Trafmaze[i][j]=Trafmaze[i][j]-1
+            if Trafmaze[i][j]==0:
+                maze[i][j]=0
+            if maze[i][j]==0 and trafchance==1:
+                maze[i][j]=1
+
+            if maze[i][j] == 1 and Trafmaze[i][j]> trafictime[1] :
+                canvas.itemconfig(a[i][j], fill="red", outline="black")
+            if maze[i][j] == 1 and Trafmaze[i][j]> trafictime[0] and Trafmaze[i][j]<= trafictime[1] :
+                canvas.itemconfig(a[i][j], fill="orange", outline="black")
+            if maze[i][j] == 1 and Trafmaze[i][j]<=trafictime[0] :
+                canvas.itemconfig(a[i][j], fill="yellow", outline="black")
+            if maze[i][j] == 0 :
+                canvas.itemconfig(a[i][j], fill="", outline="")
 
 print("pik")
 

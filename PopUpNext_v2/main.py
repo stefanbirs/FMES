@@ -51,7 +51,7 @@ pods = []
 pod_at_dest=[]
 for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i],dest_list[i]))
-    mod.CommonFunctions.add_tags("pair%d"%i,["fly%d"%i,"pod%d"%i])
+    mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
     pod_at_dest.append(False)
 # Fly module
 drones = []
@@ -76,14 +76,15 @@ while pod_moving==True:
     # make pod move with wheels using tags
     # make A* for each object (method in class)
     pod_moving=False
-    #for i, wheel in enumerate(wheels):
-    #    wheel.drive()
+    for i, wheel in enumerate(wheels):
+        wheel.drive()
     for i, drone in enumerate(drones):
         pod_at_dest[i]=pods[i].at_dest()
-        drone.pick_up_pod(pods[i])
+        if wheels[i].path==None:
+            #pod_at_dest[i]=True
+            drone.pick_up_pod(pods[i])
         if pod_at_dest[i]==False:
             pod_moving=True
-        #drone.fly(dest_list[i])
 
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)

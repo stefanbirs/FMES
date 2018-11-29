@@ -415,21 +415,24 @@ class GenerateResults:
         for i in range(0,const.NUM_OF_PODS):
             pod_data[i].append(0)
     def avg_cost(pods):
-        avg_cost_arr=[]
+        avg_time_arr=[]
         for i in range(0, const.NUM_OF_PODS):
             if(pod_data[i][-1]==0):
-                avg_cost_arr.append(const.INFINITY)
-                #print("Pod%d has %d"%(i,avg_cost_arr[-1]))
+                avg_time_arr.append(const.INFINITY)
+                #print(i)
+                #print("Pod%d has %d"%(i,avg_time_arr[-1]))
             else:
-                avg_cost_arr.append(pod_data[i][-1])
-        print("Average: %d"%round(np.mean(avg_cost_arr)))
+                #print("MOVEMENT %d"%i)
+                avg_time_arr.append(pod_data[i][-1])
+        print("Average Cost: %f"%(np.mean(avg_time_arr)))
         print("Density: %f"%const.DENSITY)
-        file=open("DensityResults4.txt","a+")
-        data_entry="%f,%d\r\n"%(const.DENSITY,round(np.mean(avg_cost_arr)))
+        file_name="G2WithDrone4th.txt"
+        file=open(file_name,"a+")
+        data_entry="%f,%f\r\n"%(const.DENSITY,(np.mean(avg_time_arr)))
         file.write(data_entry)
         file.close()
         if const.GRAPH_READY==True:
-            file=open("DensityResults4.txt","r")
+            file=open(file_name,"r")
             data=file.readlines()
             x_val=[]
             y_val=[]
@@ -438,17 +441,17 @@ class GenerateResults:
                 #print(len(data_values))
                 if(len(data_values)>1):
                     x_val.append(float(data_values[0]))
-                    y_val.append(int(data_values[1]))
+                    y_val.append(float(data_values[1]))
             trace=go.Scatter(
                 x = x_val,
                 y = y_val,
                 mode = 'lines + markers',
-                name="Drones"
+                name="WithDrone"
             )
             plotly.offline.plot({
             "data": [trace],
             "layout": go.Layout(
-                title="Drone Density Curve",
+                title="With Drone Density Curve",
                 yaxis=dict(title = 'Cost'),
                 xaxis=dict(title = 'Traffic Density'))
             }, auto_open=True)

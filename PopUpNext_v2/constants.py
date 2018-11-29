@@ -10,7 +10,7 @@ def den_define():
         data_values=line.split(',')
         try:
             data_entry=int(data_values[0])
-            if(data_entry<23):
+            if(data_entry<21):
                 den_val=data_entry/50
             else:
                 den_val=data_entry/50
@@ -26,15 +26,15 @@ def den_define():
     return den_val
 DENSITY=den_define()
 def graph_check():
-    if DENSITY==22/50:
+    if DENSITY==20/50:
         return True
     return False
 GRAPH_READY=graph_check()
-INFINITY=100000
+INFINITY=200000
 import parameters as param
 #
 
-SLEEP_TIME=0.02
+SLEEP_TIME=0.01
 #
 
 RWITDH = int ( (CWIDTH/4)  /   (len(param.tmaze)/2) + 0.5 )  # ROAD WIDTH
@@ -54,7 +54,7 @@ NUM_OF_PODS = 20
 
 
 PIXEL_CHARGE = 20
-DRONE_COST=20
+DRONE_COST=250
 WHEEL_COST=5
 #
 HUB = [0, 0]

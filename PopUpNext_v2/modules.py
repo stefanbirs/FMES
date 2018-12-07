@@ -8,7 +8,7 @@ import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 import plotly.offline as offline
-offline.init_notebook_mode()
+#offline.init_notebook_mode()
 pod_data = [[] for i in range(const.NUM_OF_PODS)]
 ################################################################################
 # Ground Module ################################################################
@@ -35,10 +35,12 @@ class DriveMod:
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
 
+        self.delay_value=0
+
         self.start = start
         self.end = end
 
-        self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
+        self.path = a_star.astar(param.tmaze, start, end,False) # Generates initial path
 
 
 ################################################################################
@@ -67,18 +69,31 @@ class DriveMod:
         cur_pos = [pos[0], pos[1]]
 
         # indentify the end coordinates
-        dest_x = int( self.end[0]*const.MULTIPLIER )
-        dest_y = int( self.end[1]*const.MULTIPLIER )
-        dest = [dest_x, dest_y]
 
+        def calc_new_path():
+            if self.path!=None:
+                self.path.pop(0) # removes first entry of the path
+                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1],False)
+            else:
+                #print('called')
+                astar_pos=[round(cur_pos[0]/const.MULTIPLIER),round(cur_pos[1]/const.MULTIPLIER)]
+                self.path = a_star.astar(param.tmaze,astar_pos, self.end,True)
+                #print(self.path)
         # If no path, dont move(so far) ########################################
+        dest_x = int(self.end[0]*const.MULTIPLIER )
+        dest_y = int(self.end[1]*const.MULTIPLIER )
+        dest = [dest_x, dest_y]
         if self.path == None:
-            self.xspeed = self.yspeed = 0
-            self.a = self.b = 0
-            self.i = 4 # Make sure that it doesn't enter another if statement
-
+            # self.xspeed = self.yspeed = 0
+            # self.a = self.b = 0
+            #self.i = 4
+            #print('calling?')
+            calc_new_path()
+         # Make sure that it doesn't enter another if statement
+             #print("path", self.path)
+        #print(self.path)
         # If path, move to destination #########################################
-        else:
+        if self.path!=None:
             # if reached its destination, STOP!
             if cur_pos == dest:
                 # It stops the ground mod
@@ -116,10 +131,6 @@ class DriveMod:
                     self.yspeed = -1
                     self.i = 1 # control variable
 
-                def calc_new_path():
-                    self.path.pop(0) # removes first entery of the path
-                    self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-                    #print("path", self.path)
 
                 # Checking the coordinates of the DriveMod
                 # When the DriveMod coordinate has reached a position of a new
@@ -150,6 +161,19 @@ class DriveMod:
                     self.i = 3 # control variable
                     self.yspeed = 0
                     calc_new_path()
+        delay_over=True
+        speed=[self.xspeed, self.yspeed]
+        traffic_block=traffic_calculations.stuck(pos,speed)
+        if(traffic_block!=-1):
+            delay_over=traffic_calculations.delay(self.delay_value,traffic_block)
+            if delay_over==False:
+                self.xspeed=0
+                self.yspeed=0
+                self.delay_value+=1
+            else:
+                self.delay_value=0
+        else:
+            self.delay_value=0
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
@@ -175,6 +199,7 @@ class FlyMod:
         self.charge = 100 * const.PIXEL_CHARGE
         self.threshold = 40 * const.PIXEL_CHARGE
         self.speed = 3
+        self.altitude=0
         x1 = int( start[0] * const.MULTIPLIER )
         y1 = int( start[1] * const.MULTIPLIER )
         x2 = int( start[0] * const.MULTIPLIER + const.SHAPE_SIZE )
@@ -204,8 +229,9 @@ class FlyMod:
             if at_dest==True:
                 CommonFunctions.remove_tags([self.tag,pod_tag])
                 CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
+            return False
         elif self.has_pod()==True:
-            self.fly(pod.dest)
+            return self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
         for tag in tags:
@@ -237,45 +263,53 @@ class FlyMod:
         dest_y = (end[1])
         dest = [dest_x,dest_y]
         at_dest=False
-        result=self.charge_for_dest(dest)
-        if result==True:
-            pos = citymap.canvas.coords(self.shape[0])
-            cur_pos = [pos[0], pos[1]]
-            self.xspeed = 0.0
-            self.yspeed = 0.0
-            if cur_pos == dest:
-                self.xspeed = self.yspeed = 0.0
-                at_dest=True
-            else:
-                rise = (dest_y-cur_pos[1])
-                run = (dest_x-cur_pos[0])
-                if(run != 0):
-                    if(rise != 0):
-                        slope = abs(rise/run)
-                        self.xspeed = (run/abs(run))*self.speed/(slope+1)
-                        self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
+        pos = citymap.canvas.coords(self.shape[0])
+        cur_pos = [pos[0], pos[1]]
+        self.xspeed = 0.0
+        if (self.altitude==const.ALTITUDE_HEIGHT or dest==cur_pos):
+            result=self.charge_for_dest(dest)
+            if result==True:
+                self.yspeed = 0.0
+                if cur_pos == dest:
+                    self.xspeed = self.yspeed = 0.0
+                    if(self.altitude==0):
+                        at_dest=True
                     else:
-                        self.yspeed = 0.0
-                        self.xspeed = (run/abs(run))*self.speed
+                        self.altitude-=1
                 else:
-                    self.xspeed = 0.0
-                    self.yspeed = (rise/abs(rise))*self.speed
-                if(abs(self.yspeed) > abs(rise)):
-                    self.yspeed = rise
-                if(abs(self.xspeed) > abs(run)):
-                    self.xspeed = run
-        if(self.has_pod() == True):
-            ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
-            for num_elements in range(0,len(ids_to_move)):
-                citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+                    rise = (dest_y-cur_pos[1])
+                    run = (dest_x-cur_pos[0])
+                    if(run != 0):
+                        if(rise != 0):
+                            slope = abs(rise/run)
+                            self.xspeed = (run/abs(run))*self.speed/(slope+1)
+                            self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
+                        else:
+                            self.yspeed = 0.0
+                            self.xspeed = (run/abs(run))*self.speed
+                    else:
+                        self.xspeed = 0.0
+                        self.yspeed = (rise/abs(rise))*self.speed
+                    if(abs(self.yspeed) > abs(rise)):
+                        self.yspeed = rise
+                    if(abs(self.xspeed) > abs(run)):
+                        self.xspeed = run
+            if(self.has_pod() == True):
+                ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
+                for num_elements in range(0,len(ids_to_move)):
+                    citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
 
-            cost_value=const.DRONE_COST
-            if(self.xspeed==0 and self.yspeed==0):
-                cost_value=0
-            CommonFunctions.add_cost(self.pairing_tag(),cost_value,"drone")
+                cost_value=const.DRONE_COST
+                if(self.xspeed==0 and self.yspeed==0):
+                    cost_value=0
+                CommonFunctions.add_cost(self.pairing_tag(),cost_value,"drone")
+            else:
+                for num_elements in range(0,len(self.shape)):
+                    citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            #print(abs(self.xspeed)+abs(self.yspeed))
         else:
-            for num_elements in range(0,len(self.shape)):
-                citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            self.altitude+=1
+        #print(self.altitude)
         return at_dest
 
 
@@ -314,8 +348,8 @@ class PodMod:
     def at_dest(self):
         pos = citymap.canvas.coords(self.shape[0])
         cur_pos = [pos[0], pos[1]]
-        self.xspeed = 0.0
-        self.yspeed = 0.0
+        # self.xspeed = 0.0
+        # self.yspeed = 0.0
         if cur_pos == self.dest:
             return True
         return False
@@ -458,6 +492,45 @@ class GenerateResults:
             file.close()
         else:
             raise SystemExit("BYE")
+
+class traffic_calculations:
+    def stuck(position,speed):
+        items_at_pos=-1
+        if speed[0]<0:
+            midpoint=(position[3]+position[1])/2
+            items_at_pos=citymap.canvas.find_overlapping(position[0],midpoint,position[0],midpoint)
+        elif speed[0]>0:
+            midpoint=(position[3]+position[1])/2
+            items_at_pos=citymap.canvas.find_overlapping(position[2],midpoint,position[2],midpoint)
+        elif speed[1]<0:
+            midpoint=(position[2]+position[0])/2
+            items_at_pos=citymap.canvas.find_overlapping(midpoint,position[1],midpoint,position[1])
+        elif speed[1]>0:
+            midpoint=(position[2]+position[0])/2
+            items_at_pos=citymap.canvas.find_overlapping(midpoint,position[3],midpoint,position[3])
+        #print(items_at_pos)
+        if items_at_pos!=-1:
+            for item in items_at_pos:
+                tags=citymap.canvas.gettags(item)
+                for tag in tags:
+                    if "traffic" in tag:
+                        #print(tag)
+                        return item
+        return -1
+    def delay(value,item):
+        #print(item)
+        #print(citymap.canvas.gettags(item))
+        level=citymap.canvas.itemcget(item,"fill")
+        level_value=0
+        if level=='red':
+            level_value=0.2
+        elif level=='orange':
+            level_value=0.1
+        elif level=='yellow':
+            level_value=0.05
+        if value>(level_value/const.SLEEP_TIME):
+            return True
+        return False
 ################################################################################
 # END ##########################################################################
 ################################################################################

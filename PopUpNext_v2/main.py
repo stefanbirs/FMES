@@ -49,22 +49,18 @@ for i in range(const.NUM_OF_WHEELS):
 # Pod module
 pods = []
 pod_at_dest=[]
+drone_lowered=[]
 for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i],dest_list[i]))
     mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
     pod_at_dest.append(False)
+    drone_lowered.append(False)
 # Fly module
 drones = []
 for i in range(const.NUM_OF_DRONES):
     drones.append(mod.FlyMod(const.HUB))
 pod_moving=True
 mod.GenerateResults.init_pod_data()
-# print("Drive Mod:")
-# pprint(vars(wheels[0]))
-# print("Pod Mod:")
-# pprint(vars(pods[0]))
-# print("Fly Mod:")
-# pprint(vars(drones[0]))
 
 ################################################################################
 # Main Loop ####################################################################
@@ -82,16 +78,17 @@ while pod_moving==True:
         pod_at_dest[i]=pods[i].at_dest()
         #if wheels[i].path==None:
             #pod_at_dest[i]=True
-        drone.pick_up_pod(pods[i])
-        if pod_at_dest[i]==False:
+        drone_lowered[i]=drone.pick_up_pod(pods[i])
+        #drone_lowered[i]=True
+        if pod_at_dest[i]==False or drone_lowered[i]==False:
             pod_moving=True
-
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)
-mod.GenerateResults.export_txt(pods)
+#mod.GenerateResults.export_txt(pods)
 #mod.GenerateResults.generate_graphs()
-mod.GenerateResults.avg_cost(pods)
-
+#mod.GenerateResults.avg_cost(pods)
+time.sleep(0.5)
+raise SystemExit("Ciao")
 ################################################################################
 # END ##########################################################################
 ################################################################################

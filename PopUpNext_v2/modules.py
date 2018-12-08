@@ -71,24 +71,24 @@ class DriveMod:
         # indentify the end coordinates
 
         def calc_new_path():
-            if self.path!=None:
-                self.path.pop(0) # removes first entry of the path
-                self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1],False)
-            else:
-                #print('called')
+            self.path==None
+            count=0
+            while(self.path==None):
                 astar_pos=[round(cur_pos[0]/const.MULTIPLIER),round(cur_pos[1]/const.MULTIPLIER)]
-                self.path = a_star.astar(param.tmaze,astar_pos, self.end,True)
+                self.path = a_star.astar(param.tmaze,astar_pos, self.end,count)
+                count+=1
+            #print(count)
+            #print(self.tag)
                 #print(self.path)
         # If no path, dont move(so far) ########################################
         dest_x = int(self.end[0]*const.MULTIPLIER )
         dest_y = int(self.end[1]*const.MULTIPLIER )
         dest = [dest_x, dest_y]
-        if self.path == None:
-            # self.xspeed = self.yspeed = 0
-            # self.a = self.b = 0
+            #self.xspeed = self.yspeed = 0
+            #self.a = self.b = 0
             #self.i = 4
             #print('calling?')
-            calc_new_path()
+        calc_new_path()
          # Make sure that it doesn't enter another if statement
              #print("path", self.path)
         #print(self.path)
@@ -142,25 +142,25 @@ class DriveMod:
                 if cur_pos[0] >= const.MULTIPLIER * b_x and a_y == b_y and self.i == 0:
                     self.i = 3 # control variable
                     self.xspeed = 0
-                    calc_new_path()
+                    #calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] <= const.MULTIPLIER * b_x and a_y == b_y and self.i == 1:
                     self.i = 3 # control variable
                     self.xspeed = 0
-                    calc_new_path()
+                    #calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the positive y direction
                 if cur_pos[1] >= const.MULTIPLIER * b_y and a_x == b_x and self.i == 0:
                     self.i = 3 # control variable
                     self.yspeed = 0
-                    calc_new_path()
+                    #calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the negative y direction
                 if cur_pos[1] <= const.MULTIPLIER * b_y and a_x == b_x and self.i == 1:
                     self.i = 3 # control variable
                     self.yspeed = 0
-                    calc_new_path()
+                    #calc_new_path()
         delay_over=True
         speed=[self.xspeed, self.yspeed]
         traffic_block=traffic_calculations.stuck(pos,speed)
@@ -174,6 +174,7 @@ class DriveMod:
                 self.delay_value=0
         else:
             self.delay_value=0
+        #print(self.pairing_tag())
         if(self.has_pod() == True):
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
@@ -231,6 +232,8 @@ class FlyMod:
                 CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
             return False
         elif self.has_pod()==True:
+            #print("DO it")
+            #print(citymap.canvas.gettags(pod.shape[0]))
             return self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
@@ -298,7 +301,7 @@ class FlyMod:
                 ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
                 for num_elements in range(0,len(ids_to_move)):
                     citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
-
+                #print("WORK")
                 cost_value=const.DRONE_COST
                 if(self.xspeed==0 and self.yspeed==0):
                     cost_value=0
@@ -523,9 +526,9 @@ class traffic_calculations:
         level=citymap.canvas.itemcget(item,"fill")
         level_value=0
         if level=='red':
-            level_value=0.2
+            level_value=0.5
         elif level=='orange':
-            level_value=0.1
+            level_value=0.15
         elif level=='yellow':
             level_value=0.05
         if value>(level_value/const.SLEEP_TIME):

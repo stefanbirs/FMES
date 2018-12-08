@@ -26,9 +26,9 @@ def create_houses(tmaze):
 # Makes traffic for all the '1's in  tmaze
 def create_traffic(tmaze):
     color_wheel=[]
-    color_wheel.append("red")
-    color_wheel.append("orange")
     color_wheel.append("yellow")
+    color_wheel.append("orange")
+    color_wheel.append("red")
     for x in range(len(tmaze)):
         for y in range(len(tmaze[0])):
             # make into functions

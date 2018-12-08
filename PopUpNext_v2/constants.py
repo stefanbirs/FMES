@@ -24,7 +24,7 @@ def den_define():
     file.write(str((data_entry)+1))
     file.close()
     return den_val
-DENSITY=0.6
+DENSITY=0.5
 def graph_check():
     if DENSITY==20/50:
         return True
@@ -51,7 +51,7 @@ NUM_OF_WHEELS = 10
 NUM_OF_DRONES = 10
 NUM_OF_PODS = 10
 #
-ALTITUDE_HEIGHT=100
+ALTITUDE_HEIGHT=50
 
 PIXEL_CHARGE = 20
 DRONE_COST=100

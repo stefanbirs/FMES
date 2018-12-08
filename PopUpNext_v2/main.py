@@ -52,7 +52,7 @@ pod_at_dest=[]
 drone_lowered=[]
 for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i],dest_list[i]))
-    mod.CommonFunctions.add_tags("pair%d"%i,["fly%d"%i,"pod%d"%i])
+    mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
     pod_at_dest.append(False)
     drone_lowered.append(False)
 # Fly module
@@ -79,6 +79,7 @@ while pod_moving==True:
         #if wheels[i].path==None:
             #pod_at_dest[i]=True
         drone_lowered[i]=drone.pick_up_pod(pods[i])
+        #drone_lowered[i]=True
         if pod_at_dest[i]==False or drone_lowered[i]==False:
             pod_moving=True
     citymap.tk.update()

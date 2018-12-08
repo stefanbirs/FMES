@@ -2,7 +2,7 @@ import random
 import numpy as np
 import math
 import itertools
-
+import sys
 
 
 ################################################################################
@@ -11,19 +11,16 @@ import itertools
 class Node():
     """A node class for A* Pathfinding"""
 
-    def __init__(self, parent=None, position=None):
+    def __init__(self, parent=None, position=None,weight=0):
         self.parent = parent
         self.position = position
-
+        self.weight=weight
         self.g = 0
         self.h = 0
         self.f = 0
 
     def __eq__(self, other):
         return self.position == other.position
-
-
-
 def AllCombinations(my_list, empty_list):
     """Fills an empty list with all possible combinations from my_list"""
     count = 0
@@ -40,9 +37,103 @@ def AllCombinations(my_list, empty_list):
 ################################################################################
 # A* Algorithm #################################################################
 ################################################################################
-def astar(tmaze, start, end):
+# def astar(tmaze, start, end,traffic):
+#     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
+#
+#     # Create start and end node
+#     start_node = Node(None, start,0)
+#     end_node = Node(None, end,0)
+#
+#     # Initialize both open and closed list
+#     open_list = []
+#     closed_list = []
+#
+#     # Add the start node
+#     open_list.append(start_node)
+#
+#     # Loop until you find the end
+#     while len(open_list) > 0:
+#
+#         # Get the current node
+#         current_node = open_list[0]
+#         current_index = 0
+#         for index, item in enumerate(open_list):
+#
+#             if item.f < current_node.f:
+#                 current_node = item
+#                 current_index = index
+#
+#         # Pop current off open list, add to closed list
+#         open_list.pop(current_index)
+#         closed_list.append(current_node)
+#
+#         # Found the goal
+#         if current_node == end_node:
+#             path = []
+#             path_weight=[]
+#             current = current_node
+#
+#             while current is not None:
+#                 path.append(current.position)
+#                 path_weight.append(current.weight)
+#                 current = current.parent
+#             print(path_weight[-1])
+#             return path[::-1] # Return reversed path
+#
+#         # Generate children
+#         children = []
+#         for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: # Adjacent squares
+#
+#             # Get node position
+#             node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+#             cost=min_cost(maze,current.position[0],end)
+#             sum_node_weight=current_node.weight+tmaze[new_position[0],new_position[1]]
+#             # Make sure within range
+#             if node_position[0] > (len(tmaze) - 1) or node_position[0] < 0 or node_position[1] > (len(tmaze[len(tmaze)-1]) -1) or node_position[1] < 0:
+#                 continue
+#
+#             # Make sure walkable terrain
+#             if(traffic==True):
+#                 if tmaze[node_position[0]][node_position[1]] == 4:
+#                     continue
+#             else:
+#                 if tmaze[node_position[0]][node_position[1]] != 0:
+#                     continue
+#
+#             if Node(current_node, node_position) in closed_list:
+#                 continue
+#
+#             # Create new node
+#             new_node = Node(current_node, node_position,sum_node_weight)
+#
+#             # Append
+#             children.append(new_node)
+#
+#         # Loop through children
+#         for child in children:
+#
+#             # Child is on the closed list
+#             for closed_child in closed_list:
+#                 if child == closed_child:
+#                     continue
+#
+#             # Create the f, g, and h values
+#             child.g = current_node.g + 1
+#             child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
+#             child.f = child.g + child.h
+#
+#             # Child is already in the open list
+#             for open_node in open_list:
+#                 if child == open_node and child.g > open_node.g:
+#                     continue
+#
+#             # Add the child to the open list
+#             open_list.append(child)
+# def min_cost(map,curr_pos,end,weight):
+#
+#     return weight,next_pos
+def astar(tmaze, start, end,traffic):
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
-
     # Create start and end node
     start_node = Node(None, start)
     end_node = Node(None, end)
@@ -78,7 +169,6 @@ def astar(tmaze, start, end):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-
             return path[::-1] # Return reversed path
 
         # Generate children
@@ -93,8 +183,18 @@ def astar(tmaze, start, end):
                 continue
 
             # Make sure walkable terrain
-            if tmaze[node_position[0]][node_position[1]] != 0:
-                continue
+            if(traffic==0):
+                if tmaze[node_position[0]][node_position[1]] != 0:
+                    continue
+            elif(traffic==1):
+                if tmaze[node_position[0]][node_position[1]] == 4 or tmaze[node_position[0]][node_position[1]] == 2 or tmaze[node_position[0]][node_position[1]] == 3:
+                    continue
+            elif(traffic==2):
+                if tmaze[node_position[0]][node_position[1]] == 4 or tmaze[node_position[0]][node_position[1]] == 3:
+                    continue
+            else:
+                if tmaze[node_position[0]][node_position[1]] == 4:
+                    continue
 
             if Node(current_node, node_position) in closed_list:
                 continue
@@ -125,8 +225,6 @@ def astar(tmaze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
-
-
 ################################################################################
 # A* Algorithm for trafficBlock ################################################
 ################################################################################
@@ -143,10 +241,8 @@ def trafficBlock_astar(maze, start, end):
     maze_simple = np.copy(maze)
     for i in range(0, len(maze)):
         for j in range(0, len(maze[0])):
-            if maze_simple[j][i] == 1:
+            if maze_simple[j][i] != 4:
               maze_simple[j][i] = 0
-
-
     #Find quickest path if no traffic
     tmaze3=[]
     rez3 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
@@ -163,7 +259,7 @@ def trafficBlock_astar(maze, start, end):
 
     #Find where traffic is on this path
     for i in path_nt:
-        if maze[i[1]][i[0]] == 1:
+        if maze[i[1]][i[0]] == 1 or maze[i[1]][i[0]]==2 or maze[i[1]][i[0]]==3:
             one_indices.append(one_count)
             one_coordinates.append(i)
             j+=1
@@ -222,7 +318,6 @@ def trafficBlock_astar(maze, start, end):
             path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
 
     path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
-
     print(path_arr)
 
 
@@ -248,10 +343,6 @@ def get_free_coordinates(tmaze):
         for y in range(len(tmaze[0])-1): # iterates through number of rows
             if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
                 free_coord.append((x,y)) # Coordinate list that does not have traffic
-            elif tmaze[x][y] == 1: # else if there is traffic in this coordinate "1" do nothing
-                continue
-            elif tmaze[x][y] == 2: # else if there is house in this coordinate "2" do nothing
-                continue
     return free_coord
 
 

@@ -24,15 +24,8 @@ def den_define():
     file.write(str((data_entry)+1))
     file.close()
     return den_val
-<<<<<<< HEAD
-<<<<<<< HEAD
-DENSITY=0.5
-=======
-DENSITY=den_define()
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-DENSITY=den_define()
->>>>>>> parent of 7a73b17... rise and fall implemented
+
+DENSITY=0.7
 def graph_check():
     if DENSITY==20/50:
         return True
@@ -59,16 +52,9 @@ NUM_OF_WHEELS = 20
 NUM_OF_DRONES = 20
 NUM_OF_PODS = 20
 #
-<<<<<<< HEAD
-<<<<<<< HEAD
 ALTITUDE_HEIGHT=50
-=======
 
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-
->>>>>>> parent of 7a73b17... rise and fall implemented
-
+#
 PIXEL_CHARGE = 20
 DRONE_COST=100
 WHEEL_COST=5

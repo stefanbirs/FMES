@@ -8,7 +8,7 @@ import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 import plotly.offline as offline
-offline.init_notebook_mode()
+#offline.init_notebook_mode()
 pod_data = [[] for i in range(const.NUM_OF_PODS)]
 ################################################################################
 # Ground Module ################################################################
@@ -34,37 +34,11 @@ class DriveMod:
         self.b = self.y = 1
         # i makes sure that we are entering the right if statement
         self.i = 0 # control variable
-
+        self.delay_value=0
         self.start = start
         self.end = end
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        self.path = self.calc_new_path() # Generates initial path
-=======
-        self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-        self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
->>>>>>> parent of 7a73b17... rise and fall implemented
-
-
-    def calc_new_path(self):
-        #print('calling')
-        count=0
-        pos = citymap.canvas.coords(self.shape) # Current position of ground module
-        cur_pos = [pos[0], pos[1]]
-        astar_pos=[round(cur_pos[0]/const.MULTIPLIER),round(cur_pos[1]/const.MULTIPLIER)]
-        print(astar_pos)
-        self.path = a_star.astar(param.tmaze,self.start, self.end,count)
-        #self.path.pop(0)
-        count+=1
-        while(self.path==None):
-            count+=1
-            self.path = a_star.astar(param.tmaze,astar_pos, self.end,count)
-        if(self.path)!=None:
-            self.path.pop(0)
-        #print(self.path)
+        self.call_pod=False
+        self.path = a_star.astar(param.tmaze, start, end,0) # Generates initial path
 ################################################################################
     def has_pod(self):
         tags = citymap.canvas.gettags(self.shape)
@@ -85,25 +59,27 @@ class DriveMod:
 
 ################################################################################
     def drive(self, tag="none"):
-<<<<<<< HEAD
+        def calc_new_path():
+            pos = citymap.canvas.coords(self.shape) # Current position of ground module
+            cur_pos = [pos[0], pos[1]]
+            a_star_pos=[round(pos[0]/const.MULTIPLIER),round(pos[1]/const.MULTIPLIER)]
+            self.path = a_star.astar(param.tmaze, a_star_pos, self.end,0)
+            count=3
+            #while(self.path==None):
+            self.path = a_star.astar(param.tmaze, a_star_pos, self.end,count)
+                #count+=1
+            #print(self.path)
             #print(count)
             #print(self.tag)
                 #print(self.path)
         # If no path, dont move(so far) ########################################
         #print(self.path)
-        dest_x = int(self.end[0]*const.MULTIPLIER )
-        dest_y = int(self.end[1]*const.MULTIPLIER )
-        dest = [dest_x, dest_y]
-        pos = citymap.canvas.coords(self.shape) # Current position of ground module
-        cur_pos = [pos[0], pos[1]]
         # if self.path == None:
         #     self.xspeed = self.yspeed = 0
         #     self.a = self.b = 0
         #     self.i = 4
         #     #print('calling?')
             #self.calc_new_path()
-        if self.path!=None:
-=======
 
         # saves the current position if the ground mod
         pos = citymap.canvas.coords(self.shape) # Current position of ground module
@@ -116,16 +92,13 @@ class DriveMod:
 
         # If no path, dont move(so far) ########################################
         if self.path == None:
-            self.xspeed = self.yspeed = 0
-            self.a = self.b = 0
-            self.i = 4 # Make sure that it doesn't enter another if statement
-
+            #self.xspeed = self.yspeed = 0
+            #self.a = self.b = 0
+            #self.i = 4 # Make sure that it doesn't enter another if statement
+            self.call_pod=True
+            calc_new_path()
         # If path, move to destination #########################################
-        else:
-<<<<<<< HEAD
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
->>>>>>> parent of 7a73b17... rise and fall implemented
+        if self.path!=None:
             # if reached its destination, STOP!
             if cur_pos == dest:
                 # It stops the ground mod
@@ -162,59 +135,33 @@ class DriveMod:
                     self.xspeed = 0
                     self.yspeed = -1
                     self.i = 1 # control variable
-<<<<<<< HEAD
-=======
 
-                def calc_new_path():
-                    self.path.pop(0) # removes first entery of the path
-                    self.path = a_star.astar(param.tmaze, self.path[0], self.path[-1])
-                    #print("path", self.path)
 
                 # Checking the coordinates of the DriveMod
                 # When the DriveMod coordinate has reached a position of a new
                 # coordinate, the varibles a and b gets added by one.
                 # This is done to make the if statements above to look at the next step of the path
 
-
->>>>>>> parent of cfd744e... rise and fall implemented
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] >= const.MULTIPLIER * b_x and a_y == b_y and self.i == 0:
                     self.i = 3 # control variable
                     self.xspeed = 0
-<<<<<<< HEAD
-                    self.calc_new_path()
-=======
                     calc_new_path()
->>>>>>> parent of 7a73b17... rise and fall implemented
-
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] <= const.MULTIPLIER * b_x and a_y == b_y and self.i == 1:
                     self.i = 3 # control variable
                     self.xspeed = 0
-<<<<<<< HEAD
-                    self.calc_new_path()
-=======
                     calc_new_path()
->>>>>>> parent of 7a73b17... rise and fall implemented
-
                 # if the ground mod has reached a new coordinate in the positive y direction
                 if cur_pos[1] >= const.MULTIPLIER * b_y and a_x == b_x and self.i == 0:
                     self.i = 3 # control variable
                     self.yspeed = 0
-<<<<<<< HEAD
-                    self.calc_new_path()
-=======
                     calc_new_path()
->>>>>>> parent of 7a73b17... rise and fall implemented
-
                 # if the ground mod has reached a new coordinate in the negative y direction
                 if cur_pos[1] <= const.MULTIPLIER * b_y and a_x == b_x and self.i == 1:
                     self.i = 3 # control variable
                     self.yspeed = 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    self.calc_new_path()
-
+                    calc_new_path()
         delay_over=True
         speed=[self.xspeed, self.yspeed]
         traffic_block=traffic_calculations.stuck(pos,speed)
@@ -228,14 +175,6 @@ class DriveMod:
                 self.delay_value=0
         else:
             self.delay_value=0
-
-
-=======
-                    calc_new_path()
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-                    calc_new_path()
->>>>>>> parent of 7a73b17... rise and fall implemented
         if(self.has_pod() == True):
             #print(self.tag)
             #print(self.xspeed)
@@ -268,7 +207,7 @@ class FlyMod:
         y1 = int( start[1] * const.MULTIPLIER )
         x2 = int( start[0] * const.MULTIPLIER + const.SHAPE_SIZE )
         y2 = int( start[1] * const.MULTIPLIER + const.SHAPE_SIZE )
-
+        self.altitude=0
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
         self.tag=("fly%d"%self.id)
         self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=2,tags=self.tag),
@@ -287,15 +226,24 @@ class FlyMod:
         #print("Current Pos: %d,%d"%(cur_pos[0],cur_pos[1]))
         #print("Pod Pos: %d, %d"%(pod_cur_pos[0],pod_cur_pos[1]))
         at_dest=False
-        if (self.has_pod()==False):
-            self.fly(pod_cur_pos)
-            if cur_pos==pod_cur_pos:
-                at_dest=True
-            #print(at_dest)
-            if at_dest==True:
+        #print(self.altitude)
+        #print(self.has_pod())
+        if (self.has_pod()==False or self.altitude!=0):
+            at_dest=self.fly(pod_cur_pos)
+            #print('WHY')
+            tagged=False
+            tags=citymap.canvas.gettags(self.tag)
+            for tag in tags:
+                if tag=="pair10%d"%self.id:
+                    tagged=True
+                    #print('tagged')
+            if cur_pos==pod_cur_pos and tagged==False:
+                #print('once')
+                print(self.tag)
                 CommonFunctions.remove_tags([self.tag,pod_tag])
                 CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
-        elif self.has_pod()==True:
+                #print(self.has_pod())
+        else:
             self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
@@ -323,50 +271,59 @@ class FlyMod:
         return False
     #fly directly to Destination
     def fly(self, end):
-        #currently doesnt account for astar positions, but shouldnt need to
         dest_x = (end[0])
         dest_y = (end[1])
         dest = [dest_x,dest_y]
+        pos = citymap.canvas.coords(self.shape[0])
+        cur_pos = [pos[0], pos[1]]
         at_dest=False
-        result=self.charge_for_dest(dest)
-        if result==True:
-            pos = citymap.canvas.coords(self.shape[0])
-            cur_pos = [pos[0], pos[1]]
-            self.xspeed = 0.0
-            self.yspeed = 0.0
-            if cur_pos == dest:
-                self.xspeed = self.yspeed = 0.0
-                at_dest=True
-            else:
-                rise = (dest_y-cur_pos[1])
-                run = (dest_x-cur_pos[0])
-                if(run != 0):
-                    if(rise != 0):
-                        slope = abs(rise/run)
-                        self.xspeed = (run/abs(run))*self.speed/(slope+1)
-                        self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
-                    else:
-                        self.yspeed = 0.0
-                        self.xspeed = (run/abs(run))*self.speed
-                else:
-                    self.xspeed = 0.0
-                    self.yspeed = (rise/abs(rise))*self.speed
-                if(abs(self.yspeed) > abs(rise)):
-                    self.yspeed = rise
-                if(abs(self.xspeed) > abs(run)):
-                    self.xspeed = run
-        if(self.has_pod() == True):
-            ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
-            for num_elements in range(0,len(ids_to_move)):
-                citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+        if(self.altitude==const.ALTITUDE_HEIGHT or dest==cur_pos):
+            #currently doesnt account for astar positions, but shouldnt need to
+            result=self.charge_for_dest(dest)
+            if result==True:
+                self.xspeed = 0.0
+                self.yspeed = 0.0
+                if cur_pos == dest:
+                    self.xspeed = self.yspeed = 0.0
+                    #print(self.altitude)
+                    if(self.altitude==0):
 
-            cost_value=const.DRONE_COST
-            if(self.xspeed==0 and self.yspeed==0):
-                cost_value=0
-            CommonFunctions.add_cost(self.pairing_tag(),cost_value,"drone")
+                        at_dest=True
+                    else:
+                        at_dest=False
+                        self.altitude-=1
+                else:
+                    rise = (dest_y-cur_pos[1])
+                    run = (dest_x-cur_pos[0])
+                    if(run != 0):
+                        if(rise != 0):
+                            slope = abs(rise/run)
+                            self.xspeed = (run/abs(run))*self.speed/(slope+1)
+                            self.yspeed = (rise/abs(rise))*slope*abs(self.xspeed)
+                        else:
+                            self.yspeed = 0.0
+                            self.xspeed = (run/abs(run))*self.speed
+                    else:
+                        self.xspeed = 0.0
+                        self.yspeed = (rise/abs(rise))*self.speed
+                    if(abs(self.yspeed) > abs(rise)):
+                        self.yspeed = rise
+                    if(abs(self.xspeed) > abs(run)):
+                        self.xspeed = run
+            if(self.has_pod() == True):
+                ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
+                for num_elements in range(0,len(ids_to_move)):
+                    citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
+
+                cost_value=const.DRONE_COST
+                if(self.xspeed==0 and self.yspeed==0):
+                    cost_value=0
+                CommonFunctions.add_cost(self.pairing_tag(),cost_value,"drone")
+            else:
+                for num_elements in range(0,len(self.shape)):
+                    citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
         else:
-            for num_elements in range(0,len(self.shape)):
-                citymap.canvas.move(self.shape[num_elements], self.xspeed, self.yspeed)
+            self.altitude+=1
         return at_dest
 
 
@@ -549,9 +506,6 @@ class GenerateResults:
             file.close()
         else:
             raise SystemExit("BYE")
-<<<<<<< HEAD
-<<<<<<< HEAD
-
 class traffic_calculations:
     def stuck(position,speed):
         items_at_pos=-1
@@ -582,18 +536,14 @@ class traffic_calculations:
         level=citymap.canvas.itemcget(item,"fill")
         level_value=0
         if level=='red':
-            level_value=0.5
-        elif level=='orange':
             level_value=0.15
+        elif level=='orange':
+            level_value=0.10
         elif level=='yellow':
             level_value=0.05
         if value>(level_value/const.SLEEP_TIME):
             return True
         return False
-=======
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
->>>>>>> parent of 7a73b17... rise and fall implemented
 ################################################################################
 # END ##########################################################################
 ################################################################################

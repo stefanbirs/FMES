@@ -40,8 +40,6 @@ def AllCombinations(my_list, empty_list):
 ################################################################################
 # A* Algorithm #################################################################
 ################################################################################
-<<<<<<< HEAD
-<<<<<<< HEAD
 # def astar(tmaze, start, end,traffic):
 #     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
 #
@@ -138,12 +136,6 @@ def AllCombinations(my_list, empty_list):
 #
 #     return weight,next_pos
 def astar(tmaze, start, end,traffic):
-=======
-def astar(tmaze, start, end):
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-def astar(tmaze, start, end):
->>>>>>> parent of 7a73b17... rise and fall implemented
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
 
     # Create start and end node
@@ -195,8 +187,6 @@ def astar(tmaze, start, end):
                 continue
 
             # Make sure walkable terrain
-<<<<<<< HEAD
-<<<<<<< HEAD
             if(traffic==0):
                 if tmaze[node_position[0]][node_position[1]] != 0:
                     continue
@@ -206,18 +196,9 @@ def astar(tmaze, start, end):
             elif(traffic==2):
                 if tmaze[node_position[0]][node_position[1]] == 4 or tmaze[node_position[0]][node_position[1]] == 3:
                     continue
-            else:
+            elif(traffic==3):
                 if tmaze[node_position[0]][node_position[1]] == 4:
                     continue
-=======
-            if tmaze[node_position[0]][node_position[1]] != 0:
-                continue
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-            if tmaze[node_position[0]][node_position[1]] != 0:
-                continue
->>>>>>> parent of 7a73b17... rise and fall implemented
-
             if Node(current_node, node_position) in closed_list:
                 continue
 

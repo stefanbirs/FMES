@@ -49,10 +49,12 @@ for i in range(const.NUM_OF_WHEELS):
 # Pod module
 pods = []
 pod_at_dest=[]
+drone_lowered=[]
 for i in range(const.NUM_OF_PODS):
     pods.append(mod.PodMod(strt_list[i],dest_list[i]))
     mod.CommonFunctions.add_tags("pair%d"%i,["drive%d"%i,"pod%d"%i])
     pod_at_dest.append(False)
+    drone_lowered.append(False)
 # Fly module
 drones = []
 for i in range(const.NUM_OF_DRONES):
@@ -80,29 +82,21 @@ while pod_moving==True:
         wheel.drive()
     for i, drone in enumerate(drones):
         pod_at_dest[i]=pods[i].at_dest()
-        #if wheels[i].path==None:
+        if wheels[i].call_pod==True:
+            drone_lowered[i]=drone.pick_up_pod(pods[i])
+        else:
             #pod_at_dest[i]=True
-<<<<<<< HEAD
-<<<<<<< HEAD
-        #drone_lowered[i]=drone.pick_up_pod(pods[i])
-        drone_lowered[i]=True
+            drone_lowered[i]=False
         if pod_at_dest[i]==False or drone_lowered[i]==False:
-=======
-        drone.pick_up_pod(pods[i])
-        if pod_at_dest[i]==False:
->>>>>>> parent of cfd744e... rise and fall implemented
-=======
-        drone.pick_up_pod(pods[i])
-        if pod_at_dest[i]==False:
->>>>>>> parent of 7a73b17... rise and fall implemented
             pod_moving=True
 
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)
-mod.GenerateResults.export_txt(pods)
+#mod.GenerateResults.export_txt(pods)
 #mod.GenerateResults.generate_graphs()
-mod.GenerateResults.avg_cost(pods)
-
+#mod.GenerateResults.avg_cost(pods)
+time.sleep(0.5)
+raise SystemExit("Kachow")
 ################################################################################
 # END ##########################################################################
 ################################################################################

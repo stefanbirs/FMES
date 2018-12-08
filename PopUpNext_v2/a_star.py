@@ -37,6 +37,7 @@ def AllCombinations(my_list, empty_list):
 ################################################################################
 # A* Algorithm #################################################################
 ################################################################################
+<<<<<<< HEAD
 # def astar(tmaze, start, end,traffic):
 #     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
 #
@@ -133,6 +134,9 @@ def AllCombinations(my_list, empty_list):
 #
 #     return weight,next_pos
 def astar(tmaze, start, end,traffic):
+=======
+def astar(tmaze, start, end):
+>>>>>>> parent of cfd744e... rise and fall implemented
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
     # Create start and end node
     start_node = Node(None, start)
@@ -183,6 +187,7 @@ def astar(tmaze, start, end,traffic):
                 continue
 
             # Make sure walkable terrain
+<<<<<<< HEAD
             if(traffic==0):
                 if tmaze[node_position[0]][node_position[1]] != 0:
                     continue
@@ -195,6 +200,10 @@ def astar(tmaze, start, end,traffic):
             else:
                 if tmaze[node_position[0]][node_position[1]] == 4:
                     continue
+=======
+            if tmaze[node_position[0]][node_position[1]] != 0:
+                continue
+>>>>>>> parent of cfd744e... rise and fall implemented
 
             if Node(current_node, node_position) in closed_list:
                 continue
@@ -241,8 +250,10 @@ def trafficBlock_astar(maze, start, end):
     maze_simple = np.copy(maze)
     for i in range(0, len(maze)):
         for j in range(0, len(maze[0])):
-            if maze_simple[j][i] != 4:
+            if maze_simple[j][i] == 1:
               maze_simple[j][i] = 0
+
+
     #Find quickest path if no traffic
     tmaze3=[]
     rez3 = [[maze_simple[j][i] for j in range(len(maze_simple))] for i in range(len(maze_simple[0]))]
@@ -259,7 +270,7 @@ def trafficBlock_astar(maze, start, end):
 
     #Find where traffic is on this path
     for i in path_nt:
-        if maze[i[1]][i[0]] == 1 or maze[i[1]][i[0]]==2 or maze[i[1]][i[0]]==3:
+        if maze[i[1]][i[0]] == 1:
             one_indices.append(one_count)
             one_coordinates.append(i)
             j+=1
@@ -318,6 +329,7 @@ def trafficBlock_astar(maze, start, end):
             path_arr.append(astar(tmaze), path[sur_ind[i-1]+1][::-1], path[sur_ind[i]-1][::-1])
 
     path_arr.append(astar(tmaze, path[int(sur_ind[-1]+1)][::-1], end))
+
     print(path_arr)
 
 
@@ -343,6 +355,10 @@ def get_free_coordinates(tmaze):
         for y in range(len(tmaze[0])-1): # iterates through number of rows
             if tmaze[x][y] == 0: # if There is no traffic in this coordinate "0" then append coordinate
                 free_coord.append((x,y)) # Coordinate list that does not have traffic
+            elif tmaze[x][y] == 1: # else if there is traffic in this coordinate "1" do nothing
+                continue
+            elif tmaze[x][y] == 2: # else if there is house in this coordinate "2" do nothing
+                continue
     return free_coord
 
 

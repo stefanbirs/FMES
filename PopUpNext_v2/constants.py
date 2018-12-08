@@ -24,7 +24,11 @@ def den_define():
     file.write(str((data_entry)+1))
     file.close()
     return den_val
+<<<<<<< HEAD
 DENSITY=0.5
+=======
+DENSITY=den_define()
+>>>>>>> parent of cfd744e... rise and fall implemented
 def graph_check():
     if DENSITY==20/50:
         return True
@@ -47,11 +51,15 @@ TMAZE_COLS = len(param.tmaze) # number of columns
 TMAZE_ROWS = len(param.tmaze[0]) # number of rows
 #
 
-NUM_OF_WHEELS = 10
-NUM_OF_DRONES = 10
-NUM_OF_PODS = 10
+NUM_OF_WHEELS = 20
+NUM_OF_DRONES = 20
+NUM_OF_PODS = 20
 #
+<<<<<<< HEAD
 ALTITUDE_HEIGHT=50
+=======
+
+>>>>>>> parent of cfd744e... rise and fall implemented
 
 PIXEL_CHARGE = 20
 DRONE_COST=100

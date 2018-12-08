@@ -40,9 +40,25 @@ class DriveMod:
         self.start = start
         self.end = end
 
-        self.path = a_star.astar(param.tmaze, start, end,False) # Generates initial path
+        self.path = self.calc_new_path() # Generates initial path
 
 
+    def calc_new_path(self):
+        #print('calling')
+        count=0
+        pos = citymap.canvas.coords(self.shape) # Current position of ground module
+        cur_pos = [pos[0], pos[1]]
+        astar_pos=[round(cur_pos[0]/const.MULTIPLIER),round(cur_pos[1]/const.MULTIPLIER)]
+        print(astar_pos)
+        self.path = a_star.astar(param.tmaze,self.start, self.end,count)
+        #self.path.pop(0)
+        count+=1
+        while(self.path==None):
+            count+=1
+            self.path = a_star.astar(param.tmaze,astar_pos, self.end,count)
+        if(self.path)!=None:
+            self.path.pop(0)
+        #print(self.path)
 ################################################################################
     def has_pod(self):
         tags = citymap.canvas.gettags(self.shape)
@@ -63,36 +79,22 @@ class DriveMod:
 
 ################################################################################
     def drive(self, tag="none"):
-
-        # saves the current position if the ground mod
-        pos = citymap.canvas.coords(self.shape) # Current position of ground module
-        cur_pos = [pos[0], pos[1]]
-
-        # indentify the end coordinates
-
-        def calc_new_path():
-            self.path==None
-            count=0
-            while(self.path==None):
-                astar_pos=[round(cur_pos[0]/const.MULTIPLIER),round(cur_pos[1]/const.MULTIPLIER)]
-                self.path = a_star.astar(param.tmaze,astar_pos, self.end,count)
-                count+=1
             #print(count)
             #print(self.tag)
                 #print(self.path)
         # If no path, dont move(so far) ########################################
+        #print(self.path)
         dest_x = int(self.end[0]*const.MULTIPLIER )
         dest_y = int(self.end[1]*const.MULTIPLIER )
         dest = [dest_x, dest_y]
-            #self.xspeed = self.yspeed = 0
-            #self.a = self.b = 0
-            #self.i = 4
-            #print('calling?')
-        calc_new_path()
-         # Make sure that it doesn't enter another if statement
-             #print("path", self.path)
-        #print(self.path)
-        # If path, move to destination #########################################
+        pos = citymap.canvas.coords(self.shape) # Current position of ground module
+        cur_pos = [pos[0], pos[1]]
+        # if self.path == None:
+        #     self.xspeed = self.yspeed = 0
+        #     self.a = self.b = 0
+        #     self.i = 4
+        #     #print('calling?')
+            #self.calc_new_path()
         if self.path!=None:
             # if reached its destination, STOP!
             if cur_pos == dest:
@@ -130,37 +132,30 @@ class DriveMod:
                     self.xspeed = 0
                     self.yspeed = -1
                     self.i = 1 # control variable
-
-
-                # Checking the coordinates of the DriveMod
-                # When the DriveMod coordinate has reached a position of a new
-                # coordinate, the varibles a and b gets added by one.
-                # This is done to make the if statements above to look at the next step of the path
-
-
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] >= const.MULTIPLIER * b_x and a_y == b_y and self.i == 0:
                     self.i = 3 # control variable
                     self.xspeed = 0
-                    #calc_new_path()
+                    self.calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] <= const.MULTIPLIER * b_x and a_y == b_y and self.i == 1:
                     self.i = 3 # control variable
                     self.xspeed = 0
-                    #calc_new_path()
+                    self.calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the positive y direction
                 if cur_pos[1] >= const.MULTIPLIER * b_y and a_x == b_x and self.i == 0:
                     self.i = 3 # control variable
                     self.yspeed = 0
-                    #calc_new_path()
+                    self.calc_new_path()
 
                 # if the ground mod has reached a new coordinate in the negative y direction
                 if cur_pos[1] <= const.MULTIPLIER * b_y and a_x == b_x and self.i == 1:
                     self.i = 3 # control variable
                     self.yspeed = 0
-                    #calc_new_path()
+                    self.calc_new_path()
+
         delay_over=True
         speed=[self.xspeed, self.yspeed]
         traffic_block=traffic_calculations.stuck(pos,speed)
@@ -174,8 +169,12 @@ class DriveMod:
                 self.delay_value=0
         else:
             self.delay_value=0
-        #print(self.pairing_tag())
+
+
         if(self.has_pod() == True):
+            #print(self.tag)
+            #print(self.xspeed)
+            #print(self.yspeed)
             ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
             for num_elements in range(0, len(ids_to_move)):
                 citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
@@ -225,15 +224,15 @@ class FlyMod:
         #print("Pod Pos: %d, %d"%(pod_cur_pos[0],pod_cur_pos[1]))
         at_dest=False
         if (self.has_pod()==False):
-            at_dest=self.fly(pod_cur_pos)
+            self.fly(pod_cur_pos)
+            if cur_pos==pod_cur_pos:
+                at_dest=True
             #print(at_dest)
             if at_dest==True:
                 CommonFunctions.remove_tags([self.tag,pod_tag])
                 CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
             return False
         elif self.has_pod()==True:
-            #print("DO it")
-            #print(citymap.canvas.gettags(pod.shape[0]))
             return self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
@@ -301,7 +300,7 @@ class FlyMod:
                 ids_to_move = citymap.canvas.find_withtag(self.pairing_tag())
                 for num_elements in range(0,len(ids_to_move)):
                     citymap.canvas.move(ids_to_move[num_elements], self.xspeed, self.yspeed)
-                #print("WORK")
+
                 cost_value=const.DRONE_COST
                 if(self.xspeed==0 and self.yspeed==0):
                     cost_value=0

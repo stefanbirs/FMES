@@ -78,8 +78,8 @@ while pod_moving==True:
         pod_at_dest[i]=pods[i].at_dest()
         #if wheels[i].path==None:
             #pod_at_dest[i]=True
-        drone_lowered[i]=drone.pick_up_pod(pods[i])
-        #drone_lowered[i]=True
+        #drone_lowered[i]=drone.pick_up_pod(pods[i])
+        drone_lowered[i]=True
         if pod_at_dest[i]==False or drone_lowered[i]==False:
             pod_moving=True
     citymap.tk.update()

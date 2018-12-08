@@ -169,7 +169,6 @@ def astar(tmaze, start, end,traffic):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-
             return path[::-1] # Return reversed path
 
         # Generate children

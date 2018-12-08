@@ -26,12 +26,15 @@ def create_houses(tmaze):
 # Makes traffic for all the '1's in  tmaze
 def create_traffic(tmaze):
 <<<<<<< HEAD
+<<<<<<< HEAD
     color_wheel=[]
     color_wheel.append("yellow")
     color_wheel.append("orange")
     color_wheel.append("red")
 =======
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+>>>>>>> parent of 7a73b17... rise and fall implemented
     for x in range(len(tmaze)):
         for y in range(len(tmaze[0])):
             # make into functions

@@ -39,10 +39,14 @@ class DriveMod:
         self.end = end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.path = self.calc_new_path() # Generates initial path
 =======
         self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+        self.path = a_star.astar(param.tmaze, start, end) # Generates initial path
+>>>>>>> parent of 7a73b17... rise and fall implemented
 
 
     def calc_new_path(self):
@@ -118,7 +122,10 @@ class DriveMod:
 
         # If path, move to destination #########################################
         else:
+<<<<<<< HEAD
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+>>>>>>> parent of 7a73b17... rise and fall implemented
             # if reached its destination, STOP!
             if cur_pos == dest:
                 # It stops the ground mod
@@ -174,24 +181,37 @@ class DriveMod:
                 if cur_pos[0] >= const.MULTIPLIER * b_x and a_y == b_y and self.i == 0:
                     self.i = 3 # control variable
                     self.xspeed = 0
+<<<<<<< HEAD
                     self.calc_new_path()
+=======
+                    calc_new_path()
+>>>>>>> parent of 7a73b17... rise and fall implemented
 
                 # if the ground mod has reached a new coordinate in the negative x direction
                 if cur_pos[0] <= const.MULTIPLIER * b_x and a_y == b_y and self.i == 1:
                     self.i = 3 # control variable
                     self.xspeed = 0
+<<<<<<< HEAD
                     self.calc_new_path()
+=======
+                    calc_new_path()
+>>>>>>> parent of 7a73b17... rise and fall implemented
 
                 # if the ground mod has reached a new coordinate in the positive y direction
                 if cur_pos[1] >= const.MULTIPLIER * b_y and a_x == b_x and self.i == 0:
                     self.i = 3 # control variable
                     self.yspeed = 0
+<<<<<<< HEAD
                     self.calc_new_path()
+=======
+                    calc_new_path()
+>>>>>>> parent of 7a73b17... rise and fall implemented
 
                 # if the ground mod has reached a new coordinate in the negative y direction
                 if cur_pos[1] <= const.MULTIPLIER * b_y and a_x == b_x and self.i == 1:
                     self.i = 3 # control variable
                     self.yspeed = 0
+<<<<<<< HEAD
 <<<<<<< HEAD
                     self.calc_new_path()
 
@@ -213,6 +233,9 @@ class DriveMod:
 =======
                     calc_new_path()
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+                    calc_new_path()
+>>>>>>> parent of 7a73b17... rise and fall implemented
         if(self.has_pod() == True):
             #print(self.tag)
             #print(self.xspeed)
@@ -527,6 +550,7 @@ class GenerateResults:
         else:
             raise SystemExit("BYE")
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 class traffic_calculations:
     def stuck(position,speed):
@@ -568,6 +592,8 @@ class traffic_calculations:
         return False
 =======
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+>>>>>>> parent of 7a73b17... rise and fall implemented
 ################################################################################
 # END ##########################################################################
 ################################################################################

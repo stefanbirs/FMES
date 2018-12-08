@@ -2,7 +2,7 @@ import random
 import numpy as np
 import math
 import itertools
-import sys
+
 
 
 ################################################################################
@@ -11,16 +11,19 @@ import sys
 class Node():
     """A node class for A* Pathfinding"""
 
-    def __init__(self, parent=None, position=None,weight=0):
+    def __init__(self, parent=None, position=None):
         self.parent = parent
         self.position = position
-        self.weight=weight
+
         self.g = 0
         self.h = 0
         self.f = 0
 
     def __eq__(self, other):
         return self.position == other.position
+
+
+
 def AllCombinations(my_list, empty_list):
     """Fills an empty list with all possible combinations from my_list"""
     count = 0
@@ -37,6 +40,7 @@ def AllCombinations(my_list, empty_list):
 ################################################################################
 # A* Algorithm #################################################################
 ################################################################################
+<<<<<<< HEAD
 <<<<<<< HEAD
 # def astar(tmaze, start, end,traffic):
 #     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
@@ -137,7 +141,11 @@ def astar(tmaze, start, end,traffic):
 =======
 def astar(tmaze, start, end):
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+def astar(tmaze, start, end):
+>>>>>>> parent of 7a73b17... rise and fall implemented
     """Returns a list of tuples as a path from the given start to the given end in the given tmaze"""
+
     # Create start and end node
     start_node = Node(None, start)
     end_node = Node(None, end)
@@ -188,6 +196,7 @@ def astar(tmaze, start, end):
 
             # Make sure walkable terrain
 <<<<<<< HEAD
+<<<<<<< HEAD
             if(traffic==0):
                 if tmaze[node_position[0]][node_position[1]] != 0:
                     continue
@@ -204,6 +213,10 @@ def astar(tmaze, start, end):
             if tmaze[node_position[0]][node_position[1]] != 0:
                 continue
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+            if tmaze[node_position[0]][node_position[1]] != 0:
+                continue
+>>>>>>> parent of 7a73b17... rise and fall implemented
 
             if Node(current_node, node_position) in closed_list:
                 continue
@@ -234,6 +247,8 @@ def astar(tmaze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
+
+
 ################################################################################
 # A* Algorithm for trafficBlock ################################################
 ################################################################################

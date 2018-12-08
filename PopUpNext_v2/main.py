@@ -83,6 +83,7 @@ while pod_moving==True:
         #if wheels[i].path==None:
             #pod_at_dest[i]=True
 <<<<<<< HEAD
+<<<<<<< HEAD
         #drone_lowered[i]=drone.pick_up_pod(pods[i])
         drone_lowered[i]=True
         if pod_at_dest[i]==False or drone_lowered[i]==False:
@@ -90,6 +91,10 @@ while pod_moving==True:
         drone.pick_up_pod(pods[i])
         if pod_at_dest[i]==False:
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+        drone.pick_up_pod(pods[i])
+        if pod_at_dest[i]==False:
+>>>>>>> parent of 7a73b17... rise and fall implemented
             pod_moving=True
 
     citymap.tk.update()

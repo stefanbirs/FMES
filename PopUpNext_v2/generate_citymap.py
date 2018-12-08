@@ -9,9 +9,8 @@ def generate_city(size, traffic_desity):
     # places 2's in matrix
     for row in range(size[0]): # rows
         for col in range(size[1]): # columns
-            if(matrix[row][col]==1):
-                matrix[row][col]=np.random.choice([1,2,3], size=1, p=[1/3, 1/3, 1/3])
             if row != 0 and row != size[0]-1 and col != 0 and col != size[1]-1 : # ignores borders
+<<<<<<< HEAD
 <<<<<<< HEAD
                 if row %2 != 0 and col %2 != 0: # if true then and 4 to odd numbered indexes
                     matrix[row][col] = 4
@@ -22,4 +21,8 @@ def generate_city(size, traffic_desity):
                 if row %2 != 0 and col %2 != 0: # if true then and 2 to odd numbered indexes
                     matrix[row][col] = 2
 >>>>>>> parent of cfd744e... rise and fall implemented
+=======
+                if row %2 != 0 and col %2 != 0: # if true then and 2 to odd numbered indexes
+                    matrix[row][col] = 2
+>>>>>>> parent of 7a73b17... rise and fall implemented
     return matrix

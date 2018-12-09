@@ -13,22 +13,22 @@ def get_data(file_name,name_val):
         data_values=line.split(',')
         #print(len(data_values))
         if(len(data_values)>1):
-            x_val.append((data_values[0]))
+            x_val.append(float(data_values[0]))
             y_val.append(float(data_values[1]))
-    trace=go.Bar(
+    trace=go.Scatter(
         x = x_val,
         y = y_val,
+        mode='lines+markers',
         name=name_val
     )
     file.close()
     return trace
-data_1=get_data("Graph3Final.txt","WithoutSystem")
-data_2=get_data("Graph3FinalSystem.txt","WithSystem")
+data_1=get_data("Graph4Final.txt","WithSystem")
+#data_2=get_data("Graph3FinalSystem.txt","WithSystem")
 plotly.offline.plot({
-"data": [data_1,data_2],
+"data": [data_1],
 "layout": go.Layout(
-    title="Various Cities System vs Non-System",
-    barmode='group',
+    title="Drone Hub vs Distance from Centre",
     yaxis=dict(title = 'Time (seconds)'),
-    xaxis=dict(title = 'Various Cities'))
+    xaxis=dict(title = 'Distance from Centre'))
 }, auto_open=True)

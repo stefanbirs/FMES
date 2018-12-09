@@ -4,6 +4,7 @@ import numpy as np
 import a_star
 import citymap
 import time
+import math
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -478,10 +479,11 @@ class GenerateResults:
                 #print("MOVEMENT %d"%i)
             avg_time_arr.append(len(pod_data[i])*const.SLEEP_TIME)
         print("Average Time: %f"%(np.mean(avg_time_arr)))
-        print("Altitude: %f"%const.ALTITUDE_HEIGHT)
-        file_name="Graph3Final.txt"
+        print("Hub Location: %f,%f"%(const.HUB[0],const.HUB[1]))
+        file_name="Graph4Final.txt"
         file=open(file_name,"a+")
-        data_entry="%f,%f\r\n"%(const.ALTITUDE_HEIGHT,(np.mean(avg_time_arr)))
+        dist=13-math.sqrt(2*(const.HUB[0]**2))
+        data_entry="%f,%f\r\n"%(dist,(np.mean(avg_time_arr)))
         file.write(data_entry)
         file.close()
         # if const.GRAPH_READY==True:

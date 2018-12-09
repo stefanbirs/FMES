@@ -8,6 +8,7 @@ import constants as const # paramaters that don't change often
 import parameters as param # paramaters that might change often
 import modules as mod # contains the Drive, Fly and Pod modules
 # Libraries
+import math
 import numpy as np
 from tkinter import *
 import random
@@ -83,11 +84,11 @@ while pod_moving==True:
             wheel.drive()
     for i, drone in enumerate(drones):
         pod_at_dest[i]=pods[i].at_dest()
-        #if wheels[i].call_pod==True:
-        #    drone_lowered[i]=drone.pick_up_pod(pods[i])
-        #else:
+        if wheels[i].call_pod==True:
+            drone_lowered[i]=drone.pick_up_pod(pods[i])
+        else:
             #pod_at_dest[i]=True
-        drone_lowered[i]=True
+            drone_lowered[i]=True
         #print(drone_lowered[i])
         if pod_at_dest[i]==False or drone_lowered[i]==False:
             pod_moving=True

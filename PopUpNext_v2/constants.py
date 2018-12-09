@@ -12,18 +12,18 @@ def den_define():
         data_values=line.split(',')
         try:
             data_entry=int(data_values[0])
-            if(data_entry<450):
+            if(data_entry<13):
                 den_val=data_entry
             else:
                 den_val=data_entry
-                data_entry=0
+                data_entry=-1
             #print(data_entry)
         except ValueError:
             continue
     #print(DENSITY)
     file.close()
     file=open("den_value.txt","w+")
-    file.write(str((data_entry)+50))
+    file.write(str((data_entry)+1))
     file.close()
     return den_val
 
@@ -59,4 +59,5 @@ PIXEL_CHARGE = 20
 DRONE_COST=100
 WHEEL_COST=5
 #
-HUB = [0, 0]
+pos=den_define()
+HUB = [pos, pos]

@@ -60,4 +60,4 @@ DRONE_COST=100
 WHEEL_COST=5
 #
 pos=den_define()
-HUB = [pos, pos]
+HUB = [0, 0]

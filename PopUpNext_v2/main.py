@@ -97,7 +97,7 @@ while pod_moving==True:
     time.sleep(const.SLEEP_TIME)
 mod.GenerateResults.export_txt(pods)
 #mod.GenerateResults.generate_graphs()
-mod.GenerateResults.avg_cost(pods)
+#mod.GenerateResults.avg_cost(pods)
 time.sleep(0.5)
 raise SystemExit("Kachow")
 ################################################################################

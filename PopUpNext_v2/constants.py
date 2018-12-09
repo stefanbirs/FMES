@@ -2,6 +2,8 @@
 CWIDTH = 700 # CANVAS WIDTH
 CHEIGHT = 700 # CANVAS LENGTH
 
+DENSITY=0.66
+ALTITUDE_HEIGHT=91
 #
 def den_define():
     file=open("den_value.txt","r")
@@ -10,10 +12,10 @@ def den_define():
         data_values=line.split(',')
         try:
             data_entry=int(data_values[0])
-            if(data_entry<21):
-                den_val=data_entry/50
+            if(data_entry<450):
+                den_val=data_entry
             else:
-                den_val=data_entry/50
+                den_val=data_entry
                 data_entry=0
             #print(data_entry)
         except ValueError:
@@ -21,13 +23,12 @@ def den_define():
     #print(DENSITY)
     file.close()
     file=open("den_value.txt","w+")
-    file.write(str((data_entry)+1))
+    file.write(str((data_entry)+50))
     file.close()
     return den_val
 
-DENSITY=0.7
 def graph_check():
-    if DENSITY==20/50:
+    if DENSITY==9/10:
         return True
     return False
 GRAPH_READY=graph_check()
@@ -52,7 +53,6 @@ NUM_OF_WHEELS = 20
 NUM_OF_DRONES = 20
 NUM_OF_PODS = 20
 #
-ALTITUDE_HEIGHT=50
 
 #
 PIXEL_CHARGE = 20

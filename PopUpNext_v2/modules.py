@@ -63,10 +63,12 @@ class DriveMod:
             pos = citymap.canvas.coords(self.shape) # Current position of ground module
             cur_pos = [pos[0], pos[1]]
             a_star_pos=[round(pos[0]/const.MULTIPLIER),round(pos[1]/const.MULTIPLIER)]
-            self.path = a_star.astar(param.tmaze, a_star_pos, self.end,0)
+            self.path = a_star.astar(param.tmaze, a_star_pos, self.end,3)
+            #print(self.path)
             count=3
+            if self.path==None:
             #while(self.path==None):
-            self.path = a_star.astar(param.tmaze, a_star_pos, self.end,count)
+                self.path = a_star.astar(param.tmaze, a_star_pos, self.end,count)
                 #count+=1
             #print(self.path)
             #print(count)
@@ -208,6 +210,7 @@ class FlyMod:
         x2 = int( start[0] * const.MULTIPLIER + const.SHAPE_SIZE )
         y2 = int( start[1] * const.MULTIPLIER + const.SHAPE_SIZE )
         self.altitude=0
+        self.drop=False
         #print("%d,%d,%d,%d" %(x1,x2,y1,y2))
         self.tag=("fly%d"%self.id)
         self.shape = [citymap.canvas.create_line(x1, y1, x2, y2, fill="black",width=2,tags=self.tag),
@@ -227,24 +230,25 @@ class FlyMod:
         #print("Pod Pos: %d, %d"%(pod_cur_pos[0],pod_cur_pos[1]))
         at_dest=False
         #print(self.altitude)
-        #print(self.has_pod())
-        if (self.has_pod()==False or self.altitude!=0):
-            at_dest=self.fly(pod_cur_pos)
+        #print('%d and %d'%(self.has_pod(),self.altitude))
+        tagged=False
+        tags=citymap.canvas.gettags(self.tag)
+        for tag in tags:
+            if tag=="pair10%d"%self.id:
+                tagged=True
+                #print('tagged')
+        if cur_pos==pod_cur_pos and tagged==False:
+            #print('once')
+            #print(self.tag)
+            CommonFunctions.remove_tags([self.tag,pod_tag])
+            CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
+            #print(self.has_pod())
+        if self.drop==False:
+            #print(self.altitude)
+            self.drop=self.fly(pod_cur_pos)
             #print('WHY')
-            tagged=False
-            tags=citymap.canvas.gettags(self.tag)
-            for tag in tags:
-                if tag=="pair10%d"%self.id:
-                    tagged=True
-                    #print('tagged')
-            if cur_pos==pod_cur_pos and tagged==False:
-                #print('once')
-                print(self.tag)
-                CommonFunctions.remove_tags([self.tag,pod_tag])
-                CommonFunctions.add_tags("pair10%d"%self.id,[self.tag, pod_tag])
-                #print(self.has_pod())
-        else:
-            self.fly(pod.dest)
+        if self.has_pod()==True and self.drop==True:
+            return self.fly(pod.dest)
     def has_pod(self):
         tags=citymap.canvas.gettags(self.shape[0])
         for tag in tags:
@@ -291,6 +295,7 @@ class FlyMod:
                         at_dest=True
                     else:
                         at_dest=False
+
                         self.altitude-=1
                 else:
                     rise = (dest_y-cur_pos[1])
@@ -465,47 +470,47 @@ class GenerateResults:
     def avg_cost(pods):
         avg_time_arr=[]
         for i in range(0, const.NUM_OF_PODS):
-            if(pod_data[i][-1]==0):
-                avg_time_arr.append(const.INFINITY)
+            #if(pod_data[i][-1]==0):
+                #avg_time_arr.append(const.INFINITY)
                 #print(i)
                 #print("Pod%d has %d"%(i,avg_time_arr[-1]))
-            else:
+            #else:
                 #print("MOVEMENT %d"%i)
-                avg_time_arr.append(pod_data[i][-1])
-        print("Average Cost: %f"%(np.mean(avg_time_arr)))
-        print("Density: %f"%const.DENSITY)
-        file_name="G3WithDrone.txt"
+            avg_time_arr.append(len(pod_data[i])*const.SLEEP_TIME)
+        print("Average Time: %f"%(np.mean(avg_time_arr)))
+        print("Altitude: %f"%const.ALTITUDE_HEIGHT)
+        file_name="Graph3Final.txt"
         file=open(file_name,"a+")
-        data_entry="%f,%f\r\n"%(const.DENSITY,(np.mean(avg_time_arr)))
+        data_entry="%f,%f\r\n"%(const.ALTITUDE_HEIGHT,(np.mean(avg_time_arr)))
         file.write(data_entry)
         file.close()
-        if const.GRAPH_READY==True:
-            file=open(file_name,"r")
-            data=file.readlines()
-            x_val=[]
-            y_val=[]
-            for line in data:
-                data_values=line.split(',')
-                #print(len(data_values))
-                if(len(data_values)>1):
-                    x_val.append(float(data_values[0]))
-                    y_val.append(float(data_values[1]))
-            trace=go.Scatter(
-                x = x_val,
-                y = y_val,
-                mode = 'lines + markers',
-                name="WithDrone"
-            )
-            plotly.offline.plot({
-            "data": [trace],
-            "layout": go.Layout(
-                title="With Drone Density Curve",
-                yaxis=dict(title = 'Cost'),
-                xaxis=dict(title = 'Traffic Density'))
-            }, auto_open=True)
-            file.close()
-        else:
-            raise SystemExit("BYE")
+        # if const.GRAPH_READY==True:
+        #     file=open(file_name,"r")
+        #     data=file.readlines()
+        #     x_val=[]
+        #     y_val=[]
+        #     for line in data:
+        #         data_values=line.split(',')
+        #         #print(len(data_values))
+        #         if(len(data_values)>1):
+        #             x_val.append(float(data_values[0]))
+        #             y_val.append(float(data_values[1]))
+        #     trace=go.Scatter(
+        #         x = x_val,
+        #         y = y_val,
+        #         mode = 'lines + markers',
+        #         name="WithDrone"
+        #     )
+        #     plotly.offline.plot({
+        #     "data": [trace],
+        #     "layout": go.Layout(
+        #         title="With Drone Density Curve",
+        #         yaxis=dict(title = 'Cost'),
+        #         xaxis=dict(title = 'Traffic Density'))
+        #     }, auto_open=True)
+        #     file.close()
+        # else:
+        raise SystemExit("BYE")
 class traffic_calculations:
     def stuck(position,speed):
         items_at_pos=-1

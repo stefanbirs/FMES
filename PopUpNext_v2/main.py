@@ -79,22 +79,24 @@ while pod_moving==True:
     # make A* for each object (method in class)
     pod_moving=False
     for i, wheel in enumerate(wheels):
-        wheel.drive()
+        if wheel.has_pod()==True:
+            wheel.drive()
     for i, drone in enumerate(drones):
         pod_at_dest[i]=pods[i].at_dest()
-        if wheels[i].call_pod==True:
-            drone_lowered[i]=drone.pick_up_pod(pods[i])
-        else:
+        #if wheels[i].call_pod==True:
+        #    drone_lowered[i]=drone.pick_up_pod(pods[i])
+        #else:
             #pod_at_dest[i]=True
-            drone_lowered[i]=False
+        drone_lowered[i]=True
+        #print(drone_lowered[i])
         if pod_at_dest[i]==False or drone_lowered[i]==False:
             pod_moving=True
 
     citymap.tk.update()
     time.sleep(const.SLEEP_TIME)
-#mod.GenerateResults.export_txt(pods)
+mod.GenerateResults.export_txt(pods)
 #mod.GenerateResults.generate_graphs()
-#mod.GenerateResults.avg_cost(pods)
+mod.GenerateResults.avg_cost(pods)
 time.sleep(0.5)
 raise SystemExit("Kachow")
 ################################################################################
